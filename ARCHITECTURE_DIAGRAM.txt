@@ -1,0 +1,430 @@
+================================================================================
+  LEGAL AI INTAKE ASSISTANT - ARCHITECTURE DIAGRAM
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          CLIENT BROWSER                                     │
+│                    (http://localhost:3000)                                  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 │ HTTPS
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    NEXT.JS FRONTEND (TypeScript)                            │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Pages                                                                │  │
+│  │  • / (Landing page)                                                 │  │
+│  │  • /intake (Intake flow)                                            │  │
+│  │  • /dashboard (Session list)                                        │  │
+│  │  • /dashboard/session/[id] (Session detail)                         │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Components                                                           │  │
+│  │  • IntakeStepper (Progress indicator)                               │  │
+│  │  • QuestionRenderer (Dynamic form)                                  │  │
+│  │  • SessionList (Session list)                                       │  │
+│  │  • SummaryPanel (Summary display)                                   │  │
+│  │  • Header, Sidebar, LoadingSpinner                                  │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Libraries                                                            │  │
+│  │  • API Client (axios wrapper)                                       │  │
+│  │  • Supabase Client (auth + real-time)                               │  │
+│  │  • Tailwind CSS (styling)                                           │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                                 │ HTTPS
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   FASTAPI BACKEND (Python 3.11+)                            │
+│                  (http://localhost:8000)                                    │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ API Routes                                                           │  │
+│  │  • /api/intake/* (Intake flow)                                       │  │
+│  │  • /api/messages/* (Messages)                                        │  │
+│  │  • /api/files/* (File upload)                                        │  │
+│  │  • /api/summary/* (AI summary)                                       │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Services Layer                                                       │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ OllamaService                                                  │ │  │
+│  │  │  • HTTP client to Ollama                                       │ │  │
+│  │  │  • Generate text/JSON                                          │ │  │
+│  │  │  • Retry logic                                                 │ │  │
+│  │  │  • Error handling                                              │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ SummaryService                                                 │ │  │
+│  │  │  • Collect messages                                            │ │  │
+│  │  │  • Extract PDF text                                            │ │  │
+│  │  │  • Build prompt                                                │ │  │
+│  │  │  • Call Ollama                                                 │ │  │
+│  │  │  • Normalize response                                          │ │  │
+│  │  │  • Store in DB                                                 │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ PDFService                                                     │ │  │
+│  │  │  • Extract text (PyMuPDF)                                      │ │  │
+│  │  │  • Get metadata                                                │ │  │
+│  │  │  • Detect document type                                        │ │  │
+│  │  │  • Extract by page                                             │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ IntakeService                                                  │ │  │
+│  │  │  • Define intake flow                                          │ │  │
+│  │  │  • Validate answers                                            │ │  │
+│  │  │  • Submit steps                                                │ │  │
+│  │  │  • Complete intake                                             │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ SupabaseService                                                │ │  │
+│  │  │  • Database CRUD operations                                    │ │  │
+│  │  │  • Query building                                              │ │  │
+│  │  │  • Error handling                                              │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Middleware & Utilities                                               │  │
+│  │  • Authentication (JWT validation)                                   │  │
+│  │  • CORS middleware                                                   │  │
+│  │  • Exception handlers                                                │  │
+│  │  • Logging                                                           │  │
+│  │  • Configuration management                                          │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+                    ┌────────────┼────────────┐
+                    │            │            │
+                    ▼            ▼            ▼
+        ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+        │    SUPABASE      │ │     OLLAMA       │ │    STORAGE       │
+        │   PostgreSQL     │ │  Mistral 7B      │ │   (S3-like)      │
+        │                  │ │                  │ │                  │
+        │ ┌──────────────┐ │ │ HTTP API         │ │ ┌──────────────┐ │
+        │ │ clients      │ │ │ :11434           │ │ │ PDFs         │ │
+        │ │ sessions     │ │ │                  │ │ │ Documents    │ │
+        │ │ messages     │ │ │ Local LLM        │ │ │ Files        │ │
+        │ │ files        │ │ │ (No API calls)   │ │ │              │ │
+        │ │              │ │ │                  │ │ │ Signed URLs  │ │
+        │ │ RLS Enabled  │ │ │ Retry Logic      │ │ │ Private      │ │
+        │ │ Indexes      │ │ │ Timeout Handling │ │ │ Bucket       │ │
+        │ │ JSONB Fields │ │ │                  │ │ │              │ │
+        │ └──────────────┘ │ │                  │ │ └──────────────┘ │
+        │                  │ │                  │ │                  │
+        │ Auth Included    │ │ GPU Ready        │ │ Supabase        │
+        │ Backups Auto     │ │ Model Cached     │ │ Managed         │
+        │ Real-time Ready  │ │                  │ │                  │
+        └──────────────────┘ └──────────────────┘ └──────────────────┘
+
+================================================================================
+  DATA FLOW DIAGRAMS
+================================================================================
+
+1. INTAKE SESSION FLOW
+   ─────────────────────
+
+   Client Opens /intake
+        │
+        ▼
+   Frontend fetches intake flow (GET /api/intake/flow)
+        │
+        ▼
+   Display questions step-by-step
+        │
+        ▼
+   Client answers question
+        │
+        ▼
+   Frontend submits (POST /api/intake/step)
+        │
+        ▼
+   Backend validates & stores in DB
+        │
+        ▼
+   Frontend renders next question
+        │
+        ▼
+   Repeat until complete
+        │
+        ▼
+   Client completes intake (POST /api/intake/complete)
+        │
+        ▼
+   Backend marks session as complete
+        │
+        ▼
+   Lawyer can view in dashboard
+
+
+2. AI SUMMARY GENERATION
+   ──────────────────────
+
+   Lawyer clicks "Generate Summary"
+        │
+        ▼
+   Frontend: POST /api/summary/generate {session_id}
+        │
+        ▼
+   Backend SummaryService:
+        │
+        ├─ Fetch all messages from session
+        │
+        ├─ Extract text from uploaded PDFs (PDFService)
+        │
+        ├─ Build structured prompt
+        │
+        ├─ Send to Ollama HTTP API
+        │
+        ├─ Parse JSON response
+        │
+        └─ Store in DB (ai_summary JSONB field)
+        │
+        ▼
+   Frontend displays summary with:
+        ├─ Case summary
+        ├─ Legal category
+        ├─ Urgency level
+        ├─ Key facts
+        ├─ Missing information
+        └─ Recommended next questions
+
+
+3. DOCUMENT UPLOAD FLOW
+   ────────────────────
+
+   Client uploads PDF during intake
+        │
+        ▼
+   Frontend: POST /api/files/upload (multipart/form-data)
+        │
+        ▼
+   Backend validates file:
+        ├─ Check MIME type
+        ├─ Check file size (<50MB)
+        └─ Scan for malware (optional)
+        │
+        ▼
+   Backend uploads to Supabase Storage
+        │
+        ▼
+   Backend creates file record in DB
+        │
+        ▼
+   Backend extracts text (PyMuPDF)
+        │
+        ▼
+   Text stored in messages table for AI context
+        │
+        ▼
+   Frontend displays file in session
+
+================================================================================
+  COMPONENT HIERARCHY
+================================================================================
+
+App
+├── Layout
+│   ├── Header
+│   ├── Sidebar
+│   └── Main Content
+│       ├── Landing Page (/)
+│       ├── Intake Flow (/intake)
+│       │   ├── IntakeStepper
+│       │   └── QuestionRenderer
+│       │       ├── TextInput
+│       │       ├── Textarea
+│       │       ├── Select
+│       │       ├── Radio
+│       │       ├── DatePicker
+│       │       └── FileUpload
+│       ├── Dashboard (/dashboard)
+│       │   └── SessionList
+│       │       └── SessionCard
+│       └── Session Detail (/dashboard/session/[id])
+│           ├── SessionInfo
+│           ├── MessageList
+│           ├── FileViewer
+│           └── SummaryPanel
+│               ├── Summary
+│               ├── KeyFacts
+│               ├── MissingInfo
+│               └── RecommendedQuestions
+└── Footer
+
+================================================================================
+  DATABASE RELATIONSHIPS
+================================================================================
+
+clients (1) ──────────────────────────── (N) intake_sessions
+   │                                           │
+   │                                           │
+   │                                      (1) │ (N)
+   │                                           │
+   │                                      messages
+   │                                           │
+   │                                      (1) │ (N)
+   │                                           │
+   │                                      uploaded_files
+
+Relationships:
+  • One client has many intake sessions
+  • One session has many messages
+  • One session has many uploaded files
+  • All tables have user_id for RLS
+
+================================================================================
+  SECURITY LAYERS
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Layer 1: Transport Security                                                 │
+│  • HTTPS/TLS encryption                                                     │
+│  • Secure WebSocket (WSS)                                                   │
+│  • Certificate pinning (optional)                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Layer 2: Authentication                                                     │
+│  • JWT tokens (Supabase Auth)                                               │
+│  • Token validation middleware                                              │
+│  • Session management                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Layer 3: Authorization                                                      │
+│  • Row-Level Security (RLS)                                                 │
+│  • User isolation                                                           │
+│  • Resource ownership checks                                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Layer 4: Input Validation                                                   │
+│  • Pydantic models                                                          │
+│  • Type checking                                                            │
+│  • File upload validation                                                   │
+│  • SQL injection prevention                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Layer 5: Data Protection                                                    │
+│  • Encryption at rest                                                       │
+│  • Signed URLs for files                                                    │
+│  • Secrets in environment variables                                         │
+│  • No secrets in logs                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+  DEPLOYMENT ARCHITECTURE
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          PRODUCTION SETUP                                   │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Vercel (Frontend)                                                    │  │
+│  │  • Automatic deployments from Git                                    │  │
+│  │  • CDN for static assets                                             │  │
+│  │  • SSL/TLS included                                                  │  │
+│  │  • Serverless functions (optional)                                   │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ VPS (Backend)                                                        │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ Nginx (Reverse Proxy)                                          │ │  │
+│  │  │  • SSL/TLS termination                                         │ │  │
+│  │  │  • Load balancing (future)                                     │ │  │
+│  │  │  • Caching                                                     │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ FastAPI (Application)                                          │ │  │
+│  │  │  • Uvicorn ASGI server                                         │ │  │
+│  │  │  • Systemd service                                             │ │  │
+│  │  │  • Auto-restart on failure                                     │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  │                                                                      │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐ │  │
+│  │  │ Ollama (Local LLM)                                             │ │  │
+│  │  │  • Mistral 7B model                                            │ │  │
+│  │  │  • GPU acceleration (optional)                                 │ │  │
+│  │  │  • Systemd service                                             │ │  │
+│  │  └────────────────────────────────────────────────────────────────┘ │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │ Supabase (Database & Auth)                                           │  │
+│  │  • Managed PostgreSQL                                                │  │
+│  │  • Automatic backups                                                 │  │
+│  │  • Real-time subscriptions                                           │  │
+│  │  • Built-in authentication                                           │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+  SCALING ROADMAP
+================================================================================
+
+MVP (Current):
+  • Single backend instance
+  • Local Ollama
+  • Managed Supabase
+  • Suitable for 100-1000 users
+
+Phase 2 (1000-10000 users):
+  • Load balancer
+  • Multiple backend instances
+  • Database read replicas
+  • Redis caching layer
+
+Phase 3 (10000+ users):
+  • Kubernetes orchestration
+  • Ollama API service
+  • CDN for static assets
+  • Message queue (Celery)
+  • Microservices architecture
+
+================================================================================
+  MONITORING & LOGGING
+================================================================================
+
+Backend Monitoring:
+  • Request/response logging
+  • Error tracking (Sentry optional)
+  • Performance metrics
+  • Database query logging
+  • Ollama health checks
+
+Frontend Monitoring:
+  • Error boundary
+  • User session tracking
+  • Performance monitoring
+  • API call logging
+
+Infrastructure Monitoring:
+  • CPU/Memory usage
+  • Disk space
+  • Network traffic
+  • Service health
+  • Backup status
+
+================================================================================
+Created: 2024-05-24
+Version: 0.1.0 (MVP)
+================================================================================
