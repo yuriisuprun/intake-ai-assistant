@@ -53,9 +53,11 @@ cd intake-ai-assistant
 - Row-Level Security (RLS) policies
 - Indexes for performance
 
-### 2.4 Create Storage Buckets
+### 2.4 Create Storage Buckets (Supabase Storage)
 
-1. Go to **Storage** (left sidebar)
+**Note:** These are **Supabase Storage buckets** (NOT AWS S3). Supabase provides managed file storage similar to S3.
+
+1. In Supabase Dashboard, go to **Storage** (left sidebar)
 2. Click **"New Bucket"**
 3. Create first bucket:
    - **Name:** `intake-documents`
@@ -67,9 +69,22 @@ cd intake-ai-assistant
    - **Privacy:** Private
    - Click **"Create Bucket"**
 
-**What these are for:**
+**What these buckets are for:**
 - `intake-documents` - Stores client-uploaded PDFs and documents
+  - Used by: File upload endpoint
+  - Access: Signed URLs (time-limited)
+  - Max size: 50MB per file
+
 - `intake-exports` - Stores generated reports and exports
+  - Used by: Report generation (future feature)
+  - Access: Signed URLs (time-limited)
+  - Max size: 50MB per file
+
+**Why Private?**
+- Files are not publicly accessible
+- Access controlled via signed URLs
+- Only authenticated users can access their own files
+- Enforced by Row-Level Security (RLS)
 
 ### 2.5 Verify Setup
 
