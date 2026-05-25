@@ -13,20 +13,193 @@ git clone https://github.com/yourusername/intake-ai-assistant.git
 cd intake-ai-assistant
 ```
 
-## Step 2: Supabase Setup (2 min)
+## Step 2: Supabase Setup (5-10 min)
 
-1. Go to [supabase.com](https://supabase.com) → Create Project
-2. Copy your URL and API key
-3. Go to SQL Editor → Paste SQL from `docs/DATABASE_SCHEMA.md` → Execute
-4. Go to Storage → Create buckets: `intake-documents`, `intake-exports` (both private)
+### 2.1 Create Supabase Project
 
-## Step 3: Ollama (1 min)
+1. Go to [supabase.com](https://supabase.com)
+2. Click **"New Project"**
+3. Fill in project details:
+   - **Project Name:** `intake-ai-assistant` (or your choice)
+   - **Database Password:** Create a strong password
+   - **Region:** Choose closest to you
+4. Click **"Create new project"**
+5. Wait for project to initialize (2-3 minutes)
+
+### 2.2 Get API Credentials
+
+1. Go to **Settings → API**
+2. Copy these values:
+   - **Project URL** → `SUPABASE_URL`
+   - **anon public** → `SUPABASE_KEY`
+   - **service_role secret** → `SUPABASE_SERVICE_ROLE_KEY`
+3. Save these for later (you'll need them for `.env` files)
+
+### 2.3 Run Database Migrations
+
+1. Go to **SQL Editor** (left sidebar)
+2. Click **"New Query"**
+3. Open `docs/DATABASE_SCHEMA.md`
+4. Copy the entire SQL migration script
+5. Paste into SQL Editor
+6. Click **"Run"** (or Ctrl+Enter)
+7. Wait for completion (should see green checkmark)
+
+**What this creates:**
+- `clients` table
+- `intake_sessions` table
+- `messages` table
+- `uploaded_files` table
+- Row-Level Security (RLS) policies
+- Indexes for performance
+
+### 2.4 Create Storage Buckets
+
+1. Go to **Storage** (left sidebar)
+2. Click **"New Bucket"**
+3. Create first bucket:
+   - **Name:** `intake-documents`
+   - **Privacy:** Private
+   - Click **"Create Bucket"**
+4. Click **"New Bucket"** again
+5. Create second bucket:
+   - **Name:** `intake-exports`
+   - **Privacy:** Private
+   - Click **"Create Bucket"**
+
+**What these are for:**
+- `intake-documents` - Stores client-uploaded PDFs and documents
+- `intake-exports` - Stores generated reports and exports
+
+### 2.5 Verify Setup
+
+1. Go to **SQL Editor**
+2. Run this query to verify tables exist:
+   ```sql
+   SELECT table_name FROM information_schema.tables 
+   WHERE table_schema = 'public';
+   ```
+3. You should see: `clients`, `intake_sessions`, `messages`, `uploaded_files`
+
+## Step 3: Ollama Setup (5-10 min)
+
+### 3.1 Install Ollama
+
+**macOS:**
+```bash
+brew install ollama
+```
+
+**Linux:**
+```bash
+curl https://ollama.ai/install.sh | sh
+```
+
+**Windows:**
+1. Download from [ollama.ai](https://ollama.ai)
+2. Run installer
+3. Follow installation wizard
+
+### 3.2 Pull Mistral Model
+
+Open terminal and run:
 
 ```bash
-# Terminal 1
 ollama pull mistral
+```
+
+**What this does:**
+- Downloads Mistral 7B model (~4GB)
+- Stores locally on your machine
+- Takes 5-10 minutes depending on internet speed
+
+**Output should show:**
+```
+pulling manifest
+pulling 2c05b135ff72
+pulling 8ee4dff6e59c
+pulling 78e26419b132
+pulling 5c40403f1609
+pulling 927ad6c5c122
+pulling 3f5c45517d12
+pulling 4ad96d909d26
+pulling 886592d1f5b0
+verifying sha256 digest
+writing manifest
+success
+```
+
+### 3.3 Start Ollama Server
+
+In a **new terminal window**, run:
+
+```bash
 ollama serve
 ```
+
+**Output should show:**
+```
+2024/05/24 10:30:00 "GET /api/tags HTTP/1.1" 200 123
+```
+
+**Important:**
+- Keep this terminal window open
+- Ollama runs on `http://localhost:11434`
+- Don't close this window while developing
+
+### 3.4 Verify Ollama is Running
+
+In **another terminal**, test the connection:
+
+```bash
+curl http://localhost:11434/api/tags
+```
+
+**Expected response:**
+```json
+{
+  "models": [
+    {
+      "name": "mistral:latest",
+      "modified_at": "2024-05-24T10:30:00Z",
+      "size": 4000000000,
+      "digest": "..."
+    }
+  ]
+}
+```
+
+If you see this, Ollama is working! ✅
+
+### 3.5 Troubleshooting Ollama
+
+**Model download stuck?**
+```bash
+# Cancel with Ctrl+C and retry
+ollama pull mistral
+```
+
+**Port 11434 already in use?**
+```bash
+# Find process using port
+lsof -i :11434
+
+# Kill process
+kill -9 <PID>
+
+# Restart Ollama
+ollama serve
+```
+
+**Out of disk space?**
+- Mistral 7B needs ~4GB
+- Check available space: `df -h`
+- Models stored in: `~/.ollama/models/`
+
+**Slow performance?**
+- GPU acceleration available (optional)
+- Check Ollama docs for GPU setup
+- CPU-only is fine for MVP
 
 ## Step 4: Backend (1 min)
 
