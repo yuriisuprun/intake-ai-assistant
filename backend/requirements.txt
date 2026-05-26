@@ -5,7 +5,6 @@ python-multipart==0.0.6
 
 # Database & ORM
 supabase==2.3.5
-postgrest-py==0.13.0
 
 # Validation & Serialization
 pydantic==2.5.0
