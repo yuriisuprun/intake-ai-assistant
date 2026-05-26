@@ -17,7 +17,7 @@ interface SessionListProps {
   isLoading?: boolean
 }
 
-export function SessionList({ sessions, isLoading = false }: SessionListProps) {
+function SessionListComponent({ sessions, isLoading = false }: SessionListProps) {
   if (isLoading) {
     return <div className="text-center py-8">Loading sessions...</div>
   }
@@ -99,3 +99,9 @@ export function SessionList({ sessions, isLoading = false }: SessionListProps) {
     </div>
   )
 }
+
+export function SessionList(props: SessionListProps) {
+  return <SessionListComponent {...props} />
+}
+
+export default SessionListComponent

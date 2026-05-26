@@ -7,7 +7,7 @@ interface IntakeStepperProps {
   totalSteps: number
 }
 
-export function IntakeStepper({ currentStep, totalSteps }: IntakeStepperProps) {
+function IntakeStepperComponent({ currentStep, totalSteps }: IntakeStepperProps) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
@@ -48,3 +48,9 @@ export function IntakeStepper({ currentStep, totalSteps }: IntakeStepperProps) {
     </div>
   )
 }
+
+export function IntakeStepper(props: IntakeStepperProps) {
+  return <IntakeStepperComponent {...props} />
+}
+
+export default IntakeStepperComponent

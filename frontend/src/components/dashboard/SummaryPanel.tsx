@@ -17,7 +17,7 @@ interface SummaryPanelProps {
   isLoading?: boolean
 }
 
-export function SummaryPanel({ summary, isLoading = false }: SummaryPanelProps) {
+function SummaryPanelComponent({ summary, isLoading = false }: SummaryPanelProps) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg p-8 text-center">
@@ -120,3 +120,9 @@ export function SummaryPanel({ summary, isLoading = false }: SummaryPanelProps) 
     </div>
   )
 }
+
+export function SummaryPanel(props: SummaryPanelProps) {
+  return <SummaryPanelComponent {...props} />
+}
+
+export default SummaryPanelComponent

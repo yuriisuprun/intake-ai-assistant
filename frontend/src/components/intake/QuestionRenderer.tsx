@@ -21,7 +21,7 @@ interface QuestionRendererProps {
   isLoading?: boolean
 }
 
-export function QuestionRenderer({
+function QuestionRendererComponent({
   question,
   onSubmit,
   isLoading = false,
@@ -160,3 +160,9 @@ export function QuestionRenderer({
     </form>
   )
 }
+
+export function QuestionRenderer(props: QuestionRendererProps) {
+  return <QuestionRendererComponent {...props} />
+}
+
+export default QuestionRendererComponent
