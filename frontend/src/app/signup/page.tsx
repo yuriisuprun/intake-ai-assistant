@@ -26,13 +26,22 @@ export default function SignUp() {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 
       if (signUpError) throw signUpError
 
-      // Redirect to dashboard after signup
-      router.push('/dashboard')
+      // Check if email confirmation is required
+      if (data?.user && !data.session) {
+        setError('Please check your email to confirm your account before logging in.')
+        setTimeout(() => {
+          router.push('/login')
+        }, 3000)
+      } else {
+        // Auto-login if email confirmation is not required
+        router.push('/dashboard')
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to sign up')
     } finally {
@@ -47,7 +56,11 @@ export default function SignUp() {
         <p className="text-gray-600 mb-6">Join Legal AI Intake Assistant</p>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <div className={`border px-4 py-3 rounded-lg mb-4 ${
+            error.includes('check your email') 
+              ? 'bg-blue-50 border-blue-200 text-blue-700' 
+              : 'bg-red-50 border-red-200 text-red-700'
+          }`}>
             {error}
           </div>
         )}

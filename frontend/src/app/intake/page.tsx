@@ -7,7 +7,7 @@ import { IntakeStepper } from '@/components/intake/IntakeStepper'
 
 export default function IntakePage() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
+  const [setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
