@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
@@ -12,6 +12,19 @@ export default function SignUp() {
   const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [configError, setConfigError] = useState('')
+
+  useEffect(() => {
+    // Check Supabase configuration on mount
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      setConfigError(
+        'Supabase is not properly configured. Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in your .env.local file.'
+      )
+    }
+  }, [])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,6 +32,10 @@ export default function SignUp() {
     setError('')
 
     try {
+      if (configError) {
+        throw new Error(configError)
+      }
+
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -26,11 +43,14 @@ export default function SignUp() {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'}/auth/callback`,
         },
       })
 
-      if (signUpError) throw signUpError
+      if (signUpError) {
+        console.error('Supabase signup error:', signUpError)
+        throw signUpError
+      }
 
       // Check if email confirmation is required
       if (data?.user && !data.session) {
@@ -38,12 +58,13 @@ export default function SignUp() {
         setTimeout(() => {
           router.push('/login')
         }, 3000)
-      } else {
+      } else if (data?.user) {
         // Auto-login if email confirmation is not required
         router.push('/dashboard')
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to sign up')
+      console.error('Sign up error:', err)
+      setError(err.message || 'Failed to sign up. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -55,12 +76,20 @@ export default function SignUp() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
         <p className="text-gray-600 mb-6">Join Legal AI Intake Assistant</p>
 
+        {configError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            {configError}
+          </div>
+        )}
+
         {error && (
-          <div className={`border px-4 py-3 rounded-lg mb-4 ${
-            error.includes('check your email') 
-              ? 'bg-blue-50 border-blue-200 text-blue-700' 
-              : 'bg-red-50 border-red-200 text-red-700'
-          }`}>
+          <div
+            className={`border px-4 py-3 rounded-lg mb-4 ${
+              error.includes('check your email')
+                ? 'bg-blue-50 border-blue-200 text-blue-700'
+                : 'bg-red-50 border-red-200 text-red-700'
+            }`}
+          >
             {error}
           </div>
         )}
@@ -77,6 +106,7 @@ export default function SignUp() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="John Doe"
               required
+              disabled={loading || !!configError}
             />
           </div>
 
@@ -91,6 +121,7 @@ export default function SignUp() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
               required
+              disabled={loading || !!configError}
             />
           </div>
 
@@ -105,12 +136,13 @@ export default function SignUp() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="••••••••"
               required
+              disabled={loading || !!configError}
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !!configError}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium"
           >
             {loading ? 'Creating account...' : 'Sign Up'}
