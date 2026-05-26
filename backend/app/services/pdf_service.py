@@ -2,10 +2,9 @@
 PDF document processing service.
 """
 
-import fitz  # PyMuPDF
+import pdfplumber
 import logging
-from typing import Optional, Tuple
-from io import BytesIO
+from typing import Optional, List
 
 logger = logging.getLogger(__name__)
 
@@ -26,17 +25,20 @@ class PDFService:
             Extracted text
         """
         try:
-            pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-            text = ""
-
-            for page_num, page in enumerate(pdf_document):
-                if max_pages and page_num >= max_pages:
-                    break
-
-                text += page.get_text()
-                text += "\n---PAGE BREAK---\n"
-
-            pdf_document.close()
+            from io import BytesIO
+            
+            with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+                text = ""
+                
+                for page_num, page in enumerate(pdf.pages):
+                    if max_pages and page_num >= max_pages:
+                        break
+                    
+                    page_text = page.extract_text()
+                    if page_text:
+                        text += page_text
+                    text += "\n---PAGE BREAK---\n"
+            
             return text.strip()
 
         except Exception as e:
@@ -55,21 +57,17 @@ class PDFService:
             Dictionary with metadata
         """
         try:
-            pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-            metadata = pdf_document.metadata or {}
-
-            result = {
-                "title": metadata.get("title", ""),
-                "author": metadata.get("author", ""),
-                "subject": metadata.get("subject", ""),
-                "creator": metadata.get("creator", ""),
-                "producer": metadata.get("producer", ""),
-                "creation_date": metadata.get("creationDate", ""),
-                "modification_date": metadata.get("modDate", ""),
-                "pages": pdf_document.page_count,
-            }
-
-            pdf_document.close()
+            from io import BytesIO
+            
+            with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+                result = {
+                    "pages": len(pdf.pages),
+                    "title": pdf.metadata.get("Title", "") if pdf.metadata else "",
+                    "author": pdf.metadata.get("Author", "") if pdf.metadata else "",
+                    "subject": pdf.metadata.get("Subject", "") if pdf.metadata else "",
+                    "creator": pdf.metadata.get("Creator", "") if pdf.metadata else "",
+                }
+            
             return result
 
         except Exception as e:
@@ -80,16 +78,16 @@ class PDFService:
     def get_page_count(pdf_bytes: bytes) -> int:
         """Get number of pages in PDF."""
         try:
-            pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
-            count = pdf_document.page_count
-            pdf_document.close()
-            return count
+            from io import BytesIO
+            
+            with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+                return len(pdf.pages)
         except Exception as e:
             logger.error(f"Error getting page count: {e}")
             return 0
 
     @staticmethod
-    def extract_text_by_page(pdf_bytes: bytes) -> list[str]:
+    def extract_text_by_page(pdf_bytes: bytes) -> List[str]:
         """
         Extract text from each page separately.
 
@@ -97,13 +95,14 @@ class PDFService:
             List of text strings, one per page
         """
         try:
-            pdf_document = fitz.open(stream=pdf_bytes, filetype="pdf")
+            from io import BytesIO
+            
             pages_text = []
-
-            for page in pdf_document:
-                pages_text.append(page.get_text())
-
-            pdf_document.close()
+            with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+                for page in pdf.pages:
+                    page_text = page.extract_text()
+                    pages_text.append(page_text if page_text else "")
+            
             return pages_text
 
         except Exception as e:
@@ -182,7 +181,6 @@ class PDFService:
             return text
 
         # Simple summarization: take first max_length characters
-        # In production, use AI summarization
         summary = text[:max_length]
         last_period = summary.rfind(".")
         if last_period > 0:
