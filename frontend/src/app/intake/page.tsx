@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import IntakeStepper from '@/components/intake/IntakeStepper'
+import { IntakeStepper } from '@/components/intake/IntakeStepper'
 
 export default function IntakePage() {
   const router = useRouter()
@@ -36,7 +36,7 @@ export default function IntakePage() {
           <p className="text-gray-600 mt-2">Please provide information about your case</p>
         </div>
 
-        <IntakeStepper />
+        <IntakeStepper currentStep={1} totalSteps={5} />
       </div>
     </div>
   )

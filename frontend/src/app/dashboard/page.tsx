@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import SessionList from '@/components/dashboard/SessionList'
-import SummaryPanel from '@/components/dashboard/SummaryPanel'
+import { SessionList } from '@/components/dashboard/SessionList'
+import { SummaryPanel } from '@/components/dashboard/SummaryPanel'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -58,13 +58,13 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Sessions List */}
           <div className="lg:col-span-2">
-            <SessionList onSelectSession={setSelectedSession} />
+            <SessionList sessions={[]} />
           </div>
 
           {/* Summary Panel */}
           <div>
             {selectedSession ? (
-              <SummaryPanel session={selectedSession} />
+              <SummaryPanel summary={selectedSession} />
             ) : (
               <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
                 Select a session to view details
