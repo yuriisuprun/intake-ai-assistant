@@ -262,18 +262,29 @@ npm run dev
 - **Backend:** http://localhost:8000
 - **API Docs:** http://localhost:8000/docs
 
-## First Test
+## First Test - Intake Form
 
 1. Go to http://localhost:3000
-2. Click "Sign Up"
-3. Create account
-4. Click "Start Intake"
-5. Fill in questions
-6. Upload a PDF (optional)
-7. Complete intake
-8. Go to dashboard
-9. Click "Generate Summary"
-10. See AI-generated summary!
+2. Click "Sign Up" to create account
+3. Click "Start Intake" button
+4. **Client Selection Screen:**
+   - Click "Create New Client"
+   - Enter name: "John Doe"
+   - Enter email: "john@example.com"
+   - Click "Create Client"
+5. **Answer 8 Questions:**
+   - Q1: Legal Area → Select "Employment"
+   - Q2: Problem Description → Enter "I was wrongfully terminated"
+   - Q3: Timeline → Enter "Started January 15, 2024"
+   - Q4: Urgency → Select "High - Urgent"
+   - Q5: Desired Outcome → Enter "Reinstatement and back pay"
+   - Q6: Documents → Skip (optional)
+   - Q7: Contact Preference → Select "Email"
+   - Q8: Additional Info → Skip (optional)
+6. Click "Next" after each question
+7. See "Intake Complete!" message
+8. Redirected to Dashboard
+9. See completed session in list
 
 ## Troubleshooting
 
@@ -311,11 +322,15 @@ uvicorn app.main:app --port 8001
 | File | Purpose |
 |------|---------|
 | `backend/app/main.py` | FastAPI app |
+| `backend/app/api/routes/intake.py` | Intake endpoints |
+| `backend/app/services/intake_service.py` | Intake logic & questions |
 | `backend/app/services/ollama_service.py` | LLM integration |
 | `backend/app/services/summary_service.py` | AI summaries |
+| `frontend/src/app/intake/page.tsx` | **Intake form page** |
+| `frontend/src/app/dashboard/page.tsx` | Dashboard with sessions |
+| `frontend/src/components/intake/IntakeStepper.tsx` | Progress indicator |
+| `frontend/src/components/intake/QuestionRenderer.tsx` | Question display |
 | `frontend/src/app/page.tsx` | Landing page |
-| `frontend/src/components/intake/` | Intake UI |
-| `frontend/src/components/dashboard/` | Dashboard UI |
 
 ## Common Commands
 
@@ -359,16 +374,41 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## API Quick Reference
 
+### Intake Form Endpoints
+
 ```bash
-# Get intake flow
+# Get all questions
 curl http://localhost:8000/api/intake/flow
 
-# Start intake
+# Start intake session
 curl -X POST http://localhost:8000/api/intake/start \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"client_id": "uuid"}'
 
+# Submit answer to a question
+curl -X POST http://localhost:8000/api/intake/step \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": "uuid",
+    "step_key": "legal_area",
+    "answer": "Employment",
+    "question_type": "select"
+  }'
+
+# Complete intake
+curl -X POST http://localhost:8000/api/intake/complete?session_id=uuid \
+  -H "Authorization: Bearer $TOKEN"
+
+# List sessions
+curl http://localhost:8000/api/intake/ \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Other Endpoints
+
+```bash
 # Generate summary
 curl -X POST http://localhost:8000/api/summary/generate \
   -H "Authorization: Bearer $TOKEN" \
@@ -382,17 +422,49 @@ curl -X POST http://localhost:8000/api/summary/generate \
 Browser (http://localhost:3000)
     ↓
 Next.js Frontend
+    ├── Home Page
+    ├── Intake Form (8 questions)
+    │   ├── Client Selection
+    │   ├── Question Stepper
+    │   └── Answer Submission
+    └── Dashboard (View Sessions)
     ↓
 FastAPI Backend (http://localhost:8000)
+    ├── /api/intake/flow (Get questions)
+    ├── /api/intake/start (Create session)
+    ├── /api/intake/step (Submit answer)
+    ├── /api/intake/complete (Mark complete)
+    ├── /api/intake/ (List sessions)
+    └── /api/summary/generate (AI summary)
     ↓
 Supabase (PostgreSQL + Auth)
+    ├── clients (Client info)
+    ├── intake_sessions (Session data)
+    ├── messages (Answers stored as messages)
+    └── uploaded_files (File references)
     ↓
 Ollama (http://localhost:11434)
+    └── Mistral 7B (AI summaries)
 ```
 
 ## What's Working
 
-✅ Structured intake flow
+✅ **Intake Form (8 Questions)**
+  - Legal Area (Select)
+  - Problem Description (Textarea)
+  - Timeline (Text)
+  - Urgency (Select)
+  - Desired Outcome (Textarea)
+  - Documents (File Upload)
+  - Contact Preference (Select)
+  - Additional Info (Textarea)
+
+✅ Client selection/creation
+✅ Question navigation (forward/backward)
+✅ Answer validation (required fields)
+✅ Progress tracking (stepper)
+✅ Session persistence
+✅ Dashboard with sessions
 ✅ Database storage
 ✅ File uploads
 ✅ AI summaries via Ollama
