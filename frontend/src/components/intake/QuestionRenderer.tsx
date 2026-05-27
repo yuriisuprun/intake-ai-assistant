@@ -130,13 +130,16 @@ function QuestionRendererComponent({
             </span>
             <input
               type="file"
-              onChange={(e) => setAnswer(e.target.files?.[0])}
+              onChange={(e) => setAnswer(e.target.files?.[0] || null)}
               className="hidden"
               multiple={false}
             />
           </label>
           <p className="text-sm text-gray-500 mt-2">
             {answer?.name || 'No file selected'}
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            PDF, Word, Images, Excel (max 50MB)
           </p>
         </div>
       )}
