@@ -3,27 +3,57 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { apiClient } from '@/lib/api'
 import { SessionList } from '@/components/dashboard/SessionList'
 import { SummaryPanel } from '@/components/dashboard/SummaryPanel'
+
+interface Session {
+  id: string
+  client_id: string
+  legal_category?: string
+  status: string
+  urgency?: string
+  created_at: string
+}
 
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [sessionsLoading, setSessionsLoading] = useState(false)
+  const [sessions, setSessions] = useState<Session[]>([])
   const [selectedSession, setSelectedSession] = useState<any>(null)
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/login')
-      } else {
+    const initializeDashboard = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+          router.push('/login')
+          return
+        }
+
         setUser(session.user)
+
+        // Set token for API client
+        if (session.access_token) {
+          apiClient.setToken(session.access_token)
+        }
+
+        // Fetch sessions
+        setSessionsLoading(true)
+        const response = await apiClient.listIntakeSessions(0, 20)
+        const sessionsList = response.data?.sessions || response.sessions || []
+        setSessions(sessionsList)
+      } catch (err) {
+        console.error('Error loading dashboard:', err)
+      } finally {
+        setSessionsLoading(false)
+        setLoading(false)
       }
-      setLoading(false)
     }
 
-    checkAuth()
+    initializeDashboard()
   }, [router])
 
   const handleLogout = async () => {
@@ -58,7 +88,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Sessions List */}
           <div className="lg:col-span-2">
-            <SessionList sessions={[]} />
+            <SessionList sessions={sessions} isLoading={sessionsLoading} />
           </div>
 
           {/* Summary Panel */}
