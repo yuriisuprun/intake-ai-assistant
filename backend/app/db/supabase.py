@@ -23,13 +23,17 @@ class SupabaseDB:
 
     def __init__(self):
         if self._client is None:
-            self._client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            # Use service role key for write operations to bypass RLS
+            key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
+            self._client = create_client(settings.SUPABASE_URL, key)
 
     @property
     def client(self) -> Client:
         """Get Supabase client."""
         if self._client is None:
-            self._client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+            # Use service role key for write operations to bypass RLS
+            key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
+            self._client = create_client(settings.SUPABASE_URL, key)
         return self._client
 
     # Clients
