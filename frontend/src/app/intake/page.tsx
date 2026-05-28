@@ -66,6 +66,11 @@ export default function IntakePage() {
           apiClient.setToken(session.access_token)
         }
 
+        // Fetch clients
+        const clientsData = await apiClient.listClients(0, 100)
+        const clientsList = clientsData.data?.clients || []
+        setClients(clientsList)
+
         // Fetch intake flow
         setQuestionsLoading(true)
         const flowData = await apiClient.getIntakeFlow()
@@ -120,13 +125,9 @@ export default function IntakePage() {
       setSubmitting(true)
       setError('')
 
-      // Create client (this would need an API endpoint)
-      // For now, we'll just add it to the list
-      const newClient: Client = {
-        id: `client-${Date.now()}`,
-        full_name: newClientName,
-        email: newClientEmail,
-      }
+      // Create client via API
+      const response = await apiClient.createClient(newClientName, newClientEmail)
+      const newClient = response.data
 
       setClients([...clients, newClient])
       setSelectedClientId(newClient.id)
