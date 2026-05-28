@@ -11,7 +11,7 @@ import json
 
 from app.core.config import settings
 from app.services.ollama_service import close_ollama_service
-from app.api.routes import intake, messages, files, summary
+from app.api.routes import intake, messages, files, summary, clients
 
 # Configure logging
 logging.basicConfig(
@@ -71,6 +71,7 @@ async def health_check():
 
 
 # Include routers
+app.include_router(clients.router, prefix=settings.API_PREFIX, tags=["clients"])
 app.include_router(intake.router, prefix=settings.API_PREFIX, tags=["intake"])
 app.include_router(messages.router, prefix=settings.API_PREFIX, tags=["messages"])
 app.include_router(files.router, prefix=settings.API_PREFIX, tags=["files"])
