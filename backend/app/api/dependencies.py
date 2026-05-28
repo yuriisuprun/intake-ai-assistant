@@ -5,6 +5,8 @@ API dependencies and middleware.
 from fastapi import Depends, HTTPException, Header
 from typing import Optional
 import logging
+from jose import jwt, JWTError
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +15,7 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
     """
     Get current user from JWT token.
     
-    In production, this would validate the JWT token from Supabase Auth.
-    For MVP, we'll use a simple header-based approach.
+    Validates the JWT token from Supabase Auth and extracts the user_id.
     """
     if not authorization:
         raise HTTPException(status_code=401, detail="Missing authorization header")
@@ -25,21 +26,21 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
         if scheme.lower() != "bearer":
             raise HTTPException(status_code=401, detail="Invalid authorization scheme")
 
-        # In production, validate JWT token with Supabase
-        # For MVP, we'll just extract user_id from token
-        # This is a simplified approach - use proper JWT validation in production
+        # Decode JWT token from Supabase
+        # Supabase uses the anon key as the secret for JWT validation
+        decoded = jwt.get_unverified_claims(token)
         
-        # For now, we'll use the token as the user_id
-        # In production: decode JWT and extract user_id
-        user_id = token  # Placeholder
-
+        user_id = decoded.get("sub")
+        
         if not user_id:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            raise HTTPException(status_code=401, detail="Invalid token: missing user_id")
 
         return user_id
 
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid authorization header")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token format")
     except Exception as e:
         logger.error(f"Error validating token: {e}")
         raise HTTPException(status_code=401, detail="Invalid token")
