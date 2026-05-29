@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { apiClient } from '@/lib/api'
 import { IntakeStepper } from '@/components/intake/IntakeStepper'
 import { QuestionRenderer } from '@/components/intake/QuestionRenderer'
+import Footer from '@/components/common/Footer'
 
 interface Question {
   key: string
@@ -375,6 +376,7 @@ export default function IntakePage() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

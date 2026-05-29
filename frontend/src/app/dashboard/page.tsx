@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { apiClient } from '@/lib/api'
 import { SessionList } from '@/components/dashboard/SessionList'
 import { SummaryPanel } from '@/components/dashboard/SummaryPanel'
+import Footer from '@/components/common/Footer'
 
 interface Session {
   id: string
@@ -66,7 +67,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -84,25 +85,30 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Sessions List */}
-          <div className="lg:col-span-2">
-            <SessionList sessions={sessions} isLoading={sessionsLoading} />
-          </div>
+      <div className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Sessions List */}
+            <div className="lg:col-span-2">
+              <SessionList sessions={sessions} isLoading={sessionsLoading} />
+            </div>
 
-          {/* Summary Panel */}
-          <div>
-            {selectedSession ? (
-              <SummaryPanel summary={selectedSession} />
-            ) : (
-              <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-                Select a session to view details
-              </div>
-            )}
+            {/* Summary Panel */}
+            <div>
+              {selectedSession ? (
+                <SummaryPanel summary={selectedSession} />
+              ) : (
+                <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
+                  Select a session to view details
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

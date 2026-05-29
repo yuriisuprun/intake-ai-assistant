@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight, FileText, Brain, Shield } from 'lucide-react'
+import Footer from '@/components/common/Footer'
 
 export default function Home() {
   return (
@@ -80,14 +81,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white mt-20 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2024 Legal AI Intake Assistant. All rights reserved.</p>
-          <p className="text-sm text-gray-400 mt-2">
-            This is not legal advice. Always consult with a qualified attorney.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
