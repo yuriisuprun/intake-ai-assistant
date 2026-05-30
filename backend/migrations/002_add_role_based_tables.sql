@@ -276,8 +276,8 @@ SELECT
   ta.assignment_status,
   ta.created_at,
   ta.updated_at,
-  c.full_name as assigned_to_name,
-  c2.full_name as assigned_by_name
+  au.email as assigned_to_name,
+  au2.email as assigned_by_name
 FROM team_assignments ta
 LEFT JOIN auth.users au ON ta.assigned_to_user_id = au.id
 LEFT JOIN auth.users au2 ON ta.assigned_by_user_id = au2.id;
