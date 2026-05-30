@@ -11,7 +11,18 @@ import json
 
 from app.core.config import settings
 from app.services.ollama_service import close_ollama_service
-from app.api.routes import intake, messages, files, summary, clients
+from app.api.routes import messages
+from app.api.routes.client import intake, files, profile, dashboard
+from app.api.routes.admin import (
+    clients as admin_clients,
+    intake as admin_intake,
+    summary as admin_summary,
+    notes as admin_notes,
+    team as admin_team,
+    reports as admin_reports,
+    settings as admin_settings,
+)
+from app.middleware.audit import AuditLoggingMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -38,7 +49,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Add CORS middleware
+# Add middleware
+app.add_middleware(AuditLoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -71,11 +83,23 @@ async def health_check():
 
 
 # Include routers
-app.include_router(clients.router, prefix=settings.API_PREFIX, tags=["clients"])
-app.include_router(intake.router, prefix=settings.API_PREFIX, tags=["intake"])
+# Shared routes
 app.include_router(messages.router, prefix=settings.API_PREFIX, tags=["messages"])
-app.include_router(files.router, prefix=settings.API_PREFIX, tags=["files"])
-app.include_router(summary.router, prefix=settings.API_PREFIX, tags=["summary"])
+
+# Client routes
+app.include_router(intake.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-intake"])
+app.include_router(files.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-files"])
+app.include_router(profile.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-profile"])
+app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-dashboard"])
+
+# Admin routes
+app.include_router(admin_clients.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-clients"])
+app.include_router(admin_intake.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake"])
+app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
+app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])
+app.include_router(admin_team.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-team"])
+app.include_router(admin_reports.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-reports"])
+app.include_router(admin_settings.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-settings"])
 
 
 # Root endpoint
