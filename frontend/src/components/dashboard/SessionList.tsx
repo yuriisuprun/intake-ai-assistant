@@ -10,6 +10,11 @@ interface Session {
   status: string
   urgency?: string
   created_at: string
+  clients?: {
+    id: string
+    full_name: string
+    email: string
+  }
 }
 
 interface SessionListProps {
@@ -65,9 +70,16 @@ function SessionListComponent({ sessions, isLoading = false }: SessionListProps)
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 {getStatusIcon(session.status)}
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {session.legal_category || 'Intake Session'}
-                </h3>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {session.legal_category || 'Intake Session'}
+                  </h3>
+                  {session.clients?.full_name && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      Client: {session.clients.full_name}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-4 text-sm text-gray-600">

@@ -15,6 +15,11 @@ interface Session {
   status: string
   urgency?: string
   created_at: string
+  clients?: {
+    id: string
+    full_name: string
+    email: string
+  }
 }
 
 export default function DashboardPage() {

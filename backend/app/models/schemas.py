@@ -120,6 +120,7 @@ class IntakeSessionResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime]
+    clients: Optional[Dict[str, Any]] = None  # Client info from join
 
     class Config:
         from_attributes = True

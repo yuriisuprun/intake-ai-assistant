@@ -167,10 +167,10 @@ class SupabaseDB:
             )
             total = count_response.count or 0
 
-            # Get paginated results
+            # Get paginated results with client info
             response = (
                 self.client.table("intake_sessions")
-                .select("*")
+                .select("*, clients(id, full_name, email)")
                 .eq("user_id", user_id)
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
