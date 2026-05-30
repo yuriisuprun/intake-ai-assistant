@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Legal AI Intake Assistant',
   description: 'Structured legal intake for law firms',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
