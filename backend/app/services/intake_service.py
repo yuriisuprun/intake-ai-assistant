@@ -91,7 +91,7 @@ class IntakeService:
             "description": "Choose your preferred communication method",
             "question_type": "select",
             "required": True,
-            "options": ["Email", "Phone", "Both"],
+            "options": ["Email", "Phone", "WhatsApp", "Both"],
             "help_text": "We'll use this to reach out to you",
         },
         {
