@@ -7,24 +7,53 @@
 │                     CLIENT BROWSER                              │
 └────────────────────────┬────────────────────────────────────────┘
                          │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              NEXT.JS FRONTEND (TypeScript)                      │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │ /intake - Structured intake flow                         │  │
-│  │ /dashboard - Lawyer dashboard                            │  │
-│  │ /dashboard/session/[id] - Session detail                 │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└────────────────────────┬────────────────────────────────────────┘
-                         │ HTTPS
-                         ▼
+        ┌────────────────┴────────────────┐
+        │                                 │
+        ▼                                 ▼
+┌──────────────────────────┐    ┌──────────────────────────┐
+│  CLIENT INTERFACE        │    │  ADMIN INTERFACE         │
+│  (Next.js)               │    │  (Next.js)               │
+│  /client/*               │    │  /admin/*                │
+│  ├─ /intake              │    │  ├─ /dashboard           │
+│  ├─ /dashboard           │    │  ├─ /sessions            │
+│  └─ /profile             │    │  ├─ /clients             │
+│                          │    │  ├─ /team                │
+│                          │    │  └─ /reports             │
+└──────────────┬───────────┘    └──────────────┬───────────┘
+               │                              │
+               │ HTTPS                        │ HTTPS
+               │                              │
+               └──────────────┬───────────────┘
+                              │
+                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │           FASTAPI BACKEND (Python 3.11+)                        │
 │  ┌──────────────────────────────────────────────────────────┐  │
-│  │ /api/intake/* - Intake flow endpoints                    │  │
-│  │ /api/messages/* - Message endpoints                      │  │
-│  │ /api/files/* - File upload/retrieval                     │  │
-│  │ /api/summary/* - AI summary generation                   │  │
+│  │ CLIENT ROUTES (/api/client/*)                            │  │
+│  │ ├─ /intake/* - Intake flow endpoints                     │  │
+│  │ ├─ /files/* - File upload/retrieval                      │  │
+│  │ ├─ /profile/* - Profile management                       │  │
+│  │ └─ /dashboard/* - Client dashboard                       │  │
+│  │                                                           │  │
+│  │ ADMIN ROUTES (/api/admin/*)                              │  │
+│  │ ├─ /intake/* - View all intakes                          │  │
+│  │ ├─ /clients/* - Client management                        │  │
+│  │ ├─ /summary/* - AI summary generation                    │  │
+│  │ ├─ /notes/* - Session notes                              │  │
+│  │ ├─ /team/* - Team management                             │  │
+│  │ ├─ /reports/* - Analytics & reports                      │  │
+│  │ └─ /settings/* - Admin settings                          │  │
+│  │                                                           │  │
+│  │ SHARED ROUTES (/api/messages/*)                          │  │
+│  │ └─ Messages (role-based access)                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ MIDDLEWARE LAYER                                         │  │
+│  │ ├─ Authentication (JWT validation)                       │  │
+│  │ ├─ Authorization (Role-based access)                     │  │
+│  │ ├─ Audit Logging (Action tracking)                       │  │
+│  │ └─ Error Handling (Global exception handler)             │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                                  │
 │  ┌──────────────────────────────────────────────────────────┐  │
@@ -33,6 +62,8 @@
 │  │ ├─ SummaryService (AI summary generation)                │  │
 │  │ ├─ PDFService (document processing)                      │  │
 │  │ ├─ IntakeService (intake flow logic)                     │  │
+│  │ ├─ ClientService (client operations)                     │  │
+│  │ ├─ AdminService (admin operations)                       │  │
 │  │ └─ SupabaseService (database operations)                 │  │
 │  └──────────────────────────────────────────────────────────┘  │
 └────────────────────────┬────────────────────────────────────────┘
@@ -47,40 +78,51 @@
 │ ├─ clients   │  │ HTTP API     │  │ ├─ PDFs      │
 │ ├─ sessions  │  │ :11434       │  │ ├─ Docs      │
 │ ├─ messages  │  │              │  │ └─ Files     │
-│ └─ files     │  │ Local LLM    │  │              │
+│ ├─ files     │  │ Local LLM    │  │              │
+│ ├─ notes     │  │              │  │              │
+│ ├─ team      │  │              │  │              │
+│ └─ audit_log │  │              │  │              │
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
 ## 🔄 Data Flow
 
-### 1. Intake Session Flow
+### 1. Client Self-Intake Flow
 
 ```
-Client Opens /intake
+Client Opens /client/intake
     ↓
 Frontend fetches intake flow definition (JSON)
     ↓
 Client answers structured questions (step-by-step)
     ↓
-Frontend sends each step to backend: POST /api/intake/step
+Frontend sends each step to backend: POST /api/client/intake/step
     ↓
 Backend validates & stores in DB
     ↓
 Frontend renders next question
     ↓
-Client completes intake: POST /api/intake/complete
+Client completes intake: POST /api/client/intake/complete
     ↓
 Backend marks session as complete
     ↓
-Lawyer can now view in dashboard
+Admin can now view in admin dashboard
 ```
 
-### 2. AI Summary Generation
+### 2. Admin Review & Summary Generation
 
 ```
-Lawyer clicks "Generate Summary" on dashboard
+Admin Logs In
     ↓
-Frontend: POST /api/summary/generate {session_id}
+Frontend: GET /api/admin/intake (list all sessions)
+    ↓
+Backend returns all sessions (role-based access)
+    ↓
+Admin clicks on session: GET /api/admin/intake/{id}
+    ↓
+Backend returns full session data + client info
+    ↓
+Admin clicks "Generate Summary": POST /api/admin/summary/generate
     ↓
 Backend SummaryService:
   1. Fetch all messages from session
@@ -97,19 +139,23 @@ Frontend displays summary with:
   - Key facts
   - Missing information
   - Recommended next questions
+    ↓
+Admin can add notes: POST /api/admin/intake/{id}/notes
+    ↓
+Admin can assign to team: POST /api/admin/intake/{id}/assign
 ```
 
-### 3. Document Upload Flow
+### 3. Document Upload Flow (Client)
 
 ```
 Client uploads PDF during intake
     ↓
-Frontend: POST /api/files/upload (multipart/form-data)
+Frontend: POST /api/client/files/upload (multipart/form-data)
     ↓
 Backend validates file:
   - Check MIME type
   - Check file size (<50MB)
-  - Scan for malware (optional)
+  - Verify user owns session
     ↓
 Backend uploads to Supabase Storage
     ↓
@@ -120,6 +166,29 @@ Backend extracts text (PyMuPDF)
 Text stored in messages table for AI context
     ↓
 Frontend displays file in session
+```
+
+### 4. Admin Access Control
+
+```
+User Logs In
+    ↓
+Supabase Auth validates credentials
+    ↓
+Backend checks user role in metadata
+    ↓
+├─ role = 'client' → Redirect to /client/intake
+├─ role = 'admin' → Redirect to /admin/dashboard
+├─ role = 'lawyer' → Redirect to /admin/dashboard
+└─ role = 'manager' → Redirect to /admin/dashboard
+    ↓
+All subsequent requests include role in JWT
+    ↓
+Backend middleware validates role for each endpoint
+    ↓
+├─ /api/client/* → Only accessible to clients (own data)
+├─ /api/admin/* → Only accessible to admins/lawyers/managers
+└─ /api/messages/* → Role-based filtering applied
 ```
 
 ## 🧩 Component Architecture
