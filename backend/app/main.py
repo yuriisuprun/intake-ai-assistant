@@ -11,11 +11,12 @@ import json
 
 from app.core.config import settings
 from app.services.ollama_service import close_ollama_service
-from app.api.routes import messages
+from app.api.routes import messages, intake as public_intake
 from app.api.routes.client import intake, files, profile, dashboard
 from app.api.routes.admin import (
     clients as admin_clients,
     intake as admin_intake,
+    anonymous_intakes as admin_anonymous_intakes,
     summary as admin_summary,
     notes as admin_notes,
     team as admin_team,
@@ -85,6 +86,7 @@ async def health_check():
 # Include routers
 # Shared routes
 app.include_router(messages.router, prefix=settings.API_PREFIX, tags=["messages"])
+app.include_router(public_intake.router, prefix=settings.API_PREFIX, tags=["public-intake"])
 
 # Client routes
 app.include_router(intake.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-intake"])
@@ -95,6 +97,7 @@ app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/client", tag
 # Admin routes
 app.include_router(admin_clients.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-clients"])
 app.include_router(admin_intake.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake"])
+app.include_router(admin_anonymous_intakes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-anonymous-intakes"])
 app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
 app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])
 app.include_router(admin_team.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-team"])

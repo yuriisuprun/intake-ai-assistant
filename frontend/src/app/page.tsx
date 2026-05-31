@@ -31,12 +31,12 @@ export default function Home() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Collect structured client information, generate AI summaries, and prepare consultation notes—all in one platform.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/intake" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2">
-              Start Intake <ArrowRight size={20} />
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link href="/public-intake" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+              Start Intake (No Login) <ArrowRight size={20} />
             </Link>
-            <Link href="/dashboard" className="bg-white text-blue-600 px-8 py-3 rounded-lg border-2 border-blue-600 hover:bg-blue-50">
-              View Dashboard
+            <Link href="/login" className="bg-white text-blue-600 px-8 py-3 rounded-lg border-2 border-blue-600 hover:bg-blue-50">
+              Login to Dashboard
             </Link>
           </div>
         </div>
