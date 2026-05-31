@@ -11,14 +11,15 @@ from app.core.config import settings
 logger = logging.getLogger(__name__)
 
 
-async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
+async def get_current_user(authorization: Optional[str] = Header(None)) -> Optional[str]:
     """
     Get current user from JWT token.
     
     Validates the JWT token from Supabase Auth and extracts the user_id.
+    Returns None if no token is provided (for anonymous access).
     """
     if not authorization:
-        raise HTTPException(status_code=401, detail="Missing authorization header")
+        return None
 
     try:
         # Extract token from "Bearer <token>"
