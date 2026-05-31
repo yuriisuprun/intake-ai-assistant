@@ -127,7 +127,7 @@ class IntakeService:
     @staticmethod
     async def submit_step(
         session_id: str,
-        user_id: str,
+        user_id: Optional[str],
         step_key: str,
         answer: Any,
         question_type: str,
@@ -137,7 +137,7 @@ class IntakeService:
 
         Args:
             session_id: ID of the intake session
-            user_id: ID of the user
+            user_id: ID of the user (can be None for anonymous)
             step_key: Key of the question
             answer: Answer provided by user
             question_type: Type of question
@@ -147,10 +147,12 @@ class IntakeService:
         """
         try:
             # Get current session
-            session = await db.get_intake_session(session_id, user_id)
-            if not session:
+            session_response = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+            if not session_response.data:
                 logger.error(f"Session not found: {session_id}")
                 return False
+            
+            session = session_response.data
 
             # Get flow data
             flow_data = session.get("flow_data", {}) or {}
@@ -180,50 +182,54 @@ class IntakeService:
                 }
             )
 
-            # Update session
-            await db.update_intake_session(
-                session_id,
-                user_id,
+            # Update session - use direct client call to avoid user_id filter
+            update_response = db.client.table("intake_sessions").update(
                 {
                     "flow_data": flow_data,
                     "current_step": step_num or 0,
-                },
-            )
+                }
+            ).eq("id", session_id).execute()
+
+            if not update_response.data:
+                logger.error(f"Failed to update session: {session_id}")
+                return False
 
             return True
 
         except Exception as e:
-            logger.error(f"Error submitting intake step: {e}")
+            logger.error(f"Error submitting intake step: {e}", exc_info=True)
             return False
 
     @staticmethod
-    async def complete_intake(session_id: str, user_id: str) -> bool:
+    async def complete_intake(session_id: str, user_id: Optional[str]) -> bool:
         """
         Mark intake as completed.
 
         Args:
             session_id: ID of the intake session
-            user_id: ID of the user
+            user_id: ID of the user (can be None for anonymous)
 
         Returns:
             True if successful, False otherwise
         """
         try:
             # Get session
-            session = await db.get_intake_session(session_id, user_id)
-            if not session:
+            session_response = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+            if not session_response.data:
                 logger.error(f"Session not found: {session_id}")
                 return False
 
-            # Update session status
-            await db.update_intake_session(
-                session_id,
-                user_id,
+            # Update session status - use direct client call to avoid user_id filter
+            update_response = db.client.table("intake_sessions").update(
                 {
                     "status": "completed",
                     "current_step": IntakeService.get_total_steps(),
-                },
-            )
+                }
+            ).eq("id", session_id).execute()
+
+            if not update_response.data:
+                logger.error(f"Failed to update session: {session_id}")
+                return False
 
             # Create system message
             await db.create_message(
@@ -238,7 +244,7 @@ class IntakeService:
             return True
 
         except Exception as e:
-            logger.error(f"Error completing intake: {e}")
+            logger.error(f"Error completing intake: {e}", exc_info=True)
             return False
 
     @staticmethod

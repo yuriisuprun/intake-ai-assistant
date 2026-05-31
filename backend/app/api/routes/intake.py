@@ -5,6 +5,7 @@ Intake flow API routes.
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 import logging
+import uuid
 
 from app.models.schemas import (
     IntakeSessionCreate,
@@ -13,6 +14,7 @@ from app.models.schemas import (
     IntakeFlowResponse,
     IntakeQuestion,
     APIResponse,
+    AnonymousIntakeCreate,
 )
 from app.services.intake_service import IntakeService
 from app.db.supabase import db
@@ -24,7 +26,7 @@ router = APIRouter(prefix="/intake")
 
 @router.get("/flow", response_model=IntakeFlowResponse)
 async def get_intake_flow():
-    """Get the intake flow definition."""
+    """Get the intake flow definition (public endpoint)."""
     try:
         questions = IntakeService.get_intake_flow()
         return IntakeFlowResponse(
@@ -37,18 +39,50 @@ async def get_intake_flow():
 
 
 @router.post("/start", response_model=APIResponse)
-async def start_intake(
-    request: IntakeSessionCreate, user_id: str = Depends(get_current_user)
-):
-    """Start a new intake session."""
+async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = Depends(get_current_user)):
+    """Start a new intake session (registered or anonymous)."""
     try:
-        # Verify client exists and belongs to user
-        client = await db.get_client(request.client_id, user_id)
-        if not client:
-            raise HTTPException(status_code=404, detail="Client not found")
+        # Registered client intake
+        if request.client_id:
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Authentication required for registered client intake")
+            
+            # Verify client exists and belongs to user
+            client = await db.get_client(request.client_id, user_id)
+            if not client:
+                raise HTTPException(status_code=404, detail="Client not found")
 
-        # Create intake session
-        session = await db.create_intake_session(user_id, request.client_id)
+            # Create intake session
+            session = await db.create_intake_session(user_id=user_id, client_id=request.client_id, is_anonymous=False)
+
+        # Anonymous intake
+        elif request.anonymous_client_name and request.anonymous_client_email:
+            # Create anonymous intake session
+            anonymous_info = {
+                "name": request.anonymous_client_name,
+                "email": request.anonymous_client_email,
+                "phone": request.anonymous_client_phone,
+            }
+            
+            session = await db.create_intake_session(
+                user_id=None,
+                client_id=None,
+                is_anonymous=True,
+                anonymous_client_info=anonymous_info
+            )
+
+            # Create anonymous intake record
+            if session:
+                await db.create_anonymous_intake(
+                    session["id"],
+                    {
+                        "client_name": request.anonymous_client_name,
+                        "client_email": request.anonymous_client_email,
+                        "client_phone": request.anonymous_client_phone,
+                    }
+                )
+        else:
+            raise HTTPException(status_code=400, detail="Either client_id or anonymous client info is required")
 
         if not session:
             raise HTTPException(status_code=500, detail="Failed to create intake session")
@@ -65,34 +99,49 @@ async def start_intake(
 
         return APIResponse(
             success=True,
-            data=IntakeSessionResponse(**session),
-            message="Intake session started",
+            data={
+                "id": session["id"],
+                "status": session.get("status"),
+                "current_step": session.get("current_step"),
+                "is_anonymous": session.get("is_anonymous", False),
+            },
         )
 
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error starting intake: {e}")
-        raise HTTPException(status_code=500, detail="Failed to start intake")
+        raise HTTPException(status_code=500, detail="Failed to start intake session")
 
 
 @router.post("/step", response_model=APIResponse)
 async def submit_intake_step(
-    request: IntakeStepSubmit, user_id: str = Depends(get_current_user)
+    request: IntakeStepSubmit, user_id: Optional[str] = Depends(get_current_user)
 ):
-    """Submit an intake step."""
+    """Submit an intake step answer (works for both registered and anonymous)."""
     try:
+        # Get session to check if it's anonymous
+        session = db.client.table("intake_sessions").select("*").eq("id", request.session_id).single().execute()
+        
+        if not session.data:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        session_data = session.data
+        is_anonymous = session_data.get("is_anonymous", False)
+
+        # For registered sessions, verify ownership
+        if not is_anonymous and session_data.get("user_id") != user_id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
         # Validate answer
-        is_valid, error_msg = IntakeService.validate_answer(
-            request.step_key, request.answer
-        )
+        is_valid, error_msg = IntakeService.validate_answer(request.step_key, request.answer)
         if not is_valid:
             raise HTTPException(status_code=400, detail=error_msg)
 
         # Submit step
         success = await IntakeService.submit_step(
             request.session_id,
-            user_id,
+            session_data.get("user_id"),  # Can be None for anonymous
             request.step_key,
             request.answer,
             request.question_type,
@@ -101,64 +150,70 @@ async def submit_intake_step(
         if not success:
             raise HTTPException(status_code=500, detail="Failed to submit step")
 
-        # Get updated session
-        session = await db.get_intake_session(request.session_id, user_id)
-
-        return APIResponse(
-            success=True,
-            data=IntakeSessionResponse(**session),
-            message="Step submitted successfully",
-        )
+        return APIResponse(success=True, message="Step submitted successfully")
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error submitting intake step: {e}")
-        raise HTTPException(status_code=500, detail="Failed to submit step")
+        logger.error(f"Error submitting intake step: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to submit step: {str(e)}")
 
 
 @router.post("/complete", response_model=APIResponse)
 async def complete_intake(
-    session_id: str, user_id: str = Depends(get_current_user)
+    session_id: str, user_id: Optional[str] = Depends(get_current_user)
 ):
-    """Complete intake session."""
+    """Complete an intake session."""
     try:
+        # Get session
+        session = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+        
+        if not session.data:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+        session_data = session.data
+        is_anonymous = session_data.get("is_anonymous", False)
+
+        # For registered sessions, verify ownership
+        if not is_anonymous and session_data.get("user_id") != user_id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
         # Complete intake
-        success = await IntakeService.complete_intake(session_id, user_id)
+        success = await IntakeService.complete_intake(session_id, session_data.get("user_id"))
 
         if not success:
             raise HTTPException(status_code=500, detail="Failed to complete intake")
 
-        # Get updated session
-        session = await db.get_intake_session(session_id, user_id)
-
-        return APIResponse(
-            success=True,
-            data=IntakeSessionResponse(**session),
-            message="Intake completed successfully",
-        )
+        return APIResponse(success=True, message="Intake completed successfully")
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error completing intake: {e}")
-        raise HTTPException(status_code=500, detail="Failed to complete intake")
+        logger.error(f"Error completing intake: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to complete intake: {str(e)}")
 
 
 @router.get("/{session_id}", response_model=APIResponse)
 async def get_intake_session(
-    session_id: str, user_id: str = Depends(get_current_user)
+    session_id: str, user_id: Optional[str] = Depends(get_current_user)
 ):
     """Get intake session details."""
     try:
-        session = await db.get_intake_session(session_id, user_id)
-
-        if not session:
+        session = await db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+        
+        if not session.data:
             raise HTTPException(status_code=404, detail="Session not found")
+
+        session_data = session.data
+        is_anonymous = session_data.get("is_anonymous", False)
+
+        # For registered sessions, verify ownership
+        if not is_anonymous and session_data.get("user_id") != user_id:
+            raise HTTPException(status_code=403, detail="Unauthorized")
 
         return APIResponse(
             success=True,
-            data=IntakeSessionResponse(**session),
+            data=session_data,
         )
 
     except HTTPException:
@@ -170,22 +225,27 @@ async def get_intake_session(
 
 @router.get("/", response_model=APIResponse)
 async def list_intake_sessions(
-    skip: int = 0, limit: int = 10, user_id: str = Depends(get_current_user)
+    skip: int = 0, limit: int = 10, user_id: Optional[str] = Depends(get_current_user)
 ):
     """List intake sessions for user."""
     try:
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Authentication required to list sessions")
+        
         sessions, total = await db.list_intake_sessions(user_id, skip, limit)
 
         return APIResponse(
             success=True,
             data={
-                "sessions": [IntakeSessionResponse(**s) for s in sessions],
+                "sessions": sessions,
                 "total": total,
                 "skip": skip,
                 "limit": limit,
             },
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error listing intake sessions: {e}")
         raise HTTPException(status_code=500, detail="Failed to list sessions")
