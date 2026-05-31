@@ -90,7 +90,11 @@ class ClientResponse(BaseModel):
 
 # Intake Session Models
 class IntakeSessionCreate(BaseModel):
-    client_id: str
+    client_id: Optional[str] = None  # For registered clients
+    # For anonymous intakes
+    anonymous_client_name: Optional[str] = None
+    anonymous_client_email: Optional[str] = None
+    anonymous_client_phone: Optional[str] = None
 
 
 class IntakeSessionUpdate(BaseModel):
@@ -109,7 +113,7 @@ class IntakeStepSubmit(BaseModel):
 
 class IntakeSessionResponse(BaseModel):
     id: str
-    client_id: str
+    client_id: Optional[str]
     legal_category: Optional[str]
     status: SessionStatus
     urgency: Optional[UrgencyLevel]
@@ -117,10 +121,34 @@ class IntakeSessionResponse(BaseModel):
     flow_data: Optional[Dict[str, Any]]
     ai_summary: Optional[Dict[str, Any]]
     notes: Optional[str]
+    is_anonymous: bool = False
+    anonymous_client_info: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime]
     clients: Optional[Dict[str, Any]] = None  # Client info from join
+
+    class Config:
+        from_attributes = True
+
+
+# Anonymous Intake Models
+class AnonymousIntakeCreate(BaseModel):
+    client_name: str = Field(..., min_length=1, max_length=255)
+    client_email: EmailStr
+    client_phone: Optional[str] = Field(None, max_length=20)
+
+
+class AnonymousIntakeResponse(BaseModel):
+    id: str
+    session_id: str
+    client_name: str
+    client_email: str
+    client_phone: Optional[str]
+    legal_category: Optional[str]
+    status: str
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True

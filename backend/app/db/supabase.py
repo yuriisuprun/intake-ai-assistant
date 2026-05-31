@@ -113,9 +113,9 @@ class SupabaseDB:
 
     # Intake Sessions
     async def create_intake_session(
-        self, user_id: str, client_id: str
+        self, user_id: Optional[str] = None, client_id: Optional[str] = None, is_anonymous: bool = False, anonymous_client_info: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Create a new intake session."""
+        """Create a new intake session (registered or anonymous)."""
         try:
             response = (
                 self.client.table("intake_sessions")
@@ -123,6 +123,8 @@ class SupabaseDB:
                     {
                         "user_id": user_id,
                         "client_id": client_id,
+                        "is_anonymous": is_anonymous,
+                        "anonymous_client_info": anonymous_client_info,
                         "status": "in_progress",
                         "current_step": 0,
                         "flow_data": {},
@@ -133,6 +135,72 @@ class SupabaseDB:
             return response.data[0] if response.data else None
         except Exception as e:
             logger.error(f"Error creating intake session: {e}")
+            raise
+
+    async def create_anonymous_intake(self, session_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Create an anonymous intake record."""
+        try:
+            response = (
+                self.client.table("anonymous_intakes")
+                .insert({**data, "session_id": session_id, "status": "submitted"})
+                .execute()
+            )
+            return response.data[0] if response.data else None
+        except Exception as e:
+            logger.error(f"Error creating anonymous intake: {e}")
+            raise
+
+    async def get_anonymous_intake(self, intake_id: str) -> Optional[Dict[str, Any]]:
+        """Get anonymous intake by ID."""
+        try:
+            response = (
+                self.client.table("anonymous_intakes")
+                .select("*")
+                .eq("id", intake_id)
+                .single()
+                .execute()
+            )
+            return response.data
+        except Exception as e:
+            logger.error(f"Error getting anonymous intake: {e}")
+            return None
+
+    async def list_all_anonymous_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
+        """List all anonymous intakes (admin only)."""
+        try:
+            # Get total count
+            count_response = (
+                self.client.table("anonymous_intakes")
+                .select("id", count="exact")
+                .execute()
+            )
+            total = count_response.count or 0
+
+            # Get paginated results
+            response = (
+                self.client.table("anonymous_intakes")
+                .select("*")
+                .order("created_at", desc=True)
+                .range(skip, skip + limit - 1)
+                .execute()
+            )
+            return response.data or [], total
+        except Exception as e:
+            logger.error(f"Error listing anonymous intakes: {e}")
+            return [], 0
+
+    async def update_anonymous_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Update anonymous intake."""
+        try:
+            response = (
+                self.client.table("anonymous_intakes")
+                .update(data)
+                .eq("id", intake_id)
+                .execute()
+            )
+            return response.data[0] if response.data else None
+        except Exception as e:
+            logger.error(f"Error updating anonymous intake: {e}")
             raise
 
     async def get_intake_session(
