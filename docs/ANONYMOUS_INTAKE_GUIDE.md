@@ -250,7 +250,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 ### Frontend Changes
 
-1. **Public Intake Page** (`app/public-intake/page.tsx`)
+1. **Intake Page** (`app/intake/page.tsx`)
    - No authentication required
    - Client info form
    - Step-by-step intake
@@ -315,7 +315,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
    - Update `main.py` to include new routes
 
 3. **Deploy Frontend**
-   - Add `app/public-intake/page.tsx`
+   - Add `app/intake/page.tsx`
    - Add `app/admin/intakes/page.tsx`
    - Update `app/page.tsx`
    - Update `lib/api.ts`

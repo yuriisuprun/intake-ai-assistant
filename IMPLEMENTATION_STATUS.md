@@ -152,8 +152,7 @@
 | Page | Status | Details |
 |------|--------|---------|
 | **Landing Page** | ✅ | `/` - Hero section, features, CTA buttons |
-| **Public Intake Page** | ✅ | `/public-intake` - Anonymous intake flow |
-| **Client Intake Page** | ✅ | `/client/intake` - Authenticated client intake |
+| **Intake Page** | ✅ | `/intake` - Universal intake flow (no login required) |
 | **Client Dashboard** | ✅ | `/client/dashboard` - Session list, summary panel |
 | **Client Profile** | ✅ | `/client/profile` - Client profile management |
 | **Client Session Detail** | ✅ | `/client/session/{id}` - Full session transcript |

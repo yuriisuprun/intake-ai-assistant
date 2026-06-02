@@ -51,7 +51,7 @@ backend/app/api/routes/admin/anonymous_intakes.py
 
 ### Frontend (2 files)
 ```
-frontend/src/app/public-intake/page.tsx
+frontend/src/app/intake/page.tsx
 frontend/src/app/admin/intakes/page.tsx
 ```
 

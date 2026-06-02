@@ -45,7 +45,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 
 ### Frontend Changes
 
-#### 1. Public Intake Page (`frontend/src/app/public-intake/page.tsx`)
+#### 1. Intake Page (`frontend/src/app/intake/page.tsx`)
 - New page accessible without authentication
 - Client information form (name, email, phone)
 - Step-by-step intake process with progress tracking
@@ -168,7 +168,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - `backend/app/api/routes/admin/anonymous_intakes.py`
 
 ### Frontend
-- `frontend/src/app/public-intake/page.tsx`
+- `frontend/src/app/intake/page.tsx`
 - `frontend/src/app/admin/intakes/page.tsx`
 
 ### Documentation

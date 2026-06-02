@@ -42,7 +42,7 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link 
-              href="/public-intake" 
+              href="/intake" 
               className="text-white px-8 py-3 rounded-lg flex items-center gap-2 transition"
               style={{ backgroundColor: '#a855f7' }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}

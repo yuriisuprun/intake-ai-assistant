@@ -153,7 +153,7 @@ curl -X PATCH -H "Authorization: Bearer YOUR_TOKEN" \
 - `backend/app/models/schemas.py` - Data models
 
 **Frontend**
-- `frontend/src/app/public-intake/page.tsx` - Public intake page
+- `frontend/src/app/intake/page.tsx` - Universal intake page (no login required)
 - `frontend/src/app/admin/intakes/page.tsx` - Admin dashboard
 - `frontend/src/lib/api.ts` - API client
 

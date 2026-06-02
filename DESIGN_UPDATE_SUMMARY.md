@@ -91,7 +91,7 @@ Light Purple Border: #e9d5ff
 - Completion flow unchanged
 
 ## Files Modified
-- `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\public-intake\page.tsx`
+- `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\intake\page.tsx`
 
 ## No Browser Cache Issues
 Since inline styles are used instead of Tailwind classes, you should see the purple design immediately without needing to:

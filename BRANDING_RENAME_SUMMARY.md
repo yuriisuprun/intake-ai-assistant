@@ -9,7 +9,7 @@
 - `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\page.tsx`
   - Navigation logo: "⚖️ Legal AI" → "⚖️ Intake Assistant"
 
-- `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\public-intake\page.tsx`
+- `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\intake\page.tsx`
   - Header: "⚖️ Legal Intake Assistant" → "⚖️ Intake Assistant"
 
 - `c:\Users\yurii\MyProjects\intake-ai-assistant\frontend\src\app\login\page.tsx`

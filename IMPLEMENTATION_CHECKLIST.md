@@ -22,7 +22,7 @@
 - [ ] Verify all endpoints are accessible
 
 ### Frontend Code
-- [ ] Review `frontend/src/app/public-intake/page.tsx` (new file)
+- [ ] Review `frontend/src/app/intake/page.tsx` (universal intake page)
 - [ ] Review `frontend/src/app/admin/intakes/page.tsx` (new file)
 - [ ] Review `frontend/src/app/page.tsx` changes
 - [ ] Review `frontend/src/lib/api.ts` changes
@@ -99,14 +99,14 @@ npm run build
 # - Verify deployment is live
 
 # 5. Test pages
-# - Visit http://yourdomain.com/public-intake
+# - Visit http://yourdomain.com/intake
 # - Visit http://yourdomain.com/admin/intakes
 ```
 
 ### Step 4: Post-Deployment Verification
 ```bash
-# 1. Test public intake flow
-# - Visit /public-intake
+# 1. Test intake flow
+# - Visit /intake
 # - Submit test intake
 # - Verify reference number generated
 # - Check database for new records
