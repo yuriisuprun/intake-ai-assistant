@@ -166,7 +166,7 @@ class SupabaseDB:
             return None
 
     async def list_all_anonymous_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
-        """List all anonymous intakes (admin only)."""
+        """List all intakes (admin only)."""
         try:
             # Get total count
             count_response = (
@@ -186,7 +186,7 @@ class SupabaseDB:
             )
             return response.data or [], total
         except Exception as e:
-            logger.error(f"Error listing anonymous intakes: {e}")
+            logger.error(f"Error listing intakes: {e}")
             return [], 0
 
     async def update_anonymous_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -252,7 +252,7 @@ class SupabaseDB:
     async def list_all_intake_sessions(
         self, skip: int = 0, limit: int = 20
     ) -> tuple[List[Dict[str, Any]], int]:
-        """List all intake sessions (admin only) - includes both registered and anonymous intakes."""
+        """List all intake sessions (admin only) - includes both registered and intakes."""
         try:
             # Get total count
             count_response = (

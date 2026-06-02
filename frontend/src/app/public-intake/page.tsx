@@ -84,7 +84,7 @@ export default function PublicIntakePage() {
       setSubmitting(true)
       setError('')
 
-      // Start anonymous intake session
+      // Start Intake session
       const response = await apiClient.startIntake({
         anonymous_client_name: clientName,
         anonymous_client_email: clientEmail,

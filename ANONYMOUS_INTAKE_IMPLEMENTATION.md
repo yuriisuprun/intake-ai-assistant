@@ -12,8 +12,8 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - Created `anonymous_intakes` table for tracking unregistered submissions
 - Added `is_anonymous` and `anonymous_client_info` columns to `intake_sessions`
 - Made `user_id` nullable in `intake_sessions` to support anonymous submissions
-- Set up RLS policies for admin-only access to anonymous intakes
-- Created admin view combining registered and anonymous intakes
+- Set up RLS policies for admin-only access to intakes
+- Created admin view combining registered and intakes
 
 #### 2. Data Models (`backend/app/models/schemas.py`)
 - Updated `IntakeSessionCreate` to support both registered and anonymous flows
@@ -29,13 +29,13 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - Updated `create_intake_session()` to support anonymous sessions
 
 #### 4. API Routes (`backend/app/api/routes/intake.py`)
-- Updated `POST /intake/start` to handle anonymous intakes
+- Updated `POST /intake/start` to handle intakes
 - Updated `POST /intake/step` to work with anonymous sessions
 - Updated `POST /intake/complete` to work with anonymous sessions
 - Made intake flow endpoint public (no auth required)
 
 #### 5. Admin Routes (`backend/app/api/routes/admin/anonymous_intakes.py`)
-- `GET /admin/anonymous-intakes` - List all anonymous intakes
+- `GET /admin/anonymous-intakes` - List all intakes
 - `GET /admin/anonymous-intakes/{id}` - Get intake details
 - `PATCH /admin/anonymous-intakes/{id}` - Update status and notes
 - `GET /admin/anonymous-intakes/search/by-email` - Search by email
@@ -54,7 +54,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - UX best practices: clear guidance, validation, progress indication
 
 #### 2. Admin Dashboard (`frontend/src/app/admin/intakes/page.tsx`)
-- New admin page for managing anonymous intakes
+- New admin page for managing intakes
 - Search by client name or email
 - Filter by status (submitted, reviewed, assigned, archived)
 - View detailed intake information
@@ -180,7 +180,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ### Backend
 - `backend/app/models/schemas.py` - Added anonymous intake models
 - `backend/app/db/supabase.py` - Added anonymous intake operations
-- `backend/app/api/routes/intake.py` - Updated to support anonymous intakes
+- `backend/app/api/routes/intake.py` - Updated to support intakes
 - `backend/app/main.py` - Registered new admin routes
 
 ### Frontend
@@ -223,7 +223,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 
 ### Admin Flow
 - [ ] Login to admin dashboard
-- [ ] View list of anonymous intakes
+- [ ] View list of intakes
 - [ ] Search by client name
 - [ ] Search by email
 - [ ] Filter by status
@@ -235,7 +235,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ### Security
 - [ ] Public endpoints don't require auth
 - [ ] Admin endpoints require auth
-- [ ] Anonymous intakes are visible to admins only
+- [ ] Intakes are visible to admins only
 - [ ] Email validation works
 - [ ] Data is stored securely
 

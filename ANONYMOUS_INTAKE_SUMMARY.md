@@ -14,7 +14,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - **Mobile Friendly**: Responsive design works on all devices
 
 ### For Admins
-- **Centralized Dashboard**: Single view of all anonymous intakes
+- **Centralized Dashboard**: Single view of all intakes
 - **Smart Filtering**: Search by name/email, filter by status
 - **Detailed Management**: View full responses, add notes, update status
 - **Workflow Support**: Status tracking (submitted → reviewed → assigned → archived)
@@ -25,7 +25,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ### Backend Components
 1. **Database Migration** - Adds anonymous intake support to Supabase
 2. **Data Models** - Pydantic schemas for validation
-3. **Database Operations** - CRUD operations for anonymous intakes
+3. **Database Operations** - CRUD operations for intakes
 4. **Public API Routes** - Endpoints for client submissions (no auth required)
 5. **Admin API Routes** - Endpoints for admin management (auth required)
 
@@ -102,7 +102,7 @@ Login
     ↓
 Admin Dashboard
     ↓
-View All Anonymous Intakes
+View All Intakes
     ↓
 Search/Filter Intakes
     ↓
@@ -159,7 +159,7 @@ Update Status & Add Notes
 ```sql
 - Added: is_anonymous (BOOLEAN)
 - Added: anonymous_client_info (JSONB)
-- Modified: user_id (now nullable for anonymous intakes)
+- Modified: user_id (now nullable for intakes)
 ```
 
 ## 🔌 API Endpoints
@@ -226,7 +226,7 @@ See `IMPLEMENTATION_CHECKLIST.md` for detailed steps.
 
 ## 📈 Metrics to Track
 
-- Total anonymous intakes submitted
+- Total intakes submitted
 - Average time to complete intake
 - Admin dashboard usage
 - Search query patterns

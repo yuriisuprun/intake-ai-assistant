@@ -98,7 +98,7 @@
 ┌──────────────────────────────────────────────────────────────────┐
 │                   ADMIN DASHBOARD                                │
 │  ┌────────────────────────────────────────────────────────────┐  │
-│  │ Anonymous Intakes                                          │  │
+│  │ Intakes                                          │  │
 │  │                                                             │  │
 │  │ Search: [Search by name or email...]                      │  │
 │  │ Filter: [All Statuses ▼]                                  │  │
@@ -197,8 +197,8 @@
 │  - auth.users                                                    │
 │                                                                   │
 │  RLS Policies:                                                   │
-│  - Admins can view all anonymous intakes                         │
-│  - Anyone can submit anonymous intakes                           │
+│  - Admins can view all intakes                         │
+│  - Anyone can submit intakes                           │
 │  - Only admins can update                                        │
 │                                                                   │
 └─────────────────────────────────────────────────────────────────┘

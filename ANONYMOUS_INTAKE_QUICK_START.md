@@ -26,7 +26,7 @@ Your reference number (e.g., "A1B2C3D4") is the first 8 characters of your sessi
 
 1. Login at: `http://localhost:3000/login`
 2. Navigate to: `http://localhost:3000/admin/intakes`
-3. View all anonymous intakes
+3. View all intakes
 
 ### Managing Intakes
 
@@ -193,7 +193,7 @@ tail -f backend/logs/app.log
 
 **Database queries**
 ```sql
--- View all anonymous intakes
+-- View all intakes
 SELECT * FROM anonymous_intakes ORDER BY created_at DESC;
 
 -- View specific intake

@@ -91,7 +91,7 @@ class ClientResponse(BaseModel):
 # Intake Session Models
 class IntakeSessionCreate(BaseModel):
     client_id: Optional[str] = None  # For registered clients
-    # For anonymous intakes
+    # For intakes
     anonymous_client_name: Optional[str] = None
     anonymous_client_email: Optional[str] = None
     anonymous_client_phone: Optional[str] = None
