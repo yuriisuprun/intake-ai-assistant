@@ -40,19 +40,10 @@ export default function AdminLayout({
       <header style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', borderBottom: '1px solid #e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-8">
-            <Link href="/admin/dashboard" className="text-2xl font-bold" style={{ color: '#a855f7' }}>
+            <Link href="/admin/intakes" className="text-2xl font-bold" style={{ color: '#a855f7' }}>
               Intake Assistant
             </Link>
             <nav className="hidden md:flex space-x-6">
-              <Link
-                href="/admin/dashboard"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Dashboard
-              </Link>
               <Link
                 href="/admin/intakes"
                 className="transition"
@@ -63,15 +54,6 @@ export default function AdminLayout({
                 Intakes
               </Link>
               <Link
-                href="/admin/sessions"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Sessions
-              </Link>
-              <Link
                 href="/admin/clients"
                 className="transition"
                 style={{ color: '#4b5563' }}
@@ -79,33 +61,6 @@ export default function AdminLayout({
                 onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
               >
                 Clients
-              </Link>
-              <Link
-                href="/admin/team"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Team
-              </Link>
-              <Link
-                href="/admin/reports"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Reports
-              </Link>
-              <Link
-                href="/admin/settings"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Settings
               </Link>
             </nav>
           </div>
