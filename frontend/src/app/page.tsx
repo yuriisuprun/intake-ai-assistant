@@ -50,7 +50,7 @@ export default function Home() {
               Start Intake<ArrowRight size={20} />
             </Link>
             <Link 
-              href="/login" 
+              href="/admin/dashboard" 
               className="px-8 py-3 rounded-lg transition"
               style={{ 
                 backgroundColor: '#ffffff',
