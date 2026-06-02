@@ -6,8 +6,7 @@ Enhanced with comprehensive management features following best practices.
 from typing import List, Optional, Dict, Any
 from uuid import UUID
 from datetime import datetime, timedelta
-from app.db.supabase import supabase_client
-from app.models.schemas import APIResponse
+from app.db.supabase import db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,7 +19,7 @@ class AdminOperations:
     async def get_user_role(user_id: UUID) -> Optional[str]:
         """Get user role from team_members table."""
         try:
-            response = supabase_client.table("team_members").select("role").eq(
+            response = db.client.table("team_members").select("role").eq(
                 "user_id", str(user_id)
             ).eq("status", "active").single().execute()
             
@@ -51,7 +50,7 @@ class AdminOperations:
     ) -> bool:
         """Create an audit log entry."""
         try:
-            supabase_client.table("audit_log").insert({
+            db.client.table("audit_log").insert({
                 "user_id": str(user_id),
                 "action": action,
                 "resource_type": resource_type,
@@ -77,7 +76,7 @@ class AdminOperations:
     ) -> Optional[Dict[str, Any]]:
         """Create a note for a session."""
         try:
-            response = supabase_client.table("admin_notes").insert({
+            response = db.client.table("admin_notes").insert({
                 "session_id": str(session_id),
                 "admin_id": str(admin_id),
                 "note_text": note_text,
@@ -96,7 +95,7 @@ class AdminOperations:
     async def get_notes(session_id: UUID) -> List[Dict[str, Any]]:
         """Get all notes for a session."""
         try:
-            response = supabase_client.table("admin_notes").select("*").eq(
+            response = db.client.table("admin_notes").select("*").eq(
                 "session_id", str(session_id)
             ).order("created_at", desc=True).execute()
             
@@ -120,7 +119,7 @@ class AdminOperations:
             if note_type:
                 update_data["note_type"] = note_type
             
-            response = supabase_client.table("admin_notes").update(
+            response = db.client.table("admin_notes").update(
                 update_data
             ).eq("id", str(note_id)).execute()
             
@@ -135,7 +134,7 @@ class AdminOperations:
     async def delete_note(note_id: UUID) -> bool:
         """Delete a note."""
         try:
-            supabase_client.table("admin_notes").delete().eq(
+            db.client.table("admin_notes").delete().eq(
                 "id", str(note_id)
             ).execute()
             return True
@@ -151,7 +150,7 @@ class AdminOperations:
     ) -> Optional[Dict[str, Any]]:
         """Assign a session to a team member."""
         try:
-            response = supabase_client.table("team_assignments").insert({
+            response = db.client.table("team_assignments").insert({
                 "session_id": str(session_id),
                 "assigned_to_user_id": str(assigned_to_user_id),
                 "assigned_by_user_id": str(assigned_by_user_id),
@@ -170,7 +169,7 @@ class AdminOperations:
     async def get_team_members() -> List[Dict[str, Any]]:
         """Get all active team members."""
         try:
-            response = supabase_client.table("team_members").select("*").eq(
+            response = db.client.table("team_members").select("*").eq(
                 "status", "active"
             ).execute()
             
@@ -183,7 +182,7 @@ class AdminOperations:
     async def get_setting(setting_key: str) -> Optional[str]:
         """Get a specific setting."""
         try:
-            response = supabase_client.table("admin_settings").select(
+            response = db.client.table("admin_settings").select(
                 "setting_value"
             ).eq("setting_key", setting_key).single().execute()
             
@@ -198,7 +197,7 @@ class AdminOperations:
     async def get_all_settings() -> Dict[str, str]:
         """Get all settings."""
         try:
-            response = supabase_client.table("admin_settings").select(
+            response = db.client.table("admin_settings").select(
                 "setting_key, setting_value"
             ).execute()
             
@@ -214,7 +213,7 @@ class AdminOperations:
     async def update_setting(setting_key: str, setting_value: str) -> bool:
         """Update a setting."""
         try:
-            supabase_client.table("admin_settings").update({
+            db.client.table("admin_settings").update({
                 "setting_value": setting_value,
                 "updated_at": datetime.utcnow().isoformat(),
             }).eq("setting_key", setting_key).execute()
@@ -232,7 +231,7 @@ class AdminOperations:
     ) -> List[Dict[str, Any]]:
         """Get audit logs with optional filtering."""
         try:
-            query = supabase_client.table("audit_log").select("*")
+            query = db.client.table("audit_log").select("*")
             
             if user_id:
                 query = query.eq("user_id", str(user_id))
@@ -253,19 +252,19 @@ class AdminOperations:
         """Get overview report with statistics."""
         try:
             # Get total sessions
-            sessions_response = supabase_client.table("intake_sessions").select(
+            sessions_response = db.client.table("intake_sessions").select(
                 "id", count="exact"
             ).execute()
             total_sessions = sessions_response.count or 0
             
             # Get completed sessions
-            completed_response = supabase_client.table("intake_sessions").select(
+            completed_response = db.client.table("intake_sessions").select(
                 "id", count="exact"
             ).eq("status", "completed").execute()
             completed_sessions = completed_response.count or 0
             
             # Get total clients
-            clients_response = supabase_client.table("clients").select(
+            clients_response = db.client.table("clients").select(
                 "id", count="exact"
             ).execute()
             total_clients = clients_response.count or 0
@@ -292,7 +291,7 @@ class AdminOperations:
             start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
             
             # Get recent sessions
-            response = supabase_client.table("intake_sessions").select(
+            response = db.client.table("intake_sessions").select(
                 "id, created_at, status"
             ).gte("created_at", start_date).execute()
             
@@ -330,7 +329,7 @@ class AdminOperations:
                     if status == "completed":
                         update_data["completed_at"] = datetime.utcnow().isoformat()
                     
-                    response = supabase_client.table("intake_sessions").update(
+                    response = db.client.table("intake_sessions").update(
                         update_data
                     ).eq("id", session_id).execute()
                     
@@ -368,7 +367,7 @@ class AdminOperations:
             
             for session_id in session_ids:
                 try:
-                    response = supabase_client.table("team_assignments").insert({
+                    response = db.client.table("team_assignments").insert({
                         "session_id": session_id,
                         "assigned_to_user_id": str(assigned_to_user_id),
                         "assigned_by_user_id": str(assigned_by_user_id),
@@ -408,7 +407,7 @@ class AdminOperations:
             start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
             
             # Build query
-            query = supabase_client.table("intake_sessions").select("*").gte(
+            query = db.client.table("intake_sessions").select("*").gte(
                 "created_at", start_date
             )
             
@@ -467,7 +466,7 @@ class AdminOperations:
         """Get workload distribution across team members."""
         try:
             # Get all team members
-            team_response = supabase_client.table("team_members").select(
+            team_response = db.client.table("team_members").select(
                 "id, user_id, role"
             ).eq("status", "active").execute()
             
@@ -476,7 +475,7 @@ class AdminOperations:
                 user_id = member["user_id"]
                 
                 # Get assigned sessions
-                assignments_response = supabase_client.table("team_assignments").select(
+                assignments_response = db.client.table("team_assignments").select(
                     "id", count="exact"
                 ).eq("assigned_to_user_id", user_id).eq(
                     "assignment_status", "assigned"
@@ -505,7 +504,7 @@ class AdminOperations:
         """Advanced search for intakes across multiple fields."""
         try:
             # Start with all sessions
-            response = supabase_client.table("intake_sessions").select("*").limit(limit).execute()
+            response = db.client.table("intake_sessions").select("*").limit(limit).execute()
             sessions = response.data or []
             
             # Apply text search
@@ -553,7 +552,7 @@ class AdminOperations:
     ) -> List[Dict[str, Any]]:
         """Export intakes data for reporting."""
         try:
-            query = supabase_client.table("intake_sessions").select("*")
+            query = db.client.table("intake_sessions").select("*")
             
             if filters:
                 if filters.get("status"):
@@ -591,7 +590,7 @@ class AdminOperations:
             # Get last 90 days
             start_date = (datetime.utcnow() - timedelta(days=90)).isoformat()
             
-            response = supabase_client.table("intake_sessions").select(
+            response = db.client.table("intake_sessions").select(
                 "created_at, completed_at, status"
             ).gte("created_at", start_date).execute()
             
