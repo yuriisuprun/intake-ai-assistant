@@ -1,158 +1,151 @@
 'use client'
 
 import Link from 'next/link'
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
+  const footerSections = [
+    {
+      title: 'PRODUCT',
+      links: [
+        { label: 'Intake Form', href: '#' },
+        { label: 'Dashboard', href: '#' },
+        { label: 'Features', href: '#' },
+        { label: 'Pricing', href: '#' },
+        { label: 'AI Summaries', href: '#' },
+        { label: 'Analytics', href: '#' },
+      ],
+    },
+    {
+      title: 'COMPANY',
+      links: [
+        { label: 'About Us', href: '#' },
+        { label: 'Blog', href: '#' },
+        { label: 'Careers', href: '#' },
+        { label: 'Press', href: '#' },
+        { label: 'Contact Us', href: '#' },
+        { label: 'Partners', href: '#' },
+      ],
+    },
+    {
+      title: 'INFORMATION',
+      links: [
+        { label: 'Documentation', href: '#' },
+        { label: 'Tutorials', href: '#' },
+        { label: 'Knowledge Base', href: '#' },
+        { label: 'FAQ', href: '#' },
+        { label: 'Roadmap', href: '#' },
+        { label: 'Status', href: '#' },
+      ],
+    },
+    {
+      title: 'SUPPORT',
+      links: [
+        { label: 'Help Center', href: '#' },
+        { label: 'Contact Support', href: '#' },
+        { label: 'Report Issues', href: '#' },
+        { label: 'Security', href: '#' },
+        { label: 'Privacy', href: '#' },
+        { label: 'Terms', href: '#' },
+      ],
+    },
+    {
+      title: 'LEGAL',
+      links: [
+        { label: 'Privacy Policy', href: '#' },
+        { label: 'Terms of Service', href: '#' },
+        { label: 'Cookie Policy', href: '#' },
+        { label: 'Compliance', href: '#' },
+        { label: 'Disclaimer', href: '#' },
+        { label: 'Accessibility', href: '#' },
+      ],
+    },
+    {
+      title: 'RESOURCES',
+      links: [
+        { label: 'Blog Articles', href: '#' },
+        { label: 'Case Studies', href: '#' },
+        { label: 'Webinars', href: '#' },
+        { label: 'Downloads', href: '#' },
+        { label: 'Community', href: '#' },
+        { label: 'Feedback', href: '#' },
+      ],
+    },
+  ]
+
   return (
-    <footer className="bg-gray-900 text-white mt-20">
+    <footer style={{ backgroundColor: '#f3f4f6', marginTop: '80px' }}>
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Company Info */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">⚖️ Legal AI</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Streamline legal intake with AI-powered summaries and structured data collection.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-gray-400 hover:text-white transition">
-                <Github size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
-                <Twitter size={20} />
-              </a>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Footer Sections Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h4 className="font-semibold mb-4 text-sm" style={{ color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {section.title}
+              </h4>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-sm transition"
+                      style={{ color: '#4b5563' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-
-          {/* Product Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Product</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/intake" className="text-gray-400 hover:text-white transition text-sm">
-                  Intake Form
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="text-gray-400 hover:text-white transition text-sm">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Pricing
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal & Support */}
-          <div>
-            <h4 className="font-semibold mb-4">Legal & Support</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Security
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white transition text-sm">
-                  Support
-                </a>
-              </li>
-            </ul>
-          </div>
+          ))}
         </div>
 
-        {/* Contact Info */}
-        <div className="border-t border-gray-800 pt-8 mb-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="flex items-center gap-3">
-              <Mail size={20} className="text-blue-400" />
-              <div>
-                <p className="text-sm text-gray-400">Email</p>
-                <a href="mailto:support@legalai.com" className="text-white hover:text-blue-400 transition">
-                  support@legalai.com
-                </a>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone size={20} className="text-blue-400" />
-              <div>
-                <p className="text-sm text-gray-400">Phone</p>
-                <a href="tel:+1-800-LEGAL-AI" className="text-white hover:text-blue-400 transition">
-                  +1 (800) LEGAL-AI
-                </a>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <MapPin size={20} className="text-blue-400" />
-              <div>
-                <p className="text-sm text-gray-400">Address</p>
-                <p className="text-white">San Francisco, CA</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid #e5e7eb', marginBottom: '24px' }}></div>
 
         {/* Bottom Footer */}
-        <div className="border-t border-gray-800 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              &copy; {currentYear} Legal AI Intake Assistant. All rights reserved.
-            </p>
-            <p className="text-gray-400 text-sm mt-4 md:mt-0">
-              ⚠️ This is not legal advice. Always consult with a qualified attorney.
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div style={{ color: '#6b7280' }} className="text-sm">
+            <p>
+              &copy; {currentYear} Legal AI Intake Assistant. All rights reserved. | 
+              <a 
+                href="#" 
+                className="transition" 
+                style={{ color: '#6b7280', marginLeft: '4px', marginRight: '4px' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#6b7280')}
+              >
+                Privacy
+              </a>
+              | 
+              <a 
+                href="#" 
+                className="transition" 
+                style={{ color: '#6b7280', marginLeft: '4px', marginRight: '4px' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#6b7280')}
+              >
+                Terms
+              </a>
+              | 
+              <a 
+                href="#" 
+                className="transition" 
+                style={{ color: '#6b7280', marginLeft: '4px' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#6b7280')}
+              >
+                Security
+              </a>
             </p>
           </div>
+          <p style={{ color: '#6b7280' }} className="text-sm mt-4 md:mt-0">
+            ⚖️ Legal AI - Streamlining legal intake workflows
+          </p>
         </div>
       </div>
     </footer>
