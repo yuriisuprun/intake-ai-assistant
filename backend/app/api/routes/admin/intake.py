@@ -23,10 +23,42 @@ async def list_all_intakes(
         # Get all intake sessions
         sessions, total = await db.list_all_intake_sessions(skip, limit)
 
+        # Transform sessions to include client_name field
+        transformed_sessions = []
+        for session in sessions:
+            is_anonymous = session.get("is_anonymous", False)
+            
+            # Get client name from different sources
+            if is_anonymous:
+                # For anonymous intakes, get name from anonymous_client_info
+                anonymous_info = session.get("anonymous_client_info", {})
+                if isinstance(anonymous_info, dict):
+                    client_name = anonymous_info.get("name", "Anonymous Client")
+                else:
+                    client_name = "Anonymous Client"
+            else:
+                # For registered intakes, get name from clients join
+                clients = session.get("clients")
+                if isinstance(clients, dict):
+                    client_name = clients.get("full_name", "Unknown")
+                else:
+                    client_name = "Unknown"
+            
+            transformed = {
+                "id": session.get("id"),
+                "client_name": client_name,
+                "status": session.get("status"),
+                "legal_category": session.get("legal_category", "General"),
+                "urgency": session.get("urgency", "low"),
+                "created_at": session.get("created_at"),
+                "is_anonymous": is_anonymous,
+            }
+            transformed_sessions.append(transformed)
+
         return APIResponse(
             success=True,
             data={
-                "sessions": sessions,
+                "sessions": transformed_sessions,
                 "total": total,
                 "skip": skip,
                 "limit": limit,
