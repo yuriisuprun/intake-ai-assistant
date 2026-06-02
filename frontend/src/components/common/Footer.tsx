@@ -111,7 +111,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div style={{ color: '#6b7280' }} className="text-sm">
             <p>
-              &copy; {currentYear} Legal AI Intake Assistant. All rights reserved. | 
+              &copy; {currentYear} Intake Assistant. All rights reserved. | 
               <a 
                 href="#" 
                 className="transition" 
@@ -144,7 +144,7 @@ export default function Footer() {
             </p>
           </div>
           <p style={{ color: '#6b7280' }} className="text-sm mt-4 md:mt-0">
-            ⚖️ Legal AI - Streamlining legal intake workflows
+            ⚖️ Intake Assistant - Streamlining legal intake workflows
           </p>
         </div>
       </div>

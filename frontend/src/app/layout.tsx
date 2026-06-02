@@ -6,7 +6,7 @@ import ErrorBoundary from '@/components/common/ErrorBoundary'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Legal AI Intake Assistant',
+  title: 'Intake Assistant',
   description: 'Structured legal intake for law firms',
   icons: {
     icon: '/favicon.svg',

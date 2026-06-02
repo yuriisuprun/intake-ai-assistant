@@ -194,7 +194,7 @@ export default function PublicIntakePage() {
       <div className="bg-white border-b" style={{ borderColor: '#e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>⚖️ Legal Intake Assistant</h1>
+            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>⚖️ Intake Assistant</h1>
           </div>
           <button
             onClick={() => router.push('/')}

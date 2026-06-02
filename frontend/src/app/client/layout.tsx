@@ -83,7 +83,7 @@ export default function ClientLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Legal Intake Assistant</h3>
+              <h3 className="text-lg font-semibold mb-4">Intake Assistant</h3>
               <p className="text-gray-400">
                 Streamline your legal intake process with AI-powered assistance.
               </p>
@@ -125,7 +125,7 @@ export default function ClientLayout({
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 Legal Intake Assistant. All rights reserved.</p>
+            <p>&copy; 2026 Intake Assistant. All rights reserved.</p>
           </div>
         </div>
       </footer>

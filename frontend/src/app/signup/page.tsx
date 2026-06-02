@@ -83,7 +83,7 @@ export default function SignUp() {
           }}
         >
           <h1 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>Create Account</h1>
-          <p className="mb-6" style={{ color: '#4b5563' }}>Join Legal AI Intake Assistant</p>
+          <p className="mb-6" style={{ color: '#4b5563' }}>Join Intake Assistant</p>
 
           {configError && (
             <div 
