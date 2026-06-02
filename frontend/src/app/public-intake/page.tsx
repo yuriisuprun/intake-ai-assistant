@@ -179,9 +179,9 @@ export default function PublicIntakePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading intake form...</p>
         </div>
       </div>
@@ -189,53 +189,83 @@ export default function PublicIntakePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+    <div className="min-h-screen" style={{ backgroundColor: '#f3f4f6' }}>
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div className="bg-white border-b" style={{ borderColor: '#e5e7eb' }}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">⚖️ Intake Form</h1>
+            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>⚖️ Legal Intake Assistant</h1>
           </div>
           <button
             onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-2 text-sm transition"
+            style={{ color: '#4b5563' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
             Back
           </button>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content with Sidebar */}
+      <div className="flex-1 flex max-w-7xl mx-auto w-full">
+        {/* Left Sidebar */}
+        <div className="w-64 bg-white border-r p-6 hidden lg:block" style={{ borderColor: '#e5e7eb' }}>
+          {/* Sidebar Navigation */}
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: '#6b7280' }}>In this form</h3>
+            <nav className="space-y-1 mb-8">
+              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Getting Started</a>
+              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Your Information</a>
+              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}>Case Details</a>
+              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Document Upload</a>
+              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Review & Submit</a>
+            </nav>
+
+            {/* Help Box */}
+            <div className="text-white rounded-lg p-6 sticky top-6" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)' }}>
+              <div className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#7e22ce', color: '#e9d5ff' }}>New</div>
+              <h4 className="font-semibold text-base mb-2">Getting Help?</h4>
+              <p className="text-sm mb-4" style={{ color: '#f3e8ff' }}>Need guidance on filling out your intake form? Our legal assistant can help.</p>
+              <button className="w-full font-medium py-2 rounded-lg transition text-sm" style={{ backgroundColor: '#ffffff', color: '#a855f7' }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#faf5ff')} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}>
+                Ask for Help
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Content Area */}
+        <div className="flex-1 px-8 py-8">
         {/* Completion Screen */}
         {completed ? (
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <CheckCircle className="text-green-500 mx-auto mb-4" size={64} />
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h2>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white rounded-lg p-8 text-center" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
+            <CheckCircle style={{ color: '#22c55e' }} className="mx-auto mb-4" size={64} />
+            <h2 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>Thank You!</h2>
+            <p className="mb-8" style={{ color: '#4b5563' }}>
               Your intake form has been successfully submitted.
             </p>
             
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-              <p className="text-sm text-gray-600 mb-2">Your Reference Number:</p>
-              <p className="text-2xl font-mono font-bold text-blue-600">{referenceNumber}</p>
-              <p className="text-xs text-gray-500 mt-2">Save this number for your records</p>
+            <div className="rounded-lg p-6 mb-8" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
+              <p className="text-sm mb-2" style={{ color: '#4b5563' }}>Your Reference Number:</p>
+              <p className="text-2xl font-mono font-bold" style={{ color: '#a855f7' }}>{referenceNumber}</p>
+              <p className="text-xs mt-2" style={{ color: '#6b7280' }}>Save this number for your records</p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-              <h3 className="font-semibold text-gray-900 mb-3">What happens next?</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
+            <div className="rounded-lg p-6 mb-8 text-left" style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}>
+              <h3 className="font-semibold mb-3" style={{ color: '#111827' }}>What happens next?</h3>
+              <ul className="space-y-2 text-sm" style={{ color: '#4b5563' }}>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">1.</span>
+                  <span className="font-bold" style={{ color: '#a855f7' }}>1.</span>
                   <span>Our team will review your intake information</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">2.</span>
+                  <span className="font-bold" style={{ color: '#a855f7' }}>2.</span>
                   <span>We'll contact you soon to discuss next steps</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">3.</span>
+                  <span className="font-bold" style={{ color: '#a855f7' }}>3.</span>
                   <span>A lawyer will be assigned to your case</span>
                 </li>
               </ul>
@@ -243,29 +273,32 @@ export default function PublicIntakePage() {
 
             <button
               onClick={handleStartOver}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition"
+              className="text-white px-8 py-3 rounded-lg transition font-medium"
+              style={{ backgroundColor: '#a855f7' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}
             >
               Submit Another Intake
             </button>
           </div>
         ) : !clientInfoSubmitted ? (
           // Client Info Form
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Get Started</h2>
-            <p className="text-gray-600 mb-8">
-              Please provide your contact information to begin the intake process.
+          <div className="bg-white rounded-lg p-8" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
+            <h2 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>Get Started</h2>
+            <p className="mb-8 leading-relaxed" style={{ color: '#4b5563' }}>
+              Please provide your contact information to begin the intake process. Your information is secure and protected.
             </p>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3">
+              <div className="px-4 py-3 rounded-lg mb-6 flex items-start gap-3" style={{ backgroundColor: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b' }}>
                 <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
                 <span>{error}</span>
               </div>
             )}
 
-            <form onSubmit={handleStartIntake} className="space-y-6">
+            <form onSubmit={handleStartIntake} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
                   Full Name *
                 </label>
                 <input
@@ -273,13 +306,21 @@ export default function PublicIntakePage() {
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg outline-none transition"
+                  style={{ border: '1px solid #d1d5db', boxShadow: 'none' }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.border = '1px solid #d1d5db'
+                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
                   Email Address *
                 </label>
                 <input
@@ -287,14 +328,22 @@ export default function PublicIntakePage() {
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
                   placeholder="john@example.com"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg outline-none transition"
+                  style={{ border: '1px solid #d1d5db' }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.border = '1px solid #d1d5db'
+                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">We'll use this to contact you about your case</p>
+                <p className="text-xs mt-1.5" style={{ color: '#6b7280' }}>We'll use this to contact you about your case</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
                   Phone Number (Optional)
                 </label>
                 <input
@@ -302,12 +351,20 @@ export default function PublicIntakePage() {
                   value={clientPhone}
                   onChange={(e) => setClientPhone(e.target.value)}
                   placeholder="+1 (555) 123-4567"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg outline-none transition"
+                  style={{ border: '1px solid #d1d5db' }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.border = '1px solid #d1d5db'
+                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.boxShadow = 'none'
+                  }}
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-gray-700">
+              <div className="rounded-lg p-4" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
+                <p className="text-sm" style={{ color: '#1f2937' }}>
                   <span className="font-semibold">Privacy Notice:</span> Your information is secure and will only be used to process your legal intake.
                 </p>
               </div>
@@ -315,7 +372,10 @@ export default function PublicIntakePage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition font-medium"
+                className="w-full text-white py-3 rounded-lg transition font-semibold"
+                style={{ backgroundColor: submitting ? '#9ca3af' : '#a855f7' }}
+                onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
+                onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
               >
                 {submitting ? 'Starting...' : 'Start Intake Process'}
               </button>
@@ -323,11 +383,11 @@ export default function PublicIntakePage() {
           </div>
         ) : (
           // Intake Questions
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-lg p-8" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
             {questionsLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading questions...</p>
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+                <p style={{ color: '#4b5563' }}>Loading questions...</p>
               </div>
             ) : (
               <>
@@ -338,7 +398,7 @@ export default function PublicIntakePage() {
                 />
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3">
+                  <div className="px-4 py-3 rounded-lg mb-6 flex items-start gap-3" style={{ backgroundColor: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b' }}>
                     <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
                     <span>{error}</span>
                   </div>
@@ -346,7 +406,7 @@ export default function PublicIntakePage() {
 
                 {/* Question */}
                 {questions[currentQuestionIndex] && (
-                  <div className="mb-8">
+                  <div className="mb-8 mt-6">
                     <QuestionRenderer
                       question={questions[currentQuestionIndex]}
                       value={answers[questions[currentQuestionIndex].key]}
@@ -355,26 +415,48 @@ export default function PublicIntakePage() {
                     />
 
                     {questions[currentQuestionIndex].help_text && (
-                      <p className="text-sm text-gray-500 mt-4">
-                        💡 {questions[currentQuestionIndex].help_text}
+                      <p className="text-sm mt-4 flex items-start gap-2" style={{ color: '#6b7280' }}>
+                        <span>💡</span>
+                        <span>{questions[currentQuestionIndex].help_text}</span>
                       </p>
                     )}
                   </div>
                 )}
 
                 {/* Navigation */}
-                <div className="flex gap-4 mt-8">
+                <div className="flex gap-3 mt-10">
                   <button
                     onClick={handlePrevious}
                     disabled={currentQuestionIndex === 0 || submitting}
-                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition font-medium"
+                    className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm"
+                    style={{ 
+                      border: '1px solid #d1d5db',
+                      color: currentQuestionIndex === 0 || submitting ? '#9ca3af' : '#374151',
+                      backgroundColor: currentQuestionIndex === 0 || submitting ? '#f3f4f6' : '#ffffff'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!(currentQuestionIndex === 0 || submitting)) {
+                        e.currentTarget.style.backgroundColor = '#f9fafb'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!(currentQuestionIndex === 0 || submitting)) {
+                        e.currentTarget.style.backgroundColor = '#ffffff'
+                      }
+                    }}
                   >
                     Previous
                   </button>
                   <button
                     onClick={handleNext}
                     disabled={submitting}
-                    className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition font-medium"
+                    className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm"
+                    style={{ 
+                      backgroundColor: submitting ? '#9ca3af' : '#a855f7',
+                      color: '#ffffff'
+                    }}
+                    onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
+                    onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
                   >
                     {submitting ? 'Submitting...' : currentQuestionIndex === questions.length - 1 ? 'Complete' : 'Next'}
                   </button>
@@ -383,6 +465,7 @@ export default function PublicIntakePage() {
             )}
           </div>
         )}
+        </div>
       </div>
 
       {/* Footer */}
