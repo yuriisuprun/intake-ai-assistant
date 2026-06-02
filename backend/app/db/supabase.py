@@ -249,6 +249,32 @@ class SupabaseDB:
             logger.error(f"Error listing intake sessions: {e}")
             return [], 0
 
+    async def list_all_intake_sessions(
+        self, skip: int = 0, limit: int = 20
+    ) -> tuple[List[Dict[str, Any]], int]:
+        """List all intake sessions (admin only) - includes both registered and anonymous intakes."""
+        try:
+            # Get total count
+            count_response = (
+                self.client.table("intake_sessions")
+                .select("id", count="exact")
+                .execute()
+            )
+            total = count_response.count or 0
+
+            # Get paginated results with client info (optional join)
+            response = (
+                self.client.table("intake_sessions")
+                .select("*, clients(id, full_name, email)")
+                .order("created_at", desc=True)
+                .range(skip, skip + limit - 1)
+                .execute()
+            )
+            return response.data or [], total
+        except Exception as e:
+            logger.error(f"Error listing all intake sessions: {e}")
+            return [], 0
+
     async def update_intake_session(
         self, session_id: str, user_id: str, data: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
@@ -265,6 +291,23 @@ class SupabaseDB:
         except Exception as e:
             logger.error(f"Error updating intake session: {e}")
             raise
+
+    async def get_intake_session_admin(
+        self, session_id: str
+    ) -> Optional[Dict[str, Any]]:
+        """Get intake session by ID (admin only - no user_id check)."""
+        try:
+            response = (
+                self.client.table("intake_sessions")
+                .select("*, clients(id, full_name, email)")
+                .eq("id", session_id)
+                .single()
+                .execute()
+            )
+            return response.data
+        except Exception as e:
+            logger.error(f"Error getting intake session: {e}")
+            return None
 
     # Messages
     async def create_message(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -292,6 +335,23 @@ class SupabaseDB:
             return response.data or []
         except Exception as e:
             logger.error(f"Error getting messages: {e}")
+            return []
+
+    async def get_intake_responses(
+        self, session_id: str
+    ) -> List[Dict[str, Any]]:
+        """Get all intake responses/messages for a session (same as get_messages)."""
+        try:
+            response = (
+                self.client.table("messages")
+                .select("*")
+                .eq("session_id", session_id)
+                .order("created_at", desc=False)
+                .execute()
+            )
+            return response.data or []
+        except Exception as e:
+            logger.error(f"Error getting intake responses: {e}")
             return []
 
     # Files
