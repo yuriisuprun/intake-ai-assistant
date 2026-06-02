@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import { apiClient } from '@/lib/api';
 
 interface OverviewReport {
@@ -22,16 +23,49 @@ interface RecentSession {
   created_at: string;
 }
 
+interface AnonymousIntake {
+  id: string;
+  session_id: string;
+  client_name: string;
+  client_email: string;
+  status: string;
+  legal_category?: string;
+  created_at: string;
+}
+
 export default function AdminDashboardPage() {
-  const { user } = useAuth();
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
   const [overview, setOverview] = useState<OverviewReport | null>(null);
   const [recentSessions, setRecentSessions] = useState<RecentSession[]>([]);
+  const [recentAnonymousIntakes, setRecentAnonymousIntakes] = useState<AnonymousIntake[]>([]);
+  const [anonymousIntakeCounts, setAnonymousIntakeCounts] = useState({
+    total: 0,
+    submitted: 0,
+    reviewed: 0,
+    assigned: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchDashboard = async () => {
+    const checkAuthAndFetchData = async () => {
       try {
+        // Check if user is authenticated
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          router.push('/admin/login');
+          return;
+        }
+
+        setUser(session.user);
+        
+        // Set token for API client
+        if (session.access_token) {
+          apiClient.setToken(session.access_token);
+        }
+
         // Fetch overview report
         const reportResponse = await apiClient.get('/admin/reports/overview');
         if (reportResponse.data.success) {
@@ -43,6 +77,24 @@ export default function AdminDashboardPage() {
         if (sessionsResponse.data.success) {
           setRecentSessions(sessionsResponse.data.data.sessions || []);
         }
+
+        // Fetch anonymous intakes
+        const anonymousResponse = await apiClient.listAnonymousIntakes(0, 100);
+        if (anonymousResponse.success) {
+          const intakes = anonymousResponse.data.intakes || [];
+          
+          // Get recent 5 intakes
+          setRecentAnonymousIntakes(intakes.slice(0, 5));
+          
+          // Calculate counts by status
+          const counts = {
+            total: intakes.length,
+            submitted: intakes.filter((i: AnonymousIntake) => i.status === 'submitted').length,
+            reviewed: intakes.filter((i: AnonymousIntake) => i.status === 'reviewed').length,
+            assigned: intakes.filter((i: AnonymousIntake) => i.status === 'assigned').length,
+          };
+          setAnonymousIntakeCounts(counts);
+        }
       } catch (err) {
         setError('Failed to load dashboard');
         console.error(err);
@@ -51,8 +103,8 @@ export default function AdminDashboardPage() {
       }
     };
 
-    fetchDashboard();
-  }, []);
+    checkAuthAndFetchData();
+  }, [router]);
 
   if (loading) {
     return (
@@ -105,6 +157,37 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Anonymous Intake Metrics */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-4">Anonymous Intakes</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-600">
+            <div className="text-3xl font-bold text-blue-600 mb-2">
+              {anonymousIntakeCounts.total}
+            </div>
+            <p className="text-gray-600">Total Submissions</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-600">
+            <div className="text-3xl font-bold text-yellow-600 mb-2">
+              {anonymousIntakeCounts.submitted}
+            </div>
+            <p className="text-gray-600">Submitted (Pending)</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-600">
+            <div className="text-3xl font-bold text-orange-600 mb-2">
+              {anonymousIntakeCounts.reviewed}
+            </div>
+            <p className="text-gray-600">Reviewed</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-600">
+            <div className="text-3xl font-bold text-green-600 mb-2">
+              {anonymousIntakeCounts.assigned}
+            </div>
+            <p className="text-gray-600">Assigned</p>
+          </div>
+        </div>
+      </div>
+
       {/* Completion Rate */}
       {overview && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
@@ -126,7 +209,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Link
           href="/admin/sessions"
           className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition"
@@ -134,6 +217,14 @@ export default function AdminDashboardPage() {
           <div className="text-2xl mb-2">📋</div>
           <h3 className="font-bold mb-2">View All Sessions</h3>
           <p className="text-sm text-gray-600">Manage intake sessions</p>
+        </Link>
+        <Link
+          href="/admin/intakes"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition border-t-2 border-blue-600"
+        >
+          <div className="text-2xl mb-2">📝</div>
+          <h3 className="font-bold mb-2">Anonymous Intakes</h3>
+          <p className="text-sm text-gray-600">View all public submissions</p>
         </Link>
         <Link
           href="/admin/clients"
@@ -211,6 +302,60 @@ export default function AdminDashboardPage() {
           )}
         </div>
       </div>
+
+      {/* Recent Anonymous Intakes */}
+      {recentAnonymousIntakes.length > 0 && (
+        <div className="bg-white rounded-lg shadow mt-8">
+          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h2 className="text-xl font-bold">Recent Anonymous Intakes</h2>
+            <Link href="/admin/intakes" className="text-blue-600 hover:text-blue-700">
+              View All →
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-200">
+            {recentAnonymousIntakes.map((intake) => {
+              const statusColors: Record<string, string> = {
+                submitted: 'bg-blue-100 text-blue-800',
+                reviewed: 'bg-yellow-100 text-yellow-800',
+                assigned: 'bg-green-100 text-green-800',
+                archived: 'bg-gray-100 text-gray-800',
+              };
+              
+              return (
+                <Link
+                  key={intake.id}
+                  href={`/admin/intakes`}
+                  className="px-6 py-4 hover:bg-gray-50 transition flex justify-between items-center"
+                >
+                  <div>
+                    <div className="font-semibold text-gray-900">
+                      {intake.client_name}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {intake.client_email} •{' '}
+                      {new Date(intake.created_at).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {intake.legal_category && (
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                        {intake.legal_category}
+                      </span>
+                    )}
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        statusColors[intake.status] || statusColors.submitted
+                      }`}
+                    >
+                      {intake.status.charAt(0).toUpperCase() + intake.status.slice(1)}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
