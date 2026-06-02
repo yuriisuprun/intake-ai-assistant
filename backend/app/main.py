@@ -16,6 +16,7 @@ from app.api.routes.client import intake, files, profile, dashboard
 from app.api.routes.admin import (
     clients as admin_clients,
     intake as admin_intake,
+    intake_management as admin_intake_management,
     anonymous_intakes as admin_anonymous_intakes,
     summary as admin_summary,
     notes as admin_notes,
@@ -95,6 +96,7 @@ app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/client", tag
 # Admin routes
 app.include_router(admin_clients.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-clients"])
 app.include_router(admin_intake.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake"])
+app.include_router(admin_intake_management.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake-management"])
 app.include_router(admin_anonymous_intakes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-anonymous-intakes"])
 app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
 app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])

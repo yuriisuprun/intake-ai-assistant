@@ -1,16 +1,20 @@
 """
 Admin database operations for role-based access control.
+Enhanced with comprehensive management features following best practices.
 """
 
 from typing import List, Optional, Dict, Any
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.db.supabase import supabase_client
 from app.models.schemas import APIResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AdminOperations:
-    """Database operations for admin functionality."""
+    """Database operations for admin functionality with comprehensive management."""
 
     @staticmethod
     async def get_user_role(user_id: UUID) -> Optional[str]:
@@ -285,8 +289,6 @@ class AdminOperations:
     async def get_activity_report(days: int = 7) -> Dict[str, Any]:
         """Get activity report for the last N days."""
         try:
-            from datetime import timedelta
-            
             start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
             
             # Get recent sessions
@@ -305,5 +307,319 @@ class AdminOperations:
             
             return {"sessions_by_day": sessions_by_day}
         except Exception as e:
-            print(f"Error getting activity report: {e}")
+            logger.error(f"Error getting activity report: {e}")
+            return {}
+
+    @staticmethod
+    async def bulk_update_status(
+        session_ids: List[str],
+        status: str,
+        user_id: UUID,
+    ) -> Dict[str, Any]:
+        """Bulk update status for multiple intakes."""
+        try:
+            results = {"updated": 0, "failed": 0, "errors": []}
+            
+            for session_id in session_ids:
+                try:
+                    update_data = {
+                        "status": status,
+                        "updated_at": datetime.utcnow().isoformat(),
+                    }
+                    
+                    if status == "completed":
+                        update_data["completed_at"] = datetime.utcnow().isoformat()
+                    
+                    response = supabase_client.table("intake_sessions").update(
+                        update_data
+                    ).eq("id", session_id).execute()
+                    
+                    if response.data:
+                        results["updated"] += 1
+                        # Log each update
+                        await AdminOperations.create_audit_log(
+                            user_id=user_id,
+                            action="BULK_UPDATE_STATUS",
+                            resource_type="intake_session",
+                            resource_id=UUID(session_id),
+                            changes={"status": status}
+                        )
+                    else:
+                        results["failed"] += 1
+                        results["errors"].append(f"Session {session_id}: Not found")
+                except Exception as e:
+                    results["failed"] += 1
+                    results["errors"].append(f"Session {session_id}: {str(e)}")
+            
+            return results
+        except Exception as e:
+            logger.error(f"Error in bulk status update: {e}")
+            raise
+
+    @staticmethod
+    async def bulk_assign(
+        session_ids: List[str],
+        assigned_to_user_id: UUID,
+        assigned_by_user_id: UUID,
+    ) -> Dict[str, Any]:
+        """Bulk assign multiple intakes to a team member."""
+        try:
+            results = {"assigned": 0, "failed": 0, "errors": []}
+            
+            for session_id in session_ids:
+                try:
+                    response = supabase_client.table("team_assignments").insert({
+                        "session_id": session_id,
+                        "assigned_to_user_id": str(assigned_to_user_id),
+                        "assigned_by_user_id": str(assigned_by_user_id),
+                        "assignment_status": "assigned",
+                        "created_at": datetime.utcnow().isoformat(),
+                    }).execute()
+                    
+                    if response.data:
+                        results["assigned"] += 1
+                        # Log each assignment
+                        await AdminOperations.create_audit_log(
+                            user_id=assigned_by_user_id,
+                            action="BULK_ASSIGN",
+                            resource_type="intake_session",
+                            resource_id=UUID(session_id),
+                            changes={"assigned_to": str(assigned_to_user_id)}
+                        )
+                    else:
+                        results["failed"] += 1
+                        results["errors"].append(f"Session {session_id}: Assignment failed")
+                except Exception as e:
+                    results["failed"] += 1
+                    results["errors"].append(f"Session {session_id}: {str(e)}")
+            
+            return results
+        except Exception as e:
+            logger.error(f"Error in bulk assign: {e}")
+            raise
+
+    @staticmethod
+    async def get_intake_metrics(
+        days: int = 30,
+        status: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Get comprehensive intake metrics."""
+        try:
+            start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
+            
+            # Build query
+            query = supabase_client.table("intake_sessions").select("*").gte(
+                "created_at", start_date
+            )
+            
+            if status:
+                query = query.eq("status", status)
+            
+            response = query.execute()
+            sessions = response.data or []
+            
+            # Calculate metrics
+            total = len(sessions)
+            completed = len([s for s in sessions if s.get("status") == "completed"])
+            in_progress = len([s for s in sessions if s.get("status") == "in_progress"])
+            archived = len([s for s in sessions if s.get("status") == "archived"])
+            
+            # Category breakdown
+            categories = {}
+            for session in sessions:
+                category = session.get("legal_category", "Other")
+                categories[category] = categories.get(category, 0) + 1
+            
+            # Urgency breakdown
+            urgencies = {}
+            for session in sessions:
+                urgency = session.get("urgency", "low")
+                urgencies[urgency] = urgencies.get(urgency, 0) + 1
+            
+            # Average completion time
+            completion_times = []
+            for session in sessions:
+                if session.get("status") == "completed":
+                    created = datetime.fromisoformat(session["created_at"].replace("Z", "+00:00"))
+                    completed_at = datetime.fromisoformat(session.get("completed_at", session["created_at"]).replace("Z", "+00:00"))
+                    delta = (completed_at - created).total_seconds() / 3600  # Hours
+                    completion_times.append(delta)
+            
+            avg_completion_time = sum(completion_times) / len(completion_times) if completion_times else 0
+            
+            return {
+                "period_days": days,
+                "total_intakes": total,
+                "completed": completed,
+                "in_progress": in_progress,
+                "archived": archived,
+                "completion_rate": (completed / total * 100) if total > 0 else 0,
+                "average_completion_hours": round(avg_completion_time, 2),
+                "by_category": categories,
+                "by_urgency": urgencies,
+            }
+        except Exception as e:
+            logger.error(f"Error getting metrics: {e}")
+            raise
+
+    @staticmethod
+    async def get_team_workload() -> List[Dict[str, Any]]:
+        """Get workload distribution across team members."""
+        try:
+            # Get all team members
+            team_response = supabase_client.table("team_members").select(
+                "id, user_id, role"
+            ).eq("status", "active").execute()
+            
+            workload = []
+            for member in team_response.data or []:
+                user_id = member["user_id"]
+                
+                # Get assigned sessions
+                assignments_response = supabase_client.table("team_assignments").select(
+                    "id", count="exact"
+                ).eq("assigned_to_user_id", user_id).eq(
+                    "assignment_status", "assigned"
+                ).execute()
+                
+                assigned_count = assignments_response.count or 0
+                
+                workload.append({
+                    "user_id": user_id,
+                    "role": member["role"],
+                    "assigned_count": assigned_count,
+                    "member_id": member["id"],
+                })
+            
+            return sorted(workload, key=lambda x: x["assigned_count"], reverse=True)
+        except Exception as e:
+            logger.error(f"Error getting team workload: {e}")
+            return []
+
+    @staticmethod
+    async def search_intakes(
+        query: str,
+        filters: Optional[Dict[str, Any]] = None,
+        limit: int = 50,
+    ) -> List[Dict[str, Any]]:
+        """Advanced search for intakes across multiple fields."""
+        try:
+            # Start with all sessions
+            response = supabase_client.table("intake_sessions").select("*").limit(limit).execute()
+            sessions = response.data or []
+            
+            # Apply text search
+            query_lower = query.lower()
+            results = []
+            
+            for session in sessions:
+                # Check multiple fields
+                match = False
+                
+                # Check client name
+                if session.get("anonymous_client_info"):
+                    if isinstance(session["anonymous_client_info"], dict):
+                        if query_lower in session["anonymous_client_info"].get("name", "").lower():
+                            match = True
+                        if query_lower in session["anonymous_client_info"].get("email", "").lower():
+                            match = True
+                
+                # Check category
+                if query_lower in session.get("legal_category", "").lower():
+                    match = True
+                
+                # Check notes
+                if query_lower in session.get("notes", "").lower():
+                    match = True
+                
+                if match:
+                    # Apply additional filters
+                    if filters:
+                        if filters.get("status") and session.get("status") != filters["status"]:
+                            continue
+                        if filters.get("urgency") and session.get("urgency") != filters["urgency"]:
+                            continue
+                    
+                    results.append(session)
+            
+            return results
+        except Exception as e:
+            logger.error(f"Error searching intakes: {e}")
+            return []
+
+    @staticmethod
+    async def export_intakes_data(
+        filters: Optional[Dict[str, Any]] = None,
+    ) -> List[Dict[str, Any]]:
+        """Export intakes data for reporting."""
+        try:
+            query = supabase_client.table("intake_sessions").select("*")
+            
+            if filters:
+                if filters.get("status"):
+                    query = query.eq("status", filters["status"])
+                if filters.get("category"):
+                    query = query.eq("legal_category", filters["category"])
+                if filters.get("urgency"):
+                    query = query.eq("urgency", filters["urgency"])
+            
+            response = query.order("created_at", desc=True).execute()
+            
+            export_data = []
+            for session in response.data or []:
+                export_item = {
+                    "id": session.get("id"),
+                    "client": session.get("anonymous_client_info", {}).get("name", "N/A") if isinstance(session.get("anonymous_client_info"), dict) else "N/A",
+                    "email": session.get("anonymous_client_info", {}).get("email", "N/A") if isinstance(session.get("anonymous_client_info"), dict) else "N/A",
+                    "category": session.get("legal_category", "N/A"),
+                    "status": session.get("status"),
+                    "urgency": session.get("urgency"),
+                    "created_at": session.get("created_at"),
+                    "updated_at": session.get("updated_at"),
+                }
+                export_data.append(export_item)
+            
+            return export_data
+        except Exception as e:
+            logger.error(f"Error exporting intakes: {e}")
+            return []
+
+    @staticmethod
+    async def get_intake_performance() -> Dict[str, Any]:
+        """Get performance metrics for intake processing."""
+        try:
+            # Get last 90 days
+            start_date = (datetime.utcnow() - timedelta(days=90)).isoformat()
+            
+            response = supabase_client.table("intake_sessions").select(
+                "created_at, completed_at, status"
+            ).gte("created_at", start_date).execute()
+            
+            sessions = response.data or []
+            
+            # Calculate performance metrics
+            total_processed = len([s for s in sessions if s.get("status") in ["completed", "archived"]])
+            pending = len([s for s in sessions if s.get("status") == "in_progress"])
+            
+            completion_times = []
+            for session in sessions:
+                if session.get("status") == "completed" and session.get("completed_at"):
+                    try:
+                        created = datetime.fromisoformat(session["created_at"].replace("Z", "+00:00"))
+                        completed = datetime.fromisoformat(session["completed_at"].replace("Z", "+00:00"))
+                        hours = (completed - created).total_seconds() / 3600
+                        completion_times.append(hours)
+                    except:
+                        pass
+            
+            return {
+                "total_processed": total_processed,
+                "pending": pending,
+                "average_hours_to_complete": round(sum(completion_times) / len(completion_times), 2) if completion_times else 0,
+                "min_hours": round(min(completion_times), 2) if completion_times else 0,
+                "max_hours": round(max(completion_times), 2) if completion_times else 0,
+                "total_analyzed": len(sessions),
+            }
+        except Exception as e:
+            logger.error(f"Error getting performance metrics: {e}")
             return {}
