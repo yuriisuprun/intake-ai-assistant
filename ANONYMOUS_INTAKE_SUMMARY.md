@@ -85,7 +85,7 @@ frontend/src/lib/api.ts
 ```
 Home Page
     ↓
-Click "Start Intake (No Login)"
+Click "Start Intake"
     ↓
 Public Intake Page
     ↓

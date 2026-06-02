@@ -63,7 +63,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - Responsive design
 
 #### 3. Home Page (`frontend/src/app/page.tsx`)
-- Added "Start Intake (No Login)" button
+- Added "Start Intake" button
 - Links to public intake page
 - Updated CTA to highlight no-registration option
 

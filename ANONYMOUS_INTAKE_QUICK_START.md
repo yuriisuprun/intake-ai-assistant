@@ -5,7 +5,7 @@
 ### Starting an Anonymous Intake
 
 1. Go to home page: `http://localhost:3000`
-2. Click "Start Intake (No Login)" button
+2. Click "Start Intake" button
 3. Enter your information:
    - Full Name (required)
    - Email Address (required)

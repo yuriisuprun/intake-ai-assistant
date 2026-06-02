@@ -168,47 +168,69 @@ export default function AdminIntakesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f3f4f6' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading intakes...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+          <p style={{ color: '#4b5563' }}>Loading intakes...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Intakes</h1>
-          <p className="text-gray-600 mt-1">Manage all unregistered client submissions</p>
+          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}>Intakes</h1>
+          <p style={{ color: '#4b5563', marginTop: '0.25rem' }}>Manage all unregistered client submissions</p>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', padding: '1.5rem', marginBottom: '1.5rem', border: '1px solid #e5e7eb' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+              <Search className="absolute left-3 top-3" size={20} style={{ color: '#9ca3af' }} />
               <input
                 type="text"
                 placeholder="Search by name or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 rounded-lg outline-none transition"
+                style={{ 
+                  border: '1px solid #d1d5db',
+                  boxShadow: 'none'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#d1d5db'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
               />
             </div>
 
             <div className="flex items-center gap-2">
-              <Filter size={20} className="text-gray-400" />
+              <Filter size={20} style={{ color: '#9ca3af' }} />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 rounded-lg outline-none transition"
+                style={{ 
+                  border: '1px solid #d1d5db',
+                  boxShadow: 'none'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = '#d1d5db'
+                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
               >
                 <option value="all">All Statuses</option>
                 <option value="submitted">Submitted</option>
@@ -218,8 +240,8 @@ export default function AdminIntakesPage() {
               </select>
             </div>
 
-            <div className="text-right">
-              <p className="text-sm text-gray-600">
+            <div style={{ textAlign: 'right' }}>
+              <p className="text-sm" style={{ color: '#4b5563' }}>
                 Showing {filteredIntakes.length} of {intakes.length} intakes
               </p>
             </div>
@@ -227,43 +249,46 @@ export default function AdminIntakesPage() {
         </div>
 
         {/* Intakes Table */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
           {filteredIntakes.length === 0 ? (
             <div className="p-8 text-center">
-              <AlertCircle className="mx-auto text-gray-400 mb-4" size={48} />
-              <p className="text-gray-600">No intakes found</p>
+              <AlertCircle className="mx-auto mb-4" size={48} style={{ color: '#9ca3af' }} />
+              <p style={{ color: '#4b5563' }}>No intakes found</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                   <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Client</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Legal Category</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Submitted</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900">Action</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Legal Category</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Status</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Submitted</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredIntakes.map((intake) => (
-                    <tr key={intake.id} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{intake.client_name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{intake.client_email}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                <tbody style={{ borderTop: '1px solid #e5e7eb' }}>
+                  {filteredIntakes.map((intake, idx) => (
+                    <tr key={intake.id} style={{ borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e5e7eb' : 'none', backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb' }} className="hover:bg-gray-50 transition">
+                      <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
+                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
+                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
                         {intake.legal_category || '—'}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         {getStatusBadge(intake.status)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
                         {new Date(intake.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <button
                           onClick={() => handleViewDetails(intake)}
-                          className="text-blue-600 hover:text-blue-900 font-medium flex items-center gap-1"
+                          className="font-medium flex items-center gap-1 transition"
+                          style={{ color: '#a855f7' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
                         >
                           <Eye size={16} />
                           View
@@ -280,25 +305,25 @@ export default function AdminIntakesPage() {
 
       {/* Details Modal */}
       {showDetails && selectedIntake && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', maxWidth: '56rem', width: '100%', maxHeight: '90vh', overflow: 'auto' }}>
             {loadingDetails ? (
               <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading details...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+                <p style={{ color: '#4b5563' }}>Loading details...</p>
               </div>
             ) : intakeDetails ? (
               <>
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 border-b">
+                <div style={{ background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)', color: '#ffffff', padding: '1.5rem', borderBottom: '1px solid #e5e7eb' }}>
                   <div className="flex justify-between items-start">
                     <div>
                       <h2 className="text-2xl font-bold">{selectedIntake.client_name}</h2>
-                      <p className="text-blue-100 mt-1">{selectedIntake.client_email}</p>
+                      <p style={{ color: '#f3e8ff', marginTop: '0.25rem' }}>{selectedIntake.client_email}</p>
                     </div>
                     <button
                       onClick={() => setShowDetails(false)}
-                      className="text-white hover:text-blue-100 text-2xl"
+                      className="text-white hover:text-purple-100 text-2xl"
                     >
                       ×
                     </button>
@@ -309,7 +334,7 @@ export default function AdminIntakesPage() {
                 <div className="p-6 space-y-6">
                   {/* Status Section */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Status</h3>
+                    <h3 className="text-lg font-semibold mb-3" style={{ color: '#111827' }}>Status</h3>
                     <div className="flex items-center gap-3 mb-4">
                       {getStatusBadge(selectedIntake.status)}
                     </div>
@@ -319,11 +344,23 @@ export default function AdminIntakesPage() {
                           key={status}
                           onClick={() => handleUpdateStatus(status)}
                           disabled={updatingStatus || selectedIntake.status === status}
-                          className={`px-4 py-2 rounded-lg font-medium transition ${
-                            selectedIntake.status === status
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                          } disabled:opacity-50`}
+                          className="px-4 py-2 rounded-lg font-medium transition"
+                          style={{
+                            backgroundColor: selectedIntake.status === status ? '#a855f7' : '#e5e7eb',
+                            color: selectedIntake.status === status ? '#ffffff' : '#374151',
+                            opacity: updatingStatus || selectedIntake.status === status ? 0.5 : 1,
+                            cursor: updatingStatus || selectedIntake.status === status ? 'not-allowed' : 'pointer'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!(updatingStatus || selectedIntake.status === status)) {
+                              e.currentTarget.style.backgroundColor = '#d1d5db'
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!(updatingStatus || selectedIntake.status === status)) {
+                              e.currentTarget.style.backgroundColor = '#e5e7eb'
+                            }
+                          }}
                         >
                           {status.charAt(0).toUpperCase() + status.slice(1)}
                         </button>
@@ -333,23 +370,23 @@ export default function AdminIntakesPage() {
 
                   {/* Client Info */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Client Information</h3>
-                    <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-3" style={{ color: '#111827' }}>Client Information</h3>
+                    <div className="grid grid-cols-2 gap-4 p-4 rounded-lg" style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}>
                       <div>
-                        <p className="text-sm text-gray-600">Name</p>
-                        <p className="font-medium text-gray-900">{selectedIntake.client_name}</p>
+                        <p className="text-sm" style={{ color: '#4b5563' }}>Name</p>
+                        <p className="font-medium" style={{ color: '#111827' }}>{selectedIntake.client_name}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Email</p>
-                        <p className="font-medium text-gray-900">{selectedIntake.client_email}</p>
+                        <p className="text-sm" style={{ color: '#4b5563' }}>Email</p>
+                        <p className="font-medium" style={{ color: '#111827' }}>{selectedIntake.client_email}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Phone</p>
-                        <p className="font-medium text-gray-900">{selectedIntake.client_phone || '—'}</p>
+                        <p className="text-sm" style={{ color: '#4b5563' }}>Phone</p>
+                        <p className="font-medium" style={{ color: '#111827' }}>{selectedIntake.client_phone || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Legal Category</p>
-                        <p className="font-medium text-gray-900">{selectedIntake.legal_category || '—'}</p>
+                        <p className="text-sm" style={{ color: '#4b5563' }}>Legal Category</p>
+                        <p className="font-medium" style={{ color: '#111827' }}>{selectedIntake.legal_category || '—'}</p>
                       </div>
                     </div>
                   </div>
@@ -357,14 +394,14 @@ export default function AdminIntakesPage() {
                   {/* Responses */}
                   {intakeDetails.responses && intakeDetails.responses.length > 0 && (
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Intake Responses</h3>
+                      <h3 className="text-lg font-semibold mb-3" style={{ color: '#111827' }}>Intake Responses</h3>
                       <div className="space-y-3 max-h-64 overflow-y-auto">
                         {intakeDetails.responses.map((response: any, idx: number) => (
-                          <div key={idx} className="bg-gray-50 p-4 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">
+                          <div key={idx} className="p-4 rounded-lg" style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}>
+                            <p className="text-sm mb-1" style={{ color: '#4b5563' }}>
                               {response.metadata?.question_key || `Step ${response.metadata?.step}`}
                             </p>
-                            <p className="text-gray-900">{response.content}</p>
+                            <p style={{ color: '#111827' }}>{response.content}</p>
                           </div>
                         ))}
                       </div>
@@ -373,29 +410,55 @@ export default function AdminIntakesPage() {
 
                   {/* Admin Notes */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Admin Notes</h3>
+                    <h3 className="text-lg font-semibold mb-3" style={{ color: '#111827' }}>Admin Notes</h3>
                     <textarea
                       value={adminNotes}
                       onChange={(e) => setAdminNotes(e.target.value)}
                       placeholder="Add internal notes about this intake..."
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg outline-none transition"
+                      style={{ 
+                        border: '1px solid #d1d5db',
+                        boxShadow: 'none',
+                        fontFamily: 'inherit'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = '#d1d5db'
+                        e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.boxShadow = 'none'
+                      }}
                       rows={4}
                     />
                     <button
                       onClick={() => handleUpdateStatus(selectedIntake.status)}
                       disabled={updatingStatus}
-                      className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition"
+                      className="mt-2 px-4 py-2 text-white rounded-lg transition font-medium"
+                      style={{
+                        backgroundColor: updatingStatus ? '#9ca3af' : '#a855f7',
+                        cursor: updatingStatus ? 'not-allowed' : 'pointer'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!updatingStatus) {
+                          e.currentTarget.style.backgroundColor = '#9333ea'
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!updatingStatus) {
+                          e.currentTarget.style.backgroundColor = '#a855f7'
+                        }
+                      }}
                     >
                       {updatingStatus ? 'Saving...' : 'Save Notes'}
                     </button>
                   </div>
 
                   {/* Metadata */}
-                  <div className="border-t pt-4">
-                    <p className="text-xs text-gray-500">
+                  <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '1rem' }}>
+                    <p className="text-xs" style={{ color: '#6b7280' }}>
                       Submitted: {new Date(selectedIntake.created_at).toLocaleString()}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs" style={{ color: '#6b7280' }}>
                       Reference: {selectedIntake.session_id.substring(0, 8).toUpperCase()}
                     </p>
                   </div>

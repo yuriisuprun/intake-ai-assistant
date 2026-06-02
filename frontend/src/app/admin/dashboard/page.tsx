@@ -109,15 +109,15 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#a855f7' }}></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-800">{error}</p>
+      <div className="rounded-lg p-4" style={{ backgroundColor: '#fee2e2', border: '1px solid #fecaca' }}>
+        <p style={{ color: '#991b1b' }}>{error}</p>
       </div>
     );
   }
@@ -125,83 +125,83 @@ export default function AdminDashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Welcome back, {user?.email}</p>
+        <h1 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>Admin Dashboard</h1>
+        <p style={{ color: '#4b5563' }}>Welcome back, {user?.email}</p>
       </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-3xl font-bold text-blue-600 mb-2">
+        <div className="bg-white rounded-lg shadow p-6" style={{ border: '1px solid #e5e7eb' }}>
+          <div className="text-3xl font-bold mb-2" style={{ color: '#a855f7' }}>
             {overview?.total_sessions || 0}
           </div>
-          <p className="text-gray-600">Total Sessions</p>
+          <p style={{ color: '#4b5563' }}>Total Sessions</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-3xl font-bold text-green-600 mb-2">
+        <div className="bg-white rounded-lg shadow p-6" style={{ border: '1px solid #e5e7eb' }}>
+          <div className="text-3xl font-bold mb-2" style={{ color: '#10b981' }}>
             {overview?.completed_sessions || 0}
           </div>
-          <p className="text-gray-600">Completed</p>
+          <p style={{ color: '#4b5563' }}>Completed</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-3xl font-bold text-yellow-600 mb-2">
+        <div className="bg-white rounded-lg shadow p-6" style={{ border: '1px solid #e5e7eb' }}>
+          <div className="text-3xl font-bold mb-2" style={{ color: '#f59e0b' }}>
             {overview?.in_progress_sessions || 0}
           </div>
-          <p className="text-gray-600">In Progress</p>
+          <p style={{ color: '#4b5563' }}>In Progress</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-3xl font-bold text-purple-600 mb-2">
+        <div className="bg-white rounded-lg shadow p-6" style={{ border: '1px solid #e5e7eb' }}>
+          <div className="text-3xl font-bold mb-2" style={{ color: '#a855f7' }}>
             {overview?.total_clients || 0}
           </div>
-          <p className="text-gray-600">Total Clients</p>
+          <p style={{ color: '#4b5563' }}>Total Clients</p>
         </div>
       </div>
 
       {/* Anonymous Intake Metrics */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Intakes</h2>
+        <h2 className="text-2xl font-bold mb-4" style={{ color: '#111827' }}>Intakes</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-600">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
+          <div className="bg-white rounded-lg shadow p-6" style={{ borderLeft: '4px solid #a855f7', border: '1px solid #e5e7eb' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#a855f7' }}>
               {anonymousIntakeCounts.total}
             </div>
-            <p className="text-gray-600">Total Submissions</p>
+            <p style={{ color: '#4b5563' }}>Total Submissions</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-600">
-            <div className="text-3xl font-bold text-yellow-600 mb-2">
+          <div className="bg-white rounded-lg shadow p-6" style={{ borderLeft: '4px solid #f59e0b', border: '1px solid #e5e7eb' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#f59e0b' }}>
               {anonymousIntakeCounts.submitted}
             </div>
-            <p className="text-gray-600">Submitted (Pending)</p>
+            <p style={{ color: '#4b5563' }}>Submitted (Pending)</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-600">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
+          <div className="bg-white rounded-lg shadow p-6" style={{ borderLeft: '4px solid #f97316', border: '1px solid #e5e7eb' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#f97316' }}>
               {anonymousIntakeCounts.reviewed}
             </div>
-            <p className="text-gray-600">Reviewed</p>
+            <p style={{ color: '#4b5563' }}>Reviewed</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-600">
-            <div className="text-3xl font-bold text-green-600 mb-2">
+          <div className="bg-white rounded-lg shadow p-6" style={{ borderLeft: '4px solid #10b981', border: '1px solid #e5e7eb' }}>
+            <div className="text-3xl font-bold mb-2" style={{ color: '#10b981' }}>
               {anonymousIntakeCounts.assigned}
             </div>
-            <p className="text-gray-600">Assigned</p>
+            <p style={{ color: '#4b5563' }}>Assigned</p>
           </div>
         </div>
       </div>
 
       {/* Completion Rate */}
       {overview && (
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">Completion Rate</h2>
+        <div className="bg-white rounded-lg shadow p-6 mb-8" style={{ border: '1px solid #e5e7eb' }}>
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#111827' }}>Completion Rate</h2>
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <div className="w-full bg-gray-200 rounded-full h-4">
                 <div
-                  className="bg-blue-600 h-4 rounded-full transition-all"
-                  style={{ width: `${overview.completion_rate}%` }}
+                  className="h-4 rounded-full transition-all"
+                  style={{ width: `${overview.completion_rate}%`, backgroundColor: '#a855f7' }}
                 ></div>
               </div>
             </div>
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold" style={{ color: '#a855f7' }}>
               {overview.completion_rate.toFixed(1)}%
             </div>
           </div>
@@ -212,82 +212,128 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Link
           href="/admin/sessions"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition"
+          className="bg-white rounded-lg shadow p-6 transition"
+          style={{ border: '1px solid #e5e7eb' }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = 'none'
+          }}
         >
           <div className="text-2xl mb-2">📋</div>
-          <h3 className="font-bold mb-2">View All Sessions</h3>
-          <p className="text-sm text-gray-600">Manage intake sessions</p>
+          <h3 className="font-bold mb-2" style={{ color: '#111827' }}>View All Sessions</h3>
+          <p className="text-sm" style={{ color: '#4b5563' }}>Manage intake sessions</p>
         </Link>
         <Link
           href="/admin/intakes"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition border-t-2 border-blue-600"
+          className="bg-white rounded-lg shadow p-6 transition"
+          style={{ borderTop: '2px solid #a855f7', border: '1px solid #e5e7eb' }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = 'none'
+          }}
         >
           <div className="text-2xl mb-2">📝</div>
-          <h3 className="font-bold mb-2">Intakes</h3>
-          <p className="text-sm text-gray-600">View all public submissions</p>
+          <h3 className="font-bold mb-2" style={{ color: '#111827' }}>Intakes</h3>
+          <p className="text-sm" style={{ color: '#4b5563' }}>View all public submissions</p>
         </Link>
         <Link
           href="/admin/clients"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition"
+          className="bg-white rounded-lg shadow p-6 transition"
+          style={{ border: '1px solid #e5e7eb' }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = 'none'
+          }}
         >
           <div className="text-2xl mb-2">👥</div>
-          <h3 className="font-bold mb-2">Manage Clients</h3>
-          <p className="text-sm text-gray-600">View all clients</p>
+          <h3 className="font-bold mb-2" style={{ color: '#111827' }}>Manage Clients</h3>
+          <p className="text-sm" style={{ color: '#4b5563' }}>View all clients</p>
         </Link>
         <Link
           href="/admin/team"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition"
+          className="bg-white rounded-lg shadow p-6 transition"
+          style={{ border: '1px solid #e5e7eb' }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLElement
+            el.style.boxShadow = 'none'
+          }}
         >
           <div className="text-2xl mb-2">👨‍💼</div>
-          <h3 className="font-bold mb-2">Team Management</h3>
-          <p className="text-sm text-gray-600">Manage team members</p>
+          <h3 className="font-bold mb-2" style={{ color: '#111827' }}>Team Management</h3>
+          <p className="text-sm" style={{ color: '#4b5563' }}>Manage team members</p>
         </Link>
       </div>
 
       {/* Recent Sessions */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Recent Sessions</h2>
-          <Link href="/admin/sessions" className="text-blue-600 hover:text-blue-700">
+      <div className="bg-white rounded-lg shadow" style={{ border: '1px solid #e5e7eb' }}>
+        <div className="px-6 py-4" style={{ borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 className="text-xl font-bold" style={{ color: '#111827' }}>Recent Sessions</h2>
+          <Link 
+            href="/admin/sessions" 
+            className="transition"
+            style={{ color: '#a855f7' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+          >
             View All →
           </Link>
         </div>
-        <div className="divide-y divide-gray-200">
+        <div style={{ borderTop: '1px solid #e5e7eb' }}>
           {recentSessions.length > 0 ? (
-            recentSessions.map((session) => (
+            recentSessions.map((session, idx) => (
               <Link
                 key={session.id}
                 href={`/admin/sessions/${session.id}`}
-                className="px-6 py-4 hover:bg-gray-50 transition flex justify-between items-center"
+                className="px-6 py-4 transition flex justify-between items-center"
+                style={{
+                  borderBottom: idx < recentSessions.length - 1 ? '1px solid #e5e7eb' : 'none',
+                  backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = idx % 2 === 0 ? '#ffffff' : '#f9fafb')}
               >
                 <div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="font-semibold" style={{ color: '#111827' }}>
                     {session.client_name}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm" style={{ color: '#4b5563' }}>
                     {session.legal_category || 'General'} •{' '}
                     {new Date(session.created_at).toLocaleDateString()}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      session.status === 'completed'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}
+                    className="px-3 py-1 rounded-full text-sm font-medium"
+                    style={{
+                      backgroundColor: session.status === 'completed' ? '#dcfce7' : '#fef3c7',
+                      color: session.status === 'completed' ? '#166534' : '#92400e'
+                    }}
                   >
                     {session.status}
                   </span>
                   {session.urgency && (
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        session.urgency === 'high'
-                          ? 'bg-red-100 text-red-800'
-                          : session.urgency === 'medium'
-                          ? 'bg-orange-100 text-orange-800'
-                          : 'bg-blue-100 text-blue-800'
-                      }`}
+                      className="px-3 py-1 rounded-full text-sm font-medium"
+                      style={{
+                        backgroundColor: session.urgency === 'high' ? '#fee2e2' : session.urgency === 'medium' ? '#fed7aa' : '#dbeafe',
+                        color: session.urgency === 'high' ? '#991b1b' : session.urgency === 'medium' ? '#92400e' : '#1e40af'
+                      }}
                     >
                       {session.urgency}
                     </span>
@@ -296,7 +342,7 @@ export default function AdminDashboardPage() {
               </Link>
             ))
           ) : (
-            <div className="px-6 py-8 text-center text-gray-600">
+            <div className="px-6 py-8 text-center" style={{ color: '#4b5563' }}>
               <p>No sessions yet</p>
             </div>
           )}
@@ -305,47 +351,63 @@ export default function AdminDashboardPage() {
 
       {/* Recent Intakes */}
       {recentAnonymousIntakes.length > 0 && (
-        <div className="bg-white rounded-lg shadow mt-8">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold">Recent Intakes</h2>
-            <Link href="/admin/intakes" className="text-blue-600 hover:text-blue-700">
+        <div className="bg-white rounded-lg shadow mt-8" style={{ border: '1px solid #e5e7eb' }}>
+          <div className="px-6 py-4" style={{ borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 className="text-xl font-bold" style={{ color: '#111827' }}>Recent Intakes</h2>
+            <Link 
+              href="/admin/intakes" 
+              className="transition"
+              style={{ color: '#a855f7' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+            >
               View All →
             </Link>
           </div>
-          <div className="divide-y divide-gray-200">
-            {recentAnonymousIntakes.map((intake) => {
-              const statusColors: Record<string, string> = {
-                submitted: 'bg-blue-100 text-blue-800',
-                reviewed: 'bg-yellow-100 text-yellow-800',
-                assigned: 'bg-green-100 text-green-800',
-                archived: 'bg-gray-100 text-gray-800',
+          <div style={{ borderTop: '1px solid #e5e7eb' }}>
+            {recentAnonymousIntakes.map((intake, idx) => {
+              const statusColors: Record<string, { bg: string; text: string }> = {
+                submitted: { bg: '#dbeafe', text: '#1e40af' },
+                reviewed: { bg: '#fef3c7', text: '#92400e' },
+                assigned: { bg: '#dcfce7', text: '#166534' },
+                archived: { bg: '#f3f4f6', text: '#4b5563' },
               };
+              
+              const statusColor = statusColors[intake.status] || statusColors.submitted;
               
               return (
                 <Link
                   key={intake.id}
                   href={`/admin/intakes`}
-                  className="px-6 py-4 hover:bg-gray-50 transition flex justify-between items-center"
+                  className="px-6 py-4 transition flex justify-between items-center"
+                  style={{
+                    borderBottom: idx < recentAnonymousIntakes.length - 1 ? '1px solid #e5e7eb' : 'none',
+                    backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f4f6')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = idx % 2 === 0 ? '#ffffff' : '#f9fafb')}
                 >
                   <div>
-                    <div className="font-semibold text-gray-900">
+                    <div className="font-semibold" style={{ color: '#111827' }}>
                       {intake.client_name}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm" style={{ color: '#4b5563' }}>
                       {intake.client_email} •{' '}
                       {new Date(intake.created_at).toLocaleDateString()}
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     {intake.legal_category && (
-                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                      <span 
+                        className="px-3 py-1 rounded-full text-sm font-medium"
+                        style={{ backgroundColor: '#f3e8ff', color: '#a855f7' }}
+                      >
                         {intake.legal_category}
                       </span>
                     )}
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        statusColors[intake.status] || statusColors.submitted
-                      }`}
+                      className="px-3 py-1 rounded-full text-sm font-medium"
+                      style={{ backgroundColor: statusColor.bg, color: statusColor.text }}
                     >
                       {intake.status.charAt(0).toUpperCase() + intake.status.slice(1)}
                     </span>

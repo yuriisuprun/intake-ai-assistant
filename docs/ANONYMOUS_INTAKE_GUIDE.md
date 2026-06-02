@@ -120,7 +120,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 1. **Landing Page**
    - User visits home page
-   - Sees "Start Intake (No Login)" button
+   - Sees "Start Intake" button
    - Clicks to access public intake
 
 2. **Client Information**
@@ -270,7 +270,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
    - `searchAnonymousIntakesByEmail()`: Search
 
 4. **Home Page** (`app/page.tsx`)
-   - Added "Start Intake (No Login)" button
+   - Added "Start Intake" button
    - Links to public intake page
 
 ## Security Considerations

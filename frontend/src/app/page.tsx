@@ -46,9 +46,8 @@ export default function Home() {
               className="text-white px-8 py-3 rounded-lg flex items-center gap-2 transition"
               style={{ backgroundColor: '#a855f7' }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}
-            >
-              Start Intake (No Login) <ArrowRight size={20} />
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}>
+              Start Intake<ArrowRight size={20} />
             </Link>
             <Link 
               href="/login" 
