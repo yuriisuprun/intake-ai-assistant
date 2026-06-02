@@ -14,7 +14,7 @@ The Anonymous Intake feature allows unregistered clients to submit legal intake 
 - **Confirmation**: Success screen with reference number and next steps
 
 ### For Admins
-- **Centralized Dashboard**: View all anonymous intakes in one place
+- **Centralized Dashboard**: View all Intakes in one place
 - **Search & Filter**: Find intakes by name, email, or status
 - **Status Management**: Track intake status (submitted, reviewed, assigned, archived)
 - **Admin Notes**: Add internal notes to each intake
@@ -42,9 +42,9 @@ The Anonymous Intake feature allows unregistered clients to submit legal intake 
 
 #### Modified Tables
 - **intake_sessions**: Added support for anonymous submissions
-  - `is_anonymous`: Boolean flag for anonymous intakes
+  - `is_anonymous`: Boolean flag for Intakes
   - `anonymous_client_info`: JSONB storing client details
-  - `user_id`: Made nullable for anonymous intakes
+  - `user_id`: Made nullable for Intakes
 
 ### API Endpoints
 
@@ -88,7 +88,7 @@ POST /api/intake/complete?session_id=uuid
 
 #### Admin Endpoints (Authentication Required)
 
-**List All Anonymous Intakes**
+**List All Intakes**
 ```
 GET /api/admin/anonymous-intakes?skip=0&limit=20
 ```
@@ -109,7 +109,7 @@ Content-Type: application/json
 }
 ```
 
-**Search Anonymous Intakes by Email**
+**Search Intakes by Email**
 ```
 GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 ```
@@ -145,7 +145,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 1. **Dashboard Access**
    - Admin logs in
-   - Navigates to "Anonymous Intakes" section
+   - Navigates to "Intakes" section
    - Sees list of all submissions
 
 2. **Search & Filter**
@@ -238,7 +238,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
    - `update_anonymous_intake()`: Update status and notes
 
 4. **API Routes** (`routes/intake.py`)
-   - Updated `/start` to handle anonymous intakes
+   - Updated `/start` to handle Intakes
    - Updated `/step` to work with anonymous sessions
    - Updated `/complete` to work with anonymous sessions
 
@@ -257,7 +257,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
    - Completion screen
 
 2. **Admin Dashboard** (`app/admin/intakes/page.tsx`)
-   - List all anonymous intakes
+   - List all Intakes
    - Search and filter
    - View details modal
    - Status management
@@ -277,8 +277,8 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 ### Row-Level Security (RLS)
 
-- **Anonymous Intakes Table**
-  - Admins can view all anonymous intakes
+- **Intakes Table**
+  - Admins can view all Intakes
   - Anyone can submit (public endpoint)
   - Only admins can update
 
@@ -330,7 +330,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 ### Key Metrics
 
-- Total anonymous intakes submitted
+- Total Intakes submitted
 - Average time to complete intake
 - Status distribution (submitted, reviewed, assigned)
 - Search queries (most common client names/emails)

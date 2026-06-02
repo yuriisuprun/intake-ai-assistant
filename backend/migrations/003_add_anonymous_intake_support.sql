@@ -32,12 +32,12 @@ CREATE INDEX IF NOT EXISTS idx_anonymous_intakes_email ON anonymous_intakes(clie
 ALTER TABLE anonymous_intakes ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist
-DROP POLICY IF EXISTS "Admins can view all anonymous intakes" ON anonymous_intakes;
-DROP POLICY IF EXISTS "Admins can update anonymous intakes" ON anonymous_intakes;
-DROP POLICY IF EXISTS "Anyone can submit anonymous intakes" ON anonymous_intakes;
+DROP POLICY IF EXISTS "Admins can view all Intakes" ON anonymous_intakes;
+DROP POLICY IF EXISTS "Admins can update Intakes" ON anonymous_intakes;
+DROP POLICY IF EXISTS "Anyone can submit Intakes" ON anonymous_intakes;
 
--- Allow admins to view all anonymous intakes
-CREATE POLICY "Admins can view all anonymous intakes"
+-- Allow admins to view all Intakes
+CREATE POLICY "Admins can view all Intakes"
   ON anonymous_intakes FOR SELECT
   USING (
     EXISTS (
@@ -47,8 +47,8 @@ CREATE POLICY "Admins can view all anonymous intakes"
     )
   );
 
--- Allow admins to update anonymous intakes
-CREATE POLICY "Admins can update anonymous intakes"
+-- Allow admins to update Intakes
+CREATE POLICY "Admins can update Intakes"
   ON anonymous_intakes FOR UPDATE
   USING (
     EXISTS (
@@ -58,8 +58,8 @@ CREATE POLICY "Admins can update anonymous intakes"
     )
   );
 
--- Allow anyone to insert anonymous intakes (public intake)
-CREATE POLICY "Anyone can submit anonymous intakes"
+-- Allow anyone to insert Intakes (public intake)
+CREATE POLICY "Anyone can submit Intakes"
   ON anonymous_intakes FOR INSERT
   WITH CHECK (true);
 

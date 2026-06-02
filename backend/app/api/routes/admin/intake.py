@@ -30,7 +30,7 @@ async def list_all_intakes(
             
             # Get client name from different sources
             if is_anonymous:
-                # For anonymous intakes, get name from anonymous_client_info
+                # For Intakes, get name from anonymous_client_info
                 anonymous_info = session.get("anonymous_client_info", {})
                 if isinstance(anonymous_info, dict):
                     client_name = anonymous_info.get("name", "Anonymous Client")

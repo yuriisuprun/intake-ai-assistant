@@ -1,4 +1,4 @@
--- Make client_id nullable to support anonymous intakes
+-- Make client_id nullable to support Intakes
 
 -- Drop the foreign key constraint
 ALTER TABLE intake_sessions 

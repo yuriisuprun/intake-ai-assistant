@@ -100,7 +100,7 @@
 | `/api/admin/reports/` | GET | ✅ | Generate reports (admin) |
 | `/api/admin/team/` | GET | ✅ | Manage team (admin) |
 | `/api/admin/settings/` | GET/PUT | ✅ | Manage settings (admin) |
-| `/api/admin/anonymous-intakes/` | GET | ✅ | List anonymous intakes (admin) |
+| `/api/admin/anonymous-intakes/` | GET | ✅ | List Intakes (admin) |
 
 #### Client Dashboard Endpoints
 | Endpoint | Method | Status | Purpose |

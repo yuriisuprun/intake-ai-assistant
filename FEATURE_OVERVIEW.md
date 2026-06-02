@@ -239,7 +239,7 @@
 ### Admin Dashboard
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ Anonymous Intakes                                                │
+│ Intakes                                                │
 │ Manage all unregistered client submissions                       │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                   │

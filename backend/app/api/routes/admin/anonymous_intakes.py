@@ -32,8 +32,8 @@ async def list_all_anonymous_intakes(
         )
 
     except Exception as e:
-        logger.error(f"Error listing anonymous intakes: {e}")
-        raise HTTPException(status_code=500, detail="Failed to list anonymous intakes")
+        logger.error(f"Error listing Intakes: {e}")
+        raise HTTPException(status_code=500, detail="Failed to list Intakes")
 
 
 @router.get("/{intake_id}", response_model=APIResponse)
@@ -115,7 +115,7 @@ async def update_anonymous_intake(
 async def search_anonymous_intakes_by_email(
     email: str, user_id: str = Depends(require_admin())
 ):
-    """Search anonymous intakes by email (admin only)."""
+    """Search Intakes by email (admin only)."""
     try:
         response = (
             db.client.table("anonymous_intakes")
@@ -136,5 +136,5 @@ async def search_anonymous_intakes_by_email(
         )
 
     except Exception as e:
-        logger.error(f"Error searching anonymous intakes: {e}")
-        raise HTTPException(status_code=500, detail="Failed to search anonymous intakes")
+        logger.error(f"Error searching Intakes: {e}")
+        raise HTTPException(status_code=500, detail="Failed to search Intakes")

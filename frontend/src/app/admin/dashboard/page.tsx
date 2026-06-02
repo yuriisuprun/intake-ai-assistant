@@ -78,7 +78,7 @@ export default function AdminDashboardPage() {
           setRecentSessions(sessionsResponse.data.data.sessions || []);
         }
 
-        // Fetch anonymous intakes
+        // Fetch Intakes
         const anonymousResponse = await apiClient.listAnonymousIntakes(0, 100);
         if (anonymousResponse.success) {
           const intakes = anonymousResponse.data.intakes || [];
@@ -159,7 +159,7 @@ export default function AdminDashboardPage() {
 
       {/* Anonymous Intake Metrics */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Anonymous Intakes</h2>
+        <h2 className="text-2xl font-bold mb-4">Intakes</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-600">
             <div className="text-3xl font-bold text-blue-600 mb-2">
@@ -223,7 +223,7 @@ export default function AdminDashboardPage() {
           className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition border-t-2 border-blue-600"
         >
           <div className="text-2xl mb-2">📝</div>
-          <h3 className="font-bold mb-2">Anonymous Intakes</h3>
+          <h3 className="font-bold mb-2">Intakes</h3>
           <p className="text-sm text-gray-600">View all public submissions</p>
         </Link>
         <Link
@@ -303,11 +303,11 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Recent Anonymous Intakes */}
+      {/* Recent Intakes */}
       {recentAnonymousIntakes.length > 0 && (
         <div className="bg-white rounded-lg shadow mt-8">
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold">Recent Anonymous Intakes</h2>
+            <h2 className="text-xl font-bold">Recent Intakes</h2>
             <Link href="/admin/intakes" className="text-blue-600 hover:text-blue-700">
               View All →
             </Link>

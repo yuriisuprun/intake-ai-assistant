@@ -222,7 +222,7 @@ npm run build
 ### Database Testing
 
 #### Data Integrity
-- [ ] Anonymous intakes stored correctly
+- [ ] Intakes stored correctly
 - [ ] Session data stored correctly
 - [ ] Messages stored correctly
 - [ ] Timestamps accurate
@@ -345,7 +345,7 @@ npm run build
 - [ ] Security audit
 
 ### Metrics to Track
-- Total anonymous intakes submitted
+- Total Intakes submitted
 - Average time to complete intake
 - Admin dashboard usage
 - Search queries
