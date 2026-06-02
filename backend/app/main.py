@@ -19,6 +19,7 @@ from app.api.routes.admin import (
     anonymous_intakes as admin_anonymous_intakes,
     summary as admin_summary,
     notes as admin_notes,
+    dashboard as admin_dashboard,
 )
 from app.middleware.audit import AuditLoggingMiddleware
 
@@ -97,6 +98,7 @@ app.include_router(admin_intake.router, prefix=f"{settings.API_PREFIX}/admin", t
 app.include_router(admin_anonymous_intakes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-anonymous-intakes"])
 app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
 app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])
+app.include_router(admin_dashboard.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-dashboard"])
 
 
 # Root endpoint

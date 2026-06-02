@@ -45,6 +45,15 @@ export default function AdminLayout({
             </Link>
             <nav className="hidden md:flex space-x-6">
               <Link
+                href="/admin/dashboard"
+                className="transition"
+                style={{ color: '#4b5563' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
+              >
+                Dashboard
+              </Link>
+              <Link
                 href="/admin/intakes"
                 className="transition"
                 style={{ color: '#4b5563' }}
