@@ -15,13 +15,23 @@ logger = logging.getLogger(__name__)
 async def get_user_role(user_id: str) -> str:
     """Get user role from database."""
     try:
-        user = await db.get_user(user_id)
-        if not user:
-            return "guest"
-        return user.get("role", "client")
+        # Check if user is in team_members table with admin/staff role
+        response = (
+            db.client.table("team_members")
+            .select("role")
+            .eq("user_id", user_id)
+            .single()
+            .execute()
+        )
+        
+        if response.data:
+            return response.data.get("role", "client")
+        
+        # If not in team_members, they're a regular client
+        return "client"
     except Exception as e:
         logger.error(f"Error getting user role: {e}")
-        return "guest"
+        return "client"
 
 
 async def require_role(
