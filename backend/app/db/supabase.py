@@ -113,9 +113,9 @@ class SupabaseDB:
 
     # Intake Sessions
     async def create_intake_session(
-        self, user_id: Optional[str] = None, client_id: Optional[str] = None, is_anonymous: bool = False, anonymous_client_info: Optional[Dict[str, Any]] = None
+        self, user_id: Optional[str] = None, client_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Create a new intake session (registered or anonymous)."""
+        """Create a new intake session (registered or unregistered)."""
         try:
             response = (
                 self.client.table("intake_sessions")
@@ -123,9 +123,7 @@ class SupabaseDB:
                     {
                         "user_id": user_id,
                         "client_id": client_id,
-                        "is_anonymous": is_anonymous,
-                        "anonymous_client_info": anonymous_client_info,
-                        "status": "in_progress",
+                        "status": "submitted",
                         "current_step": 0,
                         "flow_data": {},
                     }
@@ -137,7 +135,7 @@ class SupabaseDB:
             logger.error(f"Error creating intake session: {e}")
             raise
 
-    async def create_anonymous_intake(self, session_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_intake(self, session_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create an anonymous intake record."""
         try:
             response = (
@@ -147,10 +145,10 @@ class SupabaseDB:
             )
             return response.data[0] if response.data else None
         except Exception as e:
-            logger.error(f"Error creating anonymous intake: {e}")
+            logger.error(f"Error creating intake: {e}")
             raise
 
-    async def get_anonymous_intake(self, intake_id: str) -> Optional[Dict[str, Any]]:
+    async def get_intake(self, intake_id: str) -> Optional[Dict[str, Any]]:
         """Get anonymous intake by ID."""
         try:
             response = (
@@ -162,34 +160,37 @@ class SupabaseDB:
             )
             return response.data
         except Exception as e:
-            logger.error(f"Error getting anonymous intake: {e}")
+            logger.error(f"Error getting intake: {e}")
             return None
 
-    async def list_all_anonymous_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
-        """List all intakes (admin only)."""
+    async def list_all_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
+        """List all intakes (admin only) - combines anonymous intakes and registered sessions."""
         try:
-            # Get total count
-            count_response = (
+            # Get anonymous intakes count
+            anon_count_response = (
                 self.client.table("anonymous_intakes")
                 .select("id", count="exact")
                 .execute()
             )
-            total = count_response.count or 0
+            anon_total = anon_count_response.count or 0
 
-            # Get paginated results
-            response = (
+            # Get anonymous intakes
+            anon_response = (
                 self.client.table("anonymous_intakes")
                 .select("*")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
                 .execute()
             )
-            return response.data or [], total
+            
+            # Format results
+            results = anon_response.data or []
+            return results, anon_total
         except Exception as e:
             logger.error(f"Error listing intakes: {e}")
             return [], 0
 
-    async def update_anonymous_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    async def update_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Update anonymous intake."""
         try:
             response = (
@@ -200,7 +201,7 @@ class SupabaseDB:
             )
             return response.data[0] if response.data else None
         except Exception as e:
-            logger.error(f"Error updating anonymous intake: {e}")
+            logger.error(f"Error updating intake: {e}")
             raise
 
     async def get_intake_session(

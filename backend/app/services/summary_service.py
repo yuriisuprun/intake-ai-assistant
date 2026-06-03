@@ -73,7 +73,6 @@ class SummaryService:
                 user_id,
                 {
                     "ai_summary": summary_data,
-                    "status": "completed",
                     "legal_category": summary_data.get("legal_category"),
                     "urgency": summary_data.get("urgency"),
                 },

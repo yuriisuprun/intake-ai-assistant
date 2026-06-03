@@ -11,13 +11,12 @@ import json
 
 from app.core.config import settings
 from app.services.ollama_service import close_ollama_service
-from app.api.routes import messages, intake as public_intake
+from app.api.routes import messages, intake as public_intake, auth
 from app.api.routes.client import intake, files, profile, dashboard
 from app.api.routes.admin import (
     clients as admin_clients,
-    intake as admin_intake,
+    intakes as admin_intakes,
     intake_management as admin_intake_management,
-    anonymous_intakes as admin_anonymous_intakes,
     summary as admin_summary,
     notes as admin_notes,
     dashboard as admin_dashboard,
@@ -83,6 +82,9 @@ async def health_check():
 
 
 # Include routers
+# Authentication
+app.include_router(auth.router, tags=["auth"])
+
 # Shared routes
 app.include_router(messages.router, prefix=settings.API_PREFIX, tags=["messages"])
 app.include_router(public_intake.router, prefix=settings.API_PREFIX, tags=["public-intake"])
@@ -95,9 +97,8 @@ app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/client", tag
 
 # Admin routes
 app.include_router(admin_clients.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-clients"])
-app.include_router(admin_intake.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake"])
+app.include_router(admin_intakes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intakes"])
 app.include_router(admin_intake_management.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake-management"])
-app.include_router(admin_anonymous_intakes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-anonymous-intakes"])
 app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
 app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])
 app.include_router(admin_dashboard.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-dashboard"])

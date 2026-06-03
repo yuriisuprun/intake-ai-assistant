@@ -91,10 +91,10 @@ class ClientResponse(BaseModel):
 # Intake Session Models
 class IntakeSessionCreate(BaseModel):
     client_id: Optional[str] = None  # For registered clients
-    # For intakes
-    anonymous_client_name: Optional[str] = None
-    anonymous_client_email: Optional[str] = None
-    anonymous_client_phone: Optional[str] = None
+    # For unregistered intakes
+    client_name: Optional[str] = None
+    client_email: Optional[str] = None
+    client_phone: Optional[str] = None
 
 
 class IntakeSessionUpdate(BaseModel):
@@ -121,8 +121,6 @@ class IntakeSessionResponse(BaseModel):
     flow_data: Optional[Dict[str, Any]]
     ai_summary: Optional[Dict[str, Any]]
     notes: Optional[str]
-    is_anonymous: bool = False
-    anonymous_client_info: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime]
@@ -132,14 +130,14 @@ class IntakeSessionResponse(BaseModel):
         from_attributes = True
 
 
-# Anonymous Intake Models
-class AnonymousIntakeCreate(BaseModel):
+# Intake Models
+class IntakeCreate(BaseModel):
     client_name: str = Field(..., min_length=1, max_length=255)
     client_email: EmailStr
     client_phone: Optional[str] = Field(None, max_length=20)
 
 
-class AnonymousIntakeResponse(BaseModel):
+class IntakeResponse(BaseModel):
     id: str
     session_id: str
     client_name: str

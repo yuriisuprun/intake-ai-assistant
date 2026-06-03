@@ -515,12 +515,12 @@ class AdminOperations:
                 # Check multiple fields
                 match = False
                 
-                # Check client name
-                if session.get("anonymous_client_info"):
-                    if isinstance(session["anonymous_client_info"], dict):
-                        if query_lower in session["anonymous_client_info"].get("name", "").lower():
+                # Check client name and email from joined client table
+                if session.get("clients"):
+                    if isinstance(session["clients"], dict):
+                        if query_lower in session["clients"].get("full_name", "").lower():
                             match = True
-                        if query_lower in session["anonymous_client_info"].get("email", "").lower():
+                        if query_lower in session["clients"].get("email", "").lower():
                             match = True
                 
                 # Check category
@@ -552,29 +552,25 @@ class AdminOperations:
     ) -> List[Dict[str, Any]]:
         """Export intakes data for reporting."""
         try:
-            query = db.client.table("intake_sessions").select("*")
+            # Get intakes from anonymous_intakes table
+            query = db.client.table("anonymous_intakes").select("*")
             
             if filters:
                 if filters.get("status"):
                     query = query.eq("status", filters["status"])
-                if filters.get("category"):
-                    query = query.eq("legal_category", filters["category"])
-                if filters.get("urgency"):
-                    query = query.eq("urgency", filters["urgency"])
             
             response = query.order("created_at", desc=True).execute()
             
             export_data = []
-            for session in response.data or []:
+            for intake in response.data or []:
                 export_item = {
-                    "id": session.get("id"),
-                    "client": session.get("anonymous_client_info", {}).get("name", "N/A") if isinstance(session.get("anonymous_client_info"), dict) else "N/A",
-                    "email": session.get("anonymous_client_info", {}).get("email", "N/A") if isinstance(session.get("anonymous_client_info"), dict) else "N/A",
-                    "category": session.get("legal_category", "N/A"),
-                    "status": session.get("status"),
-                    "urgency": session.get("urgency"),
-                    "created_at": session.get("created_at"),
-                    "updated_at": session.get("updated_at"),
+                    "id": intake.get("id"),
+                    "client": intake.get("client_name", "N/A"),
+                    "email": intake.get("client_email", "N/A"),
+                    "category": intake.get("legal_category", "N/A"),
+                    "status": intake.get("status"),
+                    "created_at": intake.get("created_at"),
+                    "updated_at": intake.get("updated_at"),
                 }
                 export_data.append(export_item)
             

@@ -1,5 +1,5 @@
 {
-  "name": "legal-ai-intake-assistant",
+  "name": "ai-intake-assistant",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -21,7 +21,8 @@
     "axios": "^1.6.0",
     "zustand": "^4.4.0",
     "react-hook-form": "^7.48.0",
-    "zod": "^3.22.0"
+    "zod": "^3.22.0",
+    "jwt-decode": "^3.1.2"
   },
   "devDependencies": {
     "typescript": "^5.2.0",
