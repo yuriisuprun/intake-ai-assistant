@@ -238,7 +238,7 @@ Content-Type: application/json
 
 ## 📞 Support
 
-**Email:** admin@example.com  
+**Email:** your-admin-email@yourdomain.com  
 **Docs:** See all `ADMIN_*.md` files  
 **Issues:** Check browser console → check audit logs
 

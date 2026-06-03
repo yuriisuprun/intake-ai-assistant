@@ -1,4 +1,4 @@
-# System Architecture - Legal AI Intake Assistant
+# System Architecture - AI Intake Assistant
 
 ## 🏗️ High-Level Architecture
 

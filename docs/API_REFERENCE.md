@@ -1,4 +1,4 @@
-# API Reference - Legal AI Intake Assistant
+# API Reference - AI Intake Assistant
 
 ## Base URL
 

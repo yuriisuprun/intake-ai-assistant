@@ -291,7 +291,7 @@ Submitted → Reviewed → Assigned → Completed/Archived
 - Check `ADMIN_PANEL_ENHANCEMENTS.md` for all API endpoints
 
 **Support:**
-- Contact: admin@example.com
+- Contact: your-admin-email@yourdomain.com
 - Issues: Check audit logs for error details
 
 ---
