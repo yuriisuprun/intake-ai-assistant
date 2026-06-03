@@ -157,8 +157,9 @@ Update Status & Add Notes
 
 ### Modified Table: intake_sessions
 ```sql
-- Added: is_anonymous (BOOLEAN)
-- Added: anonymous_client_info (JSONB)
+- Added: client_name (TEXT)
+- Added: client_email (TEXT)
+- Added: client_phone (TEXT)
 - Modified: user_id (now nullable for intakes)
 ```
 

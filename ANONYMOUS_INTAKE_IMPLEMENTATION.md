@@ -10,10 +10,9 @@ Successfully implemented a complete anonymous intake system that allows unregist
 
 #### 1. Database Migration (`backend/migrations/003_add_anonymous_intake_support.sql`)
 - Created `anonymous_intakes` table for tracking unregistered submissions
-- Added `is_anonymous` and `anonymous_client_info` columns to `intake_sessions`
 - Made `user_id` nullable in `intake_sessions` to support anonymous submissions
 - Set up RLS policies for admin-only access to intakes
-- Created admin view combining registered and intakes
+- Added columns to intake_sessions: `client_name`, `client_email`, `client_phone`
 
 #### 2. Data Models (`backend/app/models/schemas.py`)
 - Updated `IntakeSessionCreate` to support both registered and anonymous flows
@@ -142,9 +141,10 @@ Successfully implemented a complete anonymous intake system that allows unregist
 
 ### intake_sessions Changes
 ```sql
-- Added: is_anonymous (BOOLEAN)
-- Added: anonymous_client_info (JSONB)
-- Modified: user_id (now nullable)
+- Modified: user_id (now nullable for anonymous intakes)
+- Added: client_name (TEXT, for direct client info)
+- Added: client_email (TEXT, for direct client info)
+- Added: client_phone (TEXT, optional for direct client info)
 ```
 
 ## API Endpoints

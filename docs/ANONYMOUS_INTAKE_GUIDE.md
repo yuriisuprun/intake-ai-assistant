@@ -42,9 +42,10 @@ The Anonymous Intake feature allows unregistered clients to submit legal intake 
 
 #### Modified Tables
 - **intake_sessions**: Added support for anonymous submissions
-  - `is_anonymous`: Boolean flag for Intakes
-  - `anonymous_client_info`: JSONB storing client details
-  - `user_id`: Made nullable for Intakes
+  - `client_name`: Direct client name storage
+  - `client_email`: Direct client email storage
+  - `client_phone`: Direct client phone storage
+  - `user_id`: Made nullable for anonymous Intakes
 
 ### API Endpoints
 

@@ -87,7 +87,7 @@ npm run dev
 2. Verify tables:
 ```sql
 SELECT * FROM anonymous_intakes;
-SELECT * FROM intake_sessions WHERE is_anonymous = true;
+SELECT * FROM intake_sessions WHERE user_id IS NULL;
 ```
 
 ### Testing Endpoints
@@ -199,8 +199,8 @@ SELECT * FROM anonymous_intakes ORDER BY created_at DESC;
 -- View specific intake
 SELECT * FROM anonymous_intakes WHERE id = 'intake-id';
 
--- View intake session
-SELECT * FROM intake_sessions WHERE is_anonymous = true;
+-- View anonymous intake session (user_id is NULL)
+SELECT * FROM intake_sessions WHERE user_id IS NULL;
 
 -- View messages for intake
 SELECT * FROM messages WHERE session_id = 'session-id';

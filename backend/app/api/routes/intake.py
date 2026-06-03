@@ -156,10 +156,9 @@ async def complete_intake(
             raise HTTPException(status_code=404, detail="Session not found")
 
         session_data = session.data
-        is_anonymous = session_data.get("is_anonymous", False)
 
-        # For registered sessions, verify ownership
-        if not is_anonymous and session_data.get("user_id") != user_id:
+        # For registered sessions (with user_id), verify ownership
+        if session_data.get("user_id") and session_data.get("user_id") != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         # Complete intake
@@ -189,10 +188,9 @@ async def get_intake_session(
             raise HTTPException(status_code=404, detail="Session not found")
 
         session_data = session.data
-        is_anonymous = session_data.get("is_anonymous", False)
 
-        # For registered sessions, verify ownership
-        if not is_anonymous and session_data.get("user_id") != user_id:
+        # For registered sessions (with user_id), verify ownership
+        if session_data.get("user_id") and session_data.get("user_id") != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         return APIResponse(
