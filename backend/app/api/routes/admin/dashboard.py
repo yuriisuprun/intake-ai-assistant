@@ -60,17 +60,10 @@ async def get_status_distribution(
 ):
     """Get distribution of intake statuses (admin only)."""
     try:
-        # Get all sessions with status
+        # Get all sessions with status - consolidated view
         response = (
             db.client.table("intake_sessions")
-            .select("status", count="exact")
-            .execute()
-        )
-        
-        # Get anonymous intakes
-        anonymous_response = (
-            db.client.table("anonymous_intakes")
-            .select("status", count="exact")
+            .select("status")
             .execute()
         )
         
@@ -79,10 +72,6 @@ async def get_status_distribution(
         for session in response.data or []:
             status = session.get("status", "unknown")
             status_counts[status] = status_counts.get(status, 0) + 1
-        
-        for intake in anonymous_response.data or []:
-            status = intake.get("status", "unknown")
-            status_counts[f"anon_{status}"] = status_counts.get(f"anon_{status}", 0) + 1
         
         return APIResponse(
             success=True,
@@ -240,9 +229,9 @@ async def get_pending_review(
 ):
     """Get intakes pending review (admin only)."""
     try:
-        # Get anonymous intakes with submitted status
+        # Get sessions with submitted status (consolidated view)
         response = (
-            db.client.table("anonymous_intakes")
+            db.client.table("intake_sessions")
             .select("*")
             .eq("status", "submitted")
             .order("created_at")

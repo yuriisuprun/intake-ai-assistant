@@ -113,7 +113,9 @@ class SupabaseDB:
 
     # Intake Sessions
     async def create_intake_session(
-        self, user_id: Optional[str] = None, client_id: Optional[str] = None
+        self, user_id: Optional[str] = None, client_id: Optional[str] = None,
+        client_name: Optional[str] = None, client_email: Optional[str] = None,
+        client_phone: Optional[str] = None
     ) -> Dict[str, Any]:
         """Create a new intake session (registered or unregistered)."""
         try:
@@ -123,6 +125,9 @@ class SupabaseDB:
                     {
                         "user_id": user_id,
                         "client_id": client_id,
+                        "client_name": client_name,
+                        "client_email": client_email,
+                        "client_phone": client_phone,
                         "status": "submitted",
                         "current_step": 0,
                         "flow_data": {},
@@ -149,10 +154,10 @@ class SupabaseDB:
             raise
 
     async def get_intake(self, intake_id: str) -> Optional[Dict[str, Any]]:
-        """Get anonymous intake by ID."""
+        """Get intake by ID (now from consolidated intake_sessions table)."""
         try:
             response = (
-                self.client.table("anonymous_intakes")
+                self.client.table("intake_sessions")
                 .select("*")
                 .eq("id", intake_id)
                 .single()
@@ -164,19 +169,19 @@ class SupabaseDB:
             return None
 
     async def list_all_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
-        """List all intakes (admin only) - combines anonymous intakes and registered sessions."""
+        """List all intakes (admin only) - from consolidated intake_sessions table."""
         try:
-            # Get anonymous intakes count
-            anon_count_response = (
-                self.client.table("anonymous_intakes")
+            # Get total count
+            count_response = (
+                self.client.table("intake_sessions")
                 .select("id", count="exact")
                 .execute()
             )
-            anon_total = anon_count_response.count or 0
+            total = count_response.count or 0
 
-            # Get anonymous intakes
-            anon_response = (
-                self.client.table("anonymous_intakes")
+            # Get paginated results
+            response = (
+                self.client.table("intake_sessions")
                 .select("*")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
@@ -184,17 +189,17 @@ class SupabaseDB:
             )
             
             # Format results
-            results = anon_response.data or []
-            return results, anon_total
+            results = response.data or []
+            return results, total
         except Exception as e:
             logger.error(f"Error listing intakes: {e}")
             return [], 0
 
     async def update_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Update anonymous intake."""
+        """Update intake (now in consolidated intake_sessions table)."""
         try:
             response = (
-                self.client.table("anonymous_intakes")
+                self.client.table("intake_sessions")
                 .update(data)
                 .eq("id", intake_id)
                 .execute()

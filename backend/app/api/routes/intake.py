@@ -42,6 +42,8 @@ async def get_intake_flow():
 async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = Depends(get_current_user)):
     """Start a new intake session (registered or unregistered)."""
     try:
+        session = None
+        
         # Registered client intake
         if request.client_id:
             if not user_id:
@@ -57,22 +59,14 @@ async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = De
 
         # Unregistered intake
         elif request.client_name and request.client_email:
-            # Create unregistered intake session
-            session = await db.create_intake_session(user_id=None, client_id=None)
-            
-            if not session:
-                raise HTTPException(status_code=500, detail="Failed to create intake session")
-            
-            # Create intake record for unregistered user
-            intake_data = {
-                "client_name": request.client_name,
-                "client_email": request.client_email,
-                "client_phone": request.client_phone,
-            }
-            intake = await db.create_intake(session["id"], intake_data)
-            
-            if not intake:
-                logger.warning(f"Failed to create intake record for session {session['id']}")
+            # Create unregistered intake session with client info
+            session = await db.create_intake_session(
+                user_id=None,
+                client_id=None,
+                client_name=request.client_name,
+                client_email=request.client_email,
+                client_phone=request.client_phone
+            )
         else:
             raise HTTPException(status_code=400, detail="Either client_id or client info (name and email) is required")
 

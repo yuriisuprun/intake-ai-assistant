@@ -167,7 +167,7 @@ async def search_intakes_by_email(
             raise HTTPException(status_code=400, detail="Email must be at least 3 characters")
 
         response = (
-            db.client.table("anonymous_intakes")
+            db.client.table("intake_sessions")
             .select("*")
             .ilike("client_email", f"%{email}%")
             .order("created_at", desc=True)
