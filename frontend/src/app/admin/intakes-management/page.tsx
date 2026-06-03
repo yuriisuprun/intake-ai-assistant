@@ -82,7 +82,7 @@ export default function IntakesManagementPage() {
     try {
       const response = await adminApi.intake.list(0, 100)
       if (response.success) {
-        setIntakes(response.data.sessions || [])
+        setIntakes(response.data.intakes || [])
       }
     } catch (err) {
       console.error('Error fetching intakes:', err)

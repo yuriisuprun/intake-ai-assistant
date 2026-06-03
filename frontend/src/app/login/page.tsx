@@ -46,8 +46,8 @@ export default function Login() {
         throw loginError
       }
 
-      // Redirect to dashboard after login
-      router.push('/dashboard')
+      // Redirect to admin dashboard after login
+      router.push('/admin/dashboard')
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to log in. Please try again.')
@@ -58,109 +58,132 @@ export default function Login() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#f3f4f6' }}>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 16px' }}>
         <div 
-          className="rounded-lg p-8 w-full max-w-md"
+          className="rounded-xl w-full max-w-md"
           style={{ 
             backgroundColor: '#ffffff',
             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #e5e7eb'
+            border: '1px solid #e5e7eb',
+            padding: '40px 32px'
           }}
         >
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>Welcome Back</h1>
-          <p className="mb-6" style={{ color: '#4b5563' }}>Log in to your account</p>
+          {/* Header Section */}
+          <div style={{ marginBottom: '32px' }}>
+            <h1 className="text-3xl font-bold" style={{ color: '#111827', marginBottom: '8px' }}>Welcome Back</h1>
+            <p style={{ color: '#6b7280', fontSize: '0.9375rem', lineHeight: '1.5' }}>Log in to your account</p>
+          </div>
 
+          {/* Error Alerts */}
           {configError && (
             <div 
-              className="px-4 py-3 rounded-lg mb-4"
+              className="rounded-lg mb-6"
               style={{ 
                 backgroundColor: '#fee2e2',
                 border: '1px solid #fecaca',
-                color: '#991b1b'
+                color: '#991b1b',
+                padding: '12px 16px'
               }}
             >
-              {configError}
+              <p style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>{configError}</p>
             </div>
           )}
 
           {error && (
             <div 
-              className="px-4 py-3 rounded-lg mb-4"
+              className="rounded-lg mb-6"
               style={{ 
                 backgroundColor: '#fee2e2',
                 border: '1px solid #fecaca',
-                color: '#991b1b'
+                color: '#991b1b',
+                padding: '12px 16px'
               }}
             >
-              {error}
+              <p style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#1f2937' }}>
+          {/* Login Form */}
+          <form onSubmit={handleLogin}>
+            {/* Email Field */}
+            <div style={{ marginBottom: '24px' }}>
+              <label className="block font-medium" style={{ color: '#1f2937', marginBottom: '8px', fontSize: '0.875rem' }}>
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg outline-none transition"
+                className="w-full rounded-lg outline-none transition"
                 style={{ 
                   border: '1px solid #d1d5db',
-                  backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff'
+                  backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff',
+                  padding: '10px 12px',
+                  fontSize: '0.9375rem',
+                  lineHeight: '1.5'
                 }}
                 placeholder="you@example.com"
                 required
                 disabled={loading || !!configError}
                 onFocus={(e) => {
                   if (!loading && !configError) {
-                    e.currentTarget.style.borderColor = '#d1d5db'
-                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                    e.currentTarget.style.borderColor = '#a855f7'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
                   }
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.borderColor = '#d1d5db'
                 }}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: '#1f2937' }}>
+            {/* Password Field */}
+            <div style={{ marginBottom: '32px' }}>
+              <label className="block font-medium" style={{ color: '#1f2937', marginBottom: '8px', fontSize: '0.875rem' }}>
                 Password
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg outline-none transition"
+                className="w-full rounded-lg outline-none transition"
                 style={{ 
                   border: '1px solid #d1d5db',
-                  backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff'
+                  backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff',
+                  padding: '10px 12px',
+                  fontSize: '0.9375rem',
+                  lineHeight: '1.5'
                 }}
                 placeholder="••••••••"
                 required
                 disabled={loading || !!configError}
                 onFocus={(e) => {
                   if (!loading && !configError) {
-                    e.currentTarget.style.borderColor = '#d1d5db'
-                    e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                    e.currentTarget.style.borderColor = '#a855f7'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
                   }
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.borderColor = '#d1d5db'
                 }}
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading || !!configError}
-              className="w-full py-2 rounded-lg font-medium transition"
+              className="w-full rounded-lg font-semibold transition"
               style={{
-                backgroundColor: loading || !!configError ? '#9ca3af' : '#a855f7',
+                backgroundColor: loading || !!configError ? '#d1d5db' : '#a855f7',
                 color: '#ffffff',
-                cursor: loading || !!configError ? 'not-allowed' : 'pointer'
+                cursor: loading || !!configError ? 'not-allowed' : 'pointer',
+                padding: '11px 16px',
+                fontSize: '0.9375rem',
+                lineHeight: '1.5',
+                marginBottom: '24px'
               }}
               onMouseEnter={(e) => {
                 if (!loading && !configError) {
@@ -177,18 +200,21 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-center mt-6" style={{ color: '#4b5563' }}>
-            Don't have an account?{' '}
-            <Link 
-              href="/signup" 
-              className="font-medium transition"
-              style={{ color: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
-            >
-              Sign up
-            </Link>
-          </p>
+          {/* Footer Link */}
+          <div style={{ textAlign: 'center', borderTop: '1px solid #e5e7eb', paddingTop: '24px' }}>
+            <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+              Don't have an account?{' '}
+              <Link 
+                href="/signup" 
+                className="font-semibold transition"
+                style={{ color: '#a855f7' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
       <Footer />

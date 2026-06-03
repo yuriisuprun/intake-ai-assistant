@@ -86,9 +86,9 @@ export default function PublicIntakePage() {
 
       // Start Intake session
       const response = await apiClient.startIntake({
-        anonymous_client_name: clientName,
-        anonymous_client_email: clientEmail,
-        anonymous_client_phone: clientPhone,
+        client_name: clientName,
+        client_email: clientEmail,
+        client_phone: clientPhone,
       })
 
       if (response.success && response.data) {
@@ -194,7 +194,7 @@ export default function PublicIntakePage() {
       <div className="bg-white border-b" style={{ borderColor: '#e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>⚖️ Intake Assistant</h1>
+            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>📋 Intake Assistant</h1>
           </div>
           <button
             onClick={() => router.push('/')}
@@ -224,15 +224,7 @@ export default function PublicIntakePage() {
               <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Review & Submit</a>
             </nav>
 
-            {/* Help Box */}
-            <div className="text-white rounded-lg p-6 sticky top-6" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)' }}>
-              <div className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#7e22ce', color: '#e9d5ff' }}>New</div>
-              <h4 className="font-semibold text-base mb-2">Getting Help?</h4>
-              <p className="text-sm mb-4" style={{ color: '#f3e8ff' }}>Need guidance on filling out your intake form? Our legal assistant can help.</p>
-              <button className="w-full font-medium py-2 rounded-lg transition text-sm" style={{ backgroundColor: '#ffffff', color: '#a855f7' }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#faf5ff')} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}>
-                Ask for Help
-              </button>
-            </div>
+
           </div>
         </div>
 

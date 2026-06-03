@@ -10,7 +10,7 @@ export default function Home() {
       {/* Navigation */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold" style={{ color: '#a855f7' }}>⚖️ Intake Assistant</div>
+          <div className="text-2xl font-bold" style={{ color: '#a855f7' }}>📋 Intake Assistant</div>
           <div className="space-x-4">
             <Link 
               href="/login" 
@@ -35,7 +35,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
           <h1 className="text-5xl font-bold mb-6" style={{ color: '#111827' }}>
-            Streamline Legal Intake
+            Streamline Intake
           </h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ color: '#4b5563' }}>
             Collect structured client information, generate AI summaries, and prepare consultation notes—all in one platform.
@@ -50,7 +50,7 @@ export default function Home() {
               Start Intake<ArrowRight size={20} />
             </Link>
             <Link 
-              href="/admin/dashboard" 
+              href="/login" 
               className="px-8 py-3 rounded-lg transition"
               style={{ 
                 backgroundColor: '#ffffff',
@@ -96,7 +96,7 @@ export default function Home() {
         <div className="rounded-lg p-12 mt-20 text-center" style={{ backgroundColor: '#ffffff', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
           <h2 className="text-3xl font-bold mb-4" style={{ color: '#111827' }}>Ready to get started?</h2>
           <p className="mb-8" style={{ color: '#4b5563' }}>
-            Start collecting structured legal intake data today.
+            Start collecting structured intake data today.
           </p>
           <Link 
             href="/signup" 
