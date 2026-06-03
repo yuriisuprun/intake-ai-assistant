@@ -30,7 +30,7 @@ export default function AdminLayout({
   }
 
   if (!user) {
-    router.push('/admin/login');
+    router.push('/admin-login');
     return null;
   }
 
@@ -146,7 +146,7 @@ export default function AdminLayout({
               <ul className="space-y-2">
                 <li>
                   <a 
-                    href="mailto:admin@example.com" 
+                    href="mailto:support@company.com" 
                     className="transition"
                     style={{ color: '#4b5563' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}

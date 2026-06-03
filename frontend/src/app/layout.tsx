@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Intake Assistant',
-  description: 'Structured legal intake for law firms',
+  description: 'Structured intake for law firms',
   icons: {
     icon: '/favicon.svg',
   },
