@@ -1,6 +1,6 @@
 # Project Structure
 
-Complete directory structure and file organization for the Legal AI Intake Assistant.
+Complete directory structure and file organization for the AI Intake Assistant.
 
 ```
 intake-ai-assistant/

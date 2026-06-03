@@ -1,8 +1,8 @@
-# Deployment Guide - Legal AI Intake Assistant
+# Deployment Guide - AI Intake Assistant
 
 ## Overview
 
-This guide covers deploying the Legal AI Intake Assistant to production.
+This guide covers deploying the AI Intake Assistant to production.
 
 ## Frontend Deployment (Vercel)
 
@@ -83,7 +83,7 @@ This guide covers deploying the Legal AI Intake Assistant to production.
 
    ```ini
    [Unit]
-   Description=Legal AI Intake Assistant API
+   Description=AI Intake Assistant API
    After=network.target
 
    [Service]

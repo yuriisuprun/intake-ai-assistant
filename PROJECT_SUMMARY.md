@@ -1,4 +1,4 @@
-# Legal AI Intake Assistant - Project Summary
+# AI Intake Assistant - Project Summary
 
 ## 🎯 Project Overview
 

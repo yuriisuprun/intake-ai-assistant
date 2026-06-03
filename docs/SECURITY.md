@@ -1,8 +1,8 @@
-# Security Implementation - Legal AI Intake Assistant
+# Security Implementation - AI Intake Assistant
 
 ## Overview
 
-This document outlines the security measures implemented in the Legal AI Intake Assistant.
+This document outlines the security measures implemented in the AI Intake Assistant.
 
 ## Authentication
 

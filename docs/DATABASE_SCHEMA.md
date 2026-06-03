@@ -1,4 +1,4 @@
-# Database Schema - Legal AI Intake Assistant
+# Database Schema - AI Intake Assistant
 
 ## Overview
 

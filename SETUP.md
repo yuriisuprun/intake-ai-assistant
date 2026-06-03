@@ -1,6 +1,6 @@
-# Setup Guide - Legal AI Intake Assistant
+# Setup Guide - AI Intake Assistant
 
-Complete step-by-step guide to set up the Legal AI Intake Assistant locally.
+Complete step-by-step guide to set up the AI Intake Assistant locally.
 
 ## Prerequisites
 

@@ -1,11 +1,11 @@
-# Legal AI Intake Assistant - MVP
+# AI Intake Assistant - MVP
 
 A production-ready SaaS platform for law firms to collect structured client intake data, store conversations, generate AI summaries, and prepare consultation notes.
 
 ## 🎯 Product Overview
 
 **What it does:**
-- Collects structured legal intake information (NOT free-form chat)
+- Collects structured intake information (NOT free-form chat)
 - Stores client conversations and documents securely
 - Generates AI-powered case summaries via local Ollama
 - Provides lawyers with case briefs and missing information alerts
@@ -166,4 +166,4 @@ This is an MVP. Focus on:
 
 ## 📄 License
 
-Proprietary - Legal AI Intake Assistant
+Proprietary - AI Intake Assistant

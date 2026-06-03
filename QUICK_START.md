@@ -310,9 +310,19 @@ npm run dev -- -p 3001
 uvicorn app.main:app --port 8001
 ```
 
+## Authentication & User Credentials
+
+**Important:** This system requires real user credentials. Demo credentials have been removed.
+
+For setting up real admin and user accounts:
+- See `REAL_CREDENTIALS_SETUP.md` - Complete guide to creating real user accounts
+- Admin login: `http://localhost:3000/admin-login`
+- Client login: `http://localhost:3000/login`
+
 ## Next Steps
 
 - Read `SETUP.md` for detailed setup
+- Read `REAL_CREDENTIALS_SETUP.md` for user account creation
 - Read `docs/ARCHITECTURE.md` for system design
 - Read `docs/API_REFERENCE.md` for API details
 - Check `PROJECT_SUMMARY.md` for full overview
