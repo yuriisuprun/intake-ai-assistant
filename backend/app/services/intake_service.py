@@ -137,7 +137,7 @@ class IntakeService:
 
         Args:
             session_id: ID of the intake session
-            user_id: ID of the user (can be None for anonymous)
+            user_id: ID of the user (can be None for unregistered intakes)
             step_key: Key of the question
             answer: Answer provided by user
             question_type: Type of question
@@ -203,11 +203,12 @@ class IntakeService:
     @staticmethod
     async def complete_intake(session_id: str, user_id: Optional[str]) -> bool:
         """
-        Mark intake as completed.
+        Mark intake as submitted. All intakes start with "submitted" status
+        and can only be changed to other statuses by admin action.
 
         Args:
             session_id: ID of the intake session
-            user_id: ID of the user (can be None for anonymous)
+            user_id: ID of the user (can be None for unregistered intakes)
 
         Returns:
             True if successful, False otherwise
@@ -219,10 +220,16 @@ class IntakeService:
                 logger.error(f"Session not found: {session_id}")
                 return False
 
+            session_data = session_response.data
+
+            # All intakes should have status "submitted" when they complete the intake form
+            # Status should only change via admin action
+            new_status = "submitted"
+
             # Update session status - use direct client call to avoid user_id filter
             update_response = db.client.table("intake_sessions").update(
                 {
-                    "status": "completed",
+                    "status": new_status,
                     "current_step": IntakeService.get_total_steps(),
                 }
             ).eq("id", session_id).execute()
@@ -232,11 +239,12 @@ class IntakeService:
                 return False
 
             # Create system message
+            message_content = "Intake submitted. Awaiting review."
             await db.create_message(
                 {
                     "session_id": session_id,
                     "role": "system",
-                    "content": "Intake completed. Awaiting lawyer review.",
+                    "content": message_content,
                     "message_type": "text",
                 }
             )

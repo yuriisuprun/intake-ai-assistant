@@ -14,7 +14,7 @@ from app.models.schemas import (
     IntakeFlowResponse,
     IntakeQuestion,
     APIResponse,
-    AnonymousIntakeCreate,
+    IntakeCreate,
 )
 from app.services.intake_service import IntakeService
 from app.db.supabase import db
@@ -40,7 +40,7 @@ async def get_intake_flow():
 
 @router.post("/start", response_model=APIResponse)
 async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = Depends(get_current_user)):
-    """Start a new intake session (registered or anonymous)."""
+    """Start a new intake session (registered or unregistered)."""
     try:
         # Registered client intake
         if request.client_id:
@@ -53,36 +53,28 @@ async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = De
                 raise HTTPException(status_code=404, detail="Client not found")
 
             # Create intake session
-            session = await db.create_intake_session(user_id=user_id, client_id=request.client_id, is_anonymous=False)
+            session = await db.create_intake_session(user_id=user_id, client_id=request.client_id)
 
-        # Anonymous intake
-        elif request.anonymous_client_name and request.anonymous_client_email:
-            # Create anonymous intake session
-            anonymous_info = {
-                "name": request.anonymous_client_name,
-                "email": request.anonymous_client_email,
-                "phone": request.anonymous_client_phone,
-            }
+        # Unregistered intake
+        elif request.client_name and request.client_email:
+            # Create unregistered intake session
+            session = await db.create_intake_session(user_id=None, client_id=None)
             
-            session = await db.create_intake_session(
-                user_id=None,
-                client_id=None,
-                is_anonymous=True,
-                anonymous_client_info=anonymous_info
-            )
-
-            # Create anonymous intake record
-            if session:
-                await db.create_anonymous_intake(
-                    session["id"],
-                    {
-                        "client_name": request.anonymous_client_name,
-                        "client_email": request.anonymous_client_email,
-                        "client_phone": request.anonymous_client_phone,
-                    }
-                )
+            if not session:
+                raise HTTPException(status_code=500, detail="Failed to create intake session")
+            
+            # Create intake record for unregistered user
+            intake_data = {
+                "client_name": request.client_name,
+                "client_email": request.client_email,
+                "client_phone": request.client_phone,
+            }
+            intake = await db.create_intake(session["id"], intake_data)
+            
+            if not intake:
+                logger.warning(f"Failed to create intake record for session {session['id']}")
         else:
-            raise HTTPException(status_code=400, detail="Either client_id or anonymous client info is required")
+            raise HTTPException(status_code=400, detail="Either client_id or client info (name and email) is required")
 
         if not session:
             raise HTTPException(status_code=500, detail="Failed to create intake session")
@@ -103,7 +95,6 @@ async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = De
                 "id": session["id"],
                 "status": session.get("status"),
                 "current_step": session.get("current_step"),
-                "is_anonymous": session.get("is_anonymous", False),
             },
         )
 
@@ -118,19 +109,18 @@ async def start_intake(request: IntakeSessionCreate, user_id: Optional[str] = De
 async def submit_intake_step(
     request: IntakeStepSubmit, user_id: Optional[str] = Depends(get_current_user)
 ):
-    """Submit an intake step answer (works for both registered and anonymous)."""
+    """Submit an intake step answer (works for both registered and unregistered)."""
     try:
-        # Get session to check if it's anonymous
+        # Get session
         session = db.client.table("intake_sessions").select("*").eq("id", request.session_id).single().execute()
         
         if not session.data:
             raise HTTPException(status_code=404, detail="Session not found")
 
         session_data = session.data
-        is_anonymous = session_data.get("is_anonymous", False)
 
-        # For registered sessions, verify ownership
-        if not is_anonymous and session_data.get("user_id") != user_id:
+        # For registered sessions with user_id, verify ownership
+        if session_data.get("user_id") and session_data.get("user_id") != user_id:
             raise HTTPException(status_code=403, detail="Unauthorized")
 
         # Validate answer
