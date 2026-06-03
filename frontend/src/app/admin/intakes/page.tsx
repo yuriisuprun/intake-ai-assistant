@@ -65,7 +65,7 @@ export default function AdminIntakesPage() {
     try {
       const response = await apiClient.listAdminIntakes(0, 100)
 
-      const allIntakes: Intake[] = (response.data?.sessions || []).map((s: any) => ({
+      const allIntakes: Intake[] = (response.data?.intakes || []).map((s: any) => ({
         ...s,
         id: s.id,
       }))
