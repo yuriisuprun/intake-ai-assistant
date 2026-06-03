@@ -14,7 +14,7 @@
 -- 2. Create admin_notes table
 CREATE TABLE IF NOT EXISTS admin_notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   admin_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   note_text TEXT NOT NULL,
   note_type VARCHAR(50) DEFAULT 'general', -- general, urgent, follow_up, etc.
@@ -30,7 +30,7 @@ CREATE INDEX IF NOT EXISTS idx_admin_notes_created_at ON admin_notes(created_at 
 -- 3. Create team_assignments table
 CREATE TABLE IF NOT EXISTS team_assignments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   assigned_to_user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   assigned_by_user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   assignment_status VARCHAR(50) DEFAULT 'assigned', -- assigned, in_progress, completed
@@ -100,8 +100,8 @@ CREATE INDEX IF NOT EXISTS idx_admin_settings_key ON admin_settings(setting_key)
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Clients can view own record" ON clients;
 DROP POLICY IF EXISTS "Admins can view all records" ON clients;
-DROP POLICY IF EXISTS "Clients can view own sessions" ON intake_sessions;
-DROP POLICY IF EXISTS "Admins can view all sessions" ON intake_sessions;
+DROP POLICY IF EXISTS "Clients can view own sessions" ON intakes;
+DROP POLICY IF EXISTS "Admins can view all sessions" ON intakes;
 
 -- Enable RLS on new tables
 ALTER TABLE admin_notes ENABLE ROW LEVEL SECURITY;
@@ -126,13 +126,13 @@ CREATE POLICY "Admins can view all records"
     )
   );
 
--- RLS Policies for intake_sessions table
+-- RLS Policies for intakes table
 CREATE POLICY "Clients can view own sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (user_id = auth.uid());
 
 CREATE POLICY "Admins can view all sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM team_members
@@ -294,7 +294,7 @@ SELECT
   s.created_at,
   s.updated_at,
   COUNT(an.id) as notes_count
-FROM intake_sessions s
+FROM intakes s
 LEFT JOIN admin_notes an ON s.id = an.session_id
 GROUP BY s.id;
 

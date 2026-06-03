@@ -107,7 +107,7 @@ All endpoints are functional and ready:
 
 ## Database Schema
 
-### intake_sessions Table
+### intakes Table
 - `id`: Session UUID
 - `user_id`: User UUID
 - `client_id`: Client UUID

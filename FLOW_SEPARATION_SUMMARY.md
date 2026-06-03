@@ -190,7 +190,7 @@ GET    /api/messages/{session_id}
 ### Updated Tables
 - `auth.users` - Added role metadata
 - `clients` - Updated RLS policies
-- `intake_sessions` - Updated RLS policies
+- `intakes` - Updated RLS policies
 
 ### New Indexes
 - `admin_notes(session_id)`

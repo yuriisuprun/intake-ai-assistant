@@ -120,7 +120,7 @@ class SupabaseDB:
         """Create a new intake session (registered or unregistered)."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .insert(
                     {
                         "user_id": user_id,
@@ -154,10 +154,10 @@ class SupabaseDB:
             raise
 
     async def get_intake(self, intake_id: str) -> Optional[Dict[str, Any]]:
-        """Get intake by ID (now from consolidated intake_sessions table)."""
+        """Get intake by ID (now from consolidated intakes table)."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*")
                 .eq("id", intake_id)
                 .single()
@@ -169,11 +169,11 @@ class SupabaseDB:
             return None
 
     async def list_all_intakes(self, skip: int = 0, limit: int = 20) -> tuple[List[Dict[str, Any]], int]:
-        """List all intakes (admin only) - from consolidated intake_sessions table."""
+        """List all intakes (admin only) - from consolidated intakes table."""
         try:
             # Get total count
             count_response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("id", count="exact")
                 .execute()
             )
@@ -181,7 +181,7 @@ class SupabaseDB:
 
             # Get paginated results
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
@@ -196,10 +196,10 @@ class SupabaseDB:
             return [], 0
 
     async def update_intake(self, intake_id: str, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Update intake (now in consolidated intake_sessions table)."""
+        """Update intake (now in consolidated intakes table)."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .update(data)
                 .eq("id", intake_id)
                 .execute()
@@ -215,7 +215,7 @@ class SupabaseDB:
         """Get intake session by ID."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*")
                 .eq("id", session_id)
                 .eq("user_id", user_id)
@@ -234,7 +234,7 @@ class SupabaseDB:
         try:
             # Get total count
             count_response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("id", count="exact")
                 .eq("user_id", user_id)
                 .execute()
@@ -243,7 +243,7 @@ class SupabaseDB:
 
             # Get paginated results with client info
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*, clients(id, full_name, email)")
                 .eq("user_id", user_id)
                 .order("created_at", desc=True)
@@ -262,7 +262,7 @@ class SupabaseDB:
         try:
             # Get total count
             count_response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("id", count="exact")
                 .execute()
             )
@@ -270,7 +270,7 @@ class SupabaseDB:
 
             # Get paginated results with client info (optional join)
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*, clients(id, full_name, email)")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
@@ -287,7 +287,7 @@ class SupabaseDB:
         """Update intake session."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .update(data)
                 .eq("id", session_id)
                 .eq("user_id", user_id)
@@ -304,7 +304,7 @@ class SupabaseDB:
         """Get intake session by ID (admin only - no user_id check)."""
         try:
             response = (
-                self.client.table("intake_sessions")
+                self.client.table("intakes")
                 .select("*, clients(id, full_name, email)")
                 .eq("id", session_id)
                 .single()

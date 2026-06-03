@@ -283,7 +283,7 @@
 
 ### Database Tables
 - **New Tables:** 5 (admin_notes, team_assignments, audit_log, team_members, admin_settings)
-- **Updated Tables:** 3 (clients, intake_sessions, auth.users)
+- **Updated Tables:** 3 (clients, intakes, auth.users)
 - **New Indexes:** 15+
 - **New Views:** 3
 

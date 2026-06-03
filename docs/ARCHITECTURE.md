@@ -244,7 +244,7 @@ CREATE TABLE clients (
 
 ### Intake Sessions Table
 ```sql
-CREATE TABLE intake_sessions (
+CREATE TABLE intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id),
   legal_category TEXT,
@@ -260,7 +260,7 @@ CREATE TABLE intake_sessions (
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id),
+  session_id UUID NOT NULL REFERENCES intakes(id),
   role TEXT NOT NULL, -- 'client', 'system', 'lawyer'
   content TEXT NOT NULL,
   metadata JSONB, -- stores question key, answer type, etc.
@@ -272,7 +272,7 @@ CREATE TABLE messages (
 ```sql
 CREATE TABLE uploaded_files (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id),
+  session_id UUID NOT NULL REFERENCES intakes(id),
   file_url TEXT NOT NULL,
   file_name TEXT NOT NULL,
   file_type TEXT, -- pdf, docx, txt, etc.

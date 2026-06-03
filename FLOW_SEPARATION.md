@@ -172,7 +172,7 @@ GET    /api/client/profile
 ### Database Access (Client)
 
 - **clients:** Own record only (RLS)
-- **intake_sessions:** Own sessions only (RLS)
+- **intakes:** Own sessions only (RLS)
 - **messages:** Own session messages only (RLS)
 - **uploaded_files:** Own session files only (RLS)
 
@@ -363,7 +363,7 @@ POST   /api/admin/settings
 ### Database Access (Admin)
 
 - **clients:** All records (no RLS restriction)
-- **intake_sessions:** All records (no RLS restriction)
+- **intakes:** All records (no RLS restriction)
 - **messages:** All records (no RLS restriction)
 - **uploaded_files:** All records (no RLS restriction)
 - **admin_notes:** Create/read/update own notes
@@ -438,14 +438,14 @@ CREATE POLICY "Admins can view all records"
 ```sql
 -- Clients can only see their own sessions
 CREATE POLICY "Clients can view own sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (
     user_id = auth.uid()
   );
 
 -- Admins can see all sessions
 CREATE POLICY "Admins can view all sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (
     EXISTS (
       SELECT 1 FROM auth.users
@@ -465,7 +465,7 @@ CREATE POLICY "Admins can view all sessions"
 ```sql
 CREATE TABLE admin_notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id),
+  session_id UUID NOT NULL REFERENCES intakes(id),
   admin_id UUID NOT NULL REFERENCES auth.users(id),
   note_text TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT now(),
@@ -477,7 +477,7 @@ CREATE TABLE admin_notes (
 ```sql
 CREATE TABLE team_assignments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id),
+  session_id UUID NOT NULL REFERENCES intakes(id),
   assigned_to_user_id UUID NOT NULL REFERENCES auth.users(id),
   assigned_by_user_id UUID NOT NULL REFERENCES auth.users(id),
   created_at TIMESTAMP DEFAULT now(),

@@ -99,7 +99,7 @@ User Login
     │
     ├─→ POST /api/intake/start ────→ Create Session
     │                                 │
-    │   ← Session ID ←────────────────┤─→ INSERT intake_sessions
+    │   ← Session ID ←────────────────┤─→ INSERT intakes
     │                                 │
     │
 Display Question 1
@@ -110,7 +110,7 @@ User Answers Question 1
     │   (answer, step_key)            │
     │                                 ├─→ INSERT messages
     │   ← Updated Session ←───────────┤
-    │                                 ├─→ UPDATE intake_sessions
+    │                                 ├─→ UPDATE intakes
     │                                 │
 Display Question 2
     │
@@ -120,14 +120,14 @@ User Answers Question 8
     │
     ├─→ POST /api/intake/complete ─→ Mark Complete
     │                                 │
-    │   ← Completed Session ←─────────┤─→ UPDATE intake_sessions
+    │   ← Completed Session ←─────────┤─→ UPDATE intakes
     │                                 │   (status = completed)
     │
 Redirect to Dashboard
     │
     ├─→ GET /api/intake/ ──────────→ List Sessions
     │                                 │
-    │   ← Sessions Array ←────────────┤─→ SELECT * FROM intake_sessions
+    │   ← Sessions Array ←────────────┤─→ SELECT * FROM intakes
     │                                 │
 Display Sessions
 ```
@@ -331,7 +331,7 @@ IntakePage Component
 └─────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────┐
-│   intake_sessions        │
+│   intakes                │
 ├──────────────────────────┤
 │ id (UUID) PK             │
 │ user_id (UUID) FK        │
@@ -351,7 +351,7 @@ IntakePage Component
 │   messages               │
 ├──────────────────────────┤
 │ id (UUID) PK             │
-│ session_id (UUID) FK ────┼──→ intake_sessions
+│ session_id (UUID) FK ────┼──→ intakes
 │ role (enum)              │
 │ content (text)           │
 │ message_type (enum)      │

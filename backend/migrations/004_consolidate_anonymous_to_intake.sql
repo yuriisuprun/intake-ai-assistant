@@ -4,7 +4,7 @@
 -- 1. Create new unified intakes table
 CREATE TABLE IF NOT EXISTS intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   client_name TEXT NOT NULL,
   client_email TEXT NOT NULL,
   client_phone TEXT,
@@ -64,8 +64,8 @@ CREATE POLICY "Anyone can submit intakes"
   ON intakes FOR INSERT
   WITH CHECK (true);
 
--- 5. Remove anonymous columns from intake_sessions
-ALTER TABLE intake_sessions 
+-- 5. Remove anonymous columns from intakes
+ALTER TABLE intakes 
 DROP COLUMN IF EXISTS is_anonymous,
 DROP COLUMN IF EXISTS anonymous_client_info;
 
@@ -97,7 +97,7 @@ SELECT
   s.created_at,
   s.updated_at,
   'registered' as intake_type
-FROM intake_sessions s
+FROM intakes s
 JOIN clients c ON s.client_id = c.id
 WHERE s.user_id IS NOT NULL;
 

@@ -120,6 +120,8 @@
 | **Query Building** | ✅ | Flexible query construction |
 | **Error Handling** | ✅ | Proper exception handling |
 | **Connection Pooling** | ✅ | Ready for production |
+| **Schema Consolidation** | ✅ | Unified intakes table with client info columns |
+| **Column Cleanup** | ✅ | `anonymous_client_info` and `is_anonymous` removed |
 
 ### ✅ AI Integration (100% Complete)
 
@@ -200,9 +202,11 @@
 | Table | Status | Columns | RLS |
 |-------|--------|---------|-----|
 | **clients** | ✅ | id, user_id, name, email, phone, created_at, updated_at | ✅ |
-| **intake_sessions** | ✅ | id, user_id, client_id, status, current_step, flow_data, created_at, updated_at | ✅ |
+| **intakes** | ✅ | id, user_id, client_id, client_name, client_email, client_phone, status, current_step, flow_data, created_at, updated_at | ✅ |
 | **messages** | ✅ | id, session_id, role, content, message_type, metadata, created_at | ✅ |
 | **uploaded_files** | ✅ | id, session_id, file_name, file_type, file_size, storage_path, created_at | ✅ |
+
+**Note:** The intakes table has been consolidated to include direct client info columns (client_name, client_email, client_phone). The `anonymous_client_info` JSONB column and `is_anonymous` boolean column have been removed as part of the schema cleanup.
 
 ### ✅ Features (100% Complete)
 

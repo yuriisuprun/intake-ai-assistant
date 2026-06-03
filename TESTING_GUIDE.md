@@ -191,7 +191,7 @@
 **Steps**:
 1. Complete intake
 2. Go to dashboard
-3. Check Supabase `intake_sessions` table
+3. Check Supabase `intakes` table
 4. Should see session with flow_data containing answers
 
 **Expected Result**: ✅ Answers saved in database

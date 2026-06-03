@@ -117,7 +117,7 @@ Ollama (Local LLM - Mistral 7B)
 
 **Tables:**
 - `clients` - Client information
-- `intake_sessions` - Intake session records
+- `intakes` - Unified intake session records with client info columns (client_name, client_email, client_phone)
 - `messages` - Conversation messages
 - `uploaded_files` - Document metadata
 
@@ -126,6 +126,7 @@ Ollama (Local LLM - Mistral 7B)
 - Automatic timestamps
 - JSONB fields for flexible data
 - Indexes for performance
+- Consolidated schema with direct client info columns in intakes table
 
 ## 🔌 API Endpoints
 

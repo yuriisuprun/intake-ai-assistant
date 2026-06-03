@@ -1,15 +1,15 @@
 -- Add support for anonymous/unregistered client intakes
 
--- 1. Add anonymous_client_info and is_anonymous columns to intake_sessions
+-- 1. Add anonymous_client_info and is_anonymous columns to intakes
 -- Note: user_id is already nullable, so we don't need to modify it
-ALTER TABLE intake_sessions 
+ALTER TABLE intakes 
 ADD COLUMN IF NOT EXISTS anonymous_client_info JSONB,
 ADD COLUMN IF NOT EXISTS is_anonymous BOOLEAN DEFAULT FALSE;
 
 -- 2. Create anonymous_intakes table for tracking unregistered submissions
 CREATE TABLE IF NOT EXISTS anonymous_intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   client_name TEXT NOT NULL,
   client_email TEXT NOT NULL,
   client_phone TEXT,
@@ -63,14 +63,14 @@ CREATE POLICY "Anyone can submit Intakes"
   ON anonymous_intakes FOR INSERT
   WITH CHECK (true);
 
--- 5. Update intake_sessions to allow NULL user_id for anonymous submissions
+-- 5. Update intakes to allow NULL user_id for anonymous submissions
 -- Make sure user_id is nullable (it should already be, but ensure it)
-ALTER TABLE intake_sessions 
+ALTER TABLE intakes 
 ALTER COLUMN user_id DROP NOT NULL;
 
 -- 6. Create or update indexes
-CREATE INDEX IF NOT EXISTS idx_intake_sessions_user_id ON intake_sessions(user_id) WHERE user_id IS NOT NULL;
-CREATE INDEX IF NOT EXISTS idx_intake_sessions_is_anonymous ON intake_sessions(is_anonymous);
+CREATE INDEX IF NOT EXISTS idx_intakes_user_id ON intakes(user_id) WHERE user_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_intakes_is_anonymous ON intakes(is_anonymous);
 
 -- 7. Create view for admin dashboard
 CREATE OR REPLACE VIEW admin_all_intakes AS
@@ -98,6 +98,6 @@ SELECT
   s.created_at,
   s.updated_at,
   'registered' as intake_type
-FROM intake_sessions s
+FROM intakes s
 JOIN clients c ON s.client_id = c.id
 WHERE s.user_id IS NOT NULL;

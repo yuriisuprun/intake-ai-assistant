@@ -94,7 +94,7 @@ See `docs/DATABASE_SCHEMA.md` for full schema details.
 
 **Core Tables:**
 - `clients` - Client information
-- `intake_sessions` - Intake session records
+- `intakes` - Intake session records
 - `messages` - Conversation messages
 - `uploaded_files` - Document storage metadata
 

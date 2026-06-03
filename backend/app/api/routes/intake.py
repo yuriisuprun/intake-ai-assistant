@@ -106,7 +106,7 @@ async def submit_intake_step(
     """Submit an intake step answer (works for both registered and unregistered)."""
     try:
         # Get session
-        session = db.client.table("intake_sessions").select("*").eq("id", request.session_id).single().execute()
+        session = db.client.table("intakes").select("*").eq("id", request.session_id).single().execute()
         
         if not session.data:
             raise HTTPException(status_code=404, detail="Session not found")
@@ -150,7 +150,7 @@ async def complete_intake(
     """Complete an intake session."""
     try:
         # Get session
-        session = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+        session = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
         
         if not session.data:
             raise HTTPException(status_code=404, detail="Session not found")
@@ -182,7 +182,7 @@ async def get_intake_session(
 ):
     """Get intake session details."""
     try:
-        session = await db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+        session = await db.client.table("intakes").select("*").eq("id", session_id).single().execute()
         
         if not session.data:
             raise HTTPException(status_code=404, detail="Session not found")

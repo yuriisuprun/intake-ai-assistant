@@ -46,10 +46,10 @@ cd intake-ai-assistant
 7. Wait for completion (should see green checkmark)
 
 **What this creates:**
-- `clients` table
-- `intake_sessions` table
-- `messages` table
-- `uploaded_files` table
+- `clients` table - Client information
+- `intakes` table - Intake session records with client info columns
+- `messages` table - Conversation messages
+- `uploaded_files` table - File metadata
 - Row-Level Security (RLS) policies
 - Indexes for performance
 
@@ -94,7 +94,7 @@ cd intake-ai-assistant
    SELECT table_name FROM information_schema.tables 
    WHERE table_schema = 'public';
    ```
-3. You should see: `clients`, `intake_sessions`, `messages`, `uploaded_files`
+3. You should see: `clients`, `intakes`, `messages`, `uploaded_files`
 
 ## Step 3: Ollama Setup (5-10 min)
 
@@ -449,7 +449,7 @@ FastAPI Backend (http://localhost:8000)
     ↓
 Supabase (PostgreSQL + Auth)
     ├── clients (Client info)
-    ├── intake_sessions (Session data)
+    ├── intakes (Session data)
     ├── messages (Answers stored as messages)
     └── uploaded_files (File references)
     ↓

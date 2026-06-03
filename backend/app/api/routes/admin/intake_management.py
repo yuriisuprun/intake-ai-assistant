@@ -309,7 +309,7 @@ async def flag_for_review(
         
         # Update urgency if flagged as high priority
         if priority == "high":
-            db.client.table("intake_sessions").update({
+            db.client.table("intakes").update({
                 "urgency": "high",
                 "updated_at": datetime.utcnow().isoformat(),
             }).eq("id", session_id).execute()

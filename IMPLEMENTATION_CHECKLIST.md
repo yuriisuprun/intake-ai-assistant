@@ -3,10 +3,18 @@
 ## Pre-Deployment
 
 ### Database
-- [ ] Review migration file: `backend/migrations/003_add_anonymous_intake_support.sql`
-- [ ] Test migration in development environment
-- [ ] Verify `anonymous_intakes` table created
-- [ ] Verify `intake_sessions` columns added
+- [ ] Review migration files:
+  - `backend/migrations/003_add_anonymous_intake_support.sql`
+  - `backend/migrations/004_consolidate_anonymous_to_intake.sql`
+  - `backend/migrations/005_consolidate_intake_tables.sql`
+  - `backend/migrations/006_remove_is_anonymous_column.sql`
+  - `backend/migrations/007_rename_intake_sessions_to_intakes.sql`
+  - `backend/migrations/008_remove_anonymous_client_info_column.sql`
+- [ ] Test migrations in development environment
+- [ ] Verify `intakes` table properly configured
+- [ ] Verify client info columns exist (client_name, client_email, client_phone)
+- [ ] Verify `anonymous_client_info` column removed
+- [ ] Verify `is_anonymous` column removed
 - [ ] Verify RLS policies applied
 - [ ] Verify indexes created
 - [ ] Backup production database before migration
@@ -51,16 +59,28 @@
 
 **Verification Queries:**
 ```sql
--- Check anonymous_intakes table
-SELECT * FROM anonymous_intakes LIMIT 1;
+-- Check intakes table structure
+SELECT column_name, data_type FROM information_schema.columns 
+WHERE table_name = 'intakes' 
+ORDER BY ordinal_position;
 
--- Check intake_sessions columns
+-- Verify anonymous_client_info is removed
 SELECT column_name FROM information_schema.columns 
-WHERE table_name = 'intake_sessions' 
-AND column_name IN ('is_anonymous', 'anonymous_client_info');
+WHERE table_name = 'intakes' 
+AND column_name = 'anonymous_client_info';
+
+-- Verify is_anonymous is removed
+SELECT column_name FROM information_schema.columns 
+WHERE table_name = 'intakes' 
+AND column_name = 'is_anonymous';
+
+-- Verify client info columns exist
+SELECT column_name FROM information_schema.columns 
+WHERE table_name = 'intakes' 
+AND column_name IN ('client_name', 'client_email', 'client_phone');
 
 -- Check RLS policies
-SELECT * FROM pg_policies WHERE tablename = 'anonymous_intakes';
+SELECT * FROM pg_policies WHERE tablename = 'intakes';
 ```
 
 ### Step 2: Backend Deployment
@@ -290,8 +310,8 @@ If issues occur during deployment:
 -- Restore from backup
 -- Or manually revert migration
 DROP TABLE IF EXISTS anonymous_intakes;
-ALTER TABLE intake_sessions DROP COLUMN IF EXISTS is_anonymous;
-ALTER TABLE intake_sessions DROP COLUMN IF EXISTS anonymous_client_info;
+ALTER TABLE intakes DROP COLUMN IF EXISTS is_anonymous;
+ALTER TABLE intakes DROP COLUMN IF EXISTS anonymous_client_info;
 ```
 
 ### Step 3: Rollback Backend

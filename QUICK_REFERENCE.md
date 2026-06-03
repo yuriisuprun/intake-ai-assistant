@@ -178,7 +178,7 @@ frontend/src/components/
 ### Updated Tables
 - `auth.users` - Added role metadata
 - `clients` - Updated RLS policies
-- `intake_sessions` - Updated RLS policies
+- `intakes` - Updated RLS policies
 
 ---
 

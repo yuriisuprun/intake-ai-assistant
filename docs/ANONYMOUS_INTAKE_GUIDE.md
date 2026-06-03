@@ -28,7 +28,7 @@ The Anonymous Intake feature allows unregistered clients to submit legal intake 
 #### New Tables
 - **anonymous_intakes**: Stores anonymous client submissions
   - `id`: Unique identifier
-  - `session_id`: Reference to intake_sessions
+  - `session_id`: Reference to intakes
   - `client_name`: Client's full name
   - `client_email`: Client's email address
   - `client_phone`: Optional phone number
@@ -41,7 +41,7 @@ The Anonymous Intake feature allows unregistered clients to submit legal intake 
   - `reviewed_at`: When admin first reviewed
 
 #### Modified Tables
-- **intake_sessions**: Added support for anonymous submissions
+- **intakes**: Added support for anonymous submissions
   - `client_name`: Direct client name storage
   - `client_email`: Direct client email storage
   - `client_phone`: Direct client phone storage
@@ -223,7 +223,7 @@ GET /api/admin/anonymous-intakes/search/by-email?email=john@example.com
 
 1. **Database Migration** (`003_add_anonymous_intake_support.sql`)
    - Creates `anonymous_intakes` table
-   - Adds columns to `intake_sessions`
+   - Adds columns to `intakes`
    - Sets up RLS policies
    - Creates admin view
 

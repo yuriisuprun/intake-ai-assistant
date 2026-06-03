@@ -306,7 +306,7 @@ const response = await apiClient.listIntakeSessions(0, 20)
 - **Error Messages**: User feedback
 
 ### Backend State
-- **Session**: Stored in Supabase `intake_sessions` table
+- **Session**: Stored in Supabase `intakes` table
 - **Answers**: Stored as messages in `messages` table
 - **Flow Data**: JSON object in session record
 

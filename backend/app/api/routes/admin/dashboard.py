@@ -62,7 +62,7 @@ async def get_status_distribution(
     try:
         # Get all sessions with status - consolidated view
         response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("status")
             .execute()
         )
@@ -93,7 +93,7 @@ async def get_urgency_distribution(
     """Get distribution of intake urgency levels (admin only)."""
     try:
         response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("urgency", count="exact")
             .execute()
         )
@@ -123,7 +123,7 @@ async def get_category_distribution(
     """Get distribution of legal categories (admin only)."""
     try:
         response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("legal_category, count")
             .execute()
         )
@@ -231,7 +231,7 @@ async def get_pending_review(
     try:
         # Get sessions with submitted status (consolidated view)
         response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("*")
             .eq("status", "submitted")
             .order("created_at")

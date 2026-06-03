@@ -33,7 +33,7 @@ FastAPI Routes (app/api/routes/intake.py)
 ### Data Storage
 
 - **Supabase Tables**:
-  - `intake_sessions`: Stores session metadata and flow_data
+  - `intakes`: Stores session metadata and flow_data
   - `messages`: Stores all answers as messages with metadata
   - `clients`: Client information
 
@@ -237,7 +237,7 @@ POST /api/intake/complete?session_id=session-uuid
 2. Frontend running on `http://localhost:3000`
 3. Supabase configured with tables:
    - `clients`
-   - `intake_sessions`
+   - `intakes`
    - `messages`
 
 ### Manual Testing Steps
@@ -297,7 +297,7 @@ The implementation includes error handling for:
 
 ### Backend State
 
-- **Session**: Stored in Supabase `intake_sessions` table
+- **Session**: Stored in Supabase `intakes` table
 - **Answers**: Stored as messages in `messages` table
 - **Flow Data**: JSON object in session record
 
@@ -353,7 +353,7 @@ The implementation includes error handling for:
 
 **Solutions**:
 1. Verify client exists in database
-2. Check Supabase `intake_sessions` table exists
+2. Check Supabase `intakes` table exists
 3. Check backend logs for errors
 4. Verify authentication token is valid
 

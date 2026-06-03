@@ -191,7 +191,7 @@
 │                                                                   │
 │  Tables:                                                         │
 │  - anonymous_intakes (NEW)                                      │
-│  - intake_sessions (MODIFIED)                                   │
+│  - intakes (MODIFIED)                                           │
 │  - messages                                                      │
 │  - clients                                                       │
 │  - auth.users                                                    │
@@ -300,7 +300,7 @@
 │                                                                   │
 │ Layer 3: Database RLS                                           │
 │ ├─ anonymous_intakes: Admins only                               │
-│ ├─ intake_sessions: User isolation                              │
+│ ├─ intakes: User isolation                                      │
 │ └─ messages: Session isolation                                  │
 │                                                                   │
 │ Layer 4: Input Validation                                       │

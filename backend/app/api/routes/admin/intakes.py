@@ -70,7 +70,7 @@ async def get_intake_details(
 
         # Get associated session
         session_response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("*")
             .eq("id", intake["session_id"])
             .single()
@@ -167,7 +167,7 @@ async def search_intakes_by_email(
             raise HTTPException(status_code=400, detail="Email must be at least 3 characters")
 
         response = (
-            db.client.table("intake_sessions")
+            db.client.table("intakes")
             .select("*")
             .ilike("client_email", f"%{email}%")
             .order("created_at", desc=True)

@@ -147,7 +147,7 @@ class IntakeService:
         """
         try:
             # Get current session
-            session_response = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+            session_response = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
             if not session_response.data:
                 logger.error(f"Session not found: {session_id}")
                 return False
@@ -183,7 +183,7 @@ class IntakeService:
             )
 
             # Update session - use direct client call to avoid user_id filter
-            update_response = db.client.table("intake_sessions").update(
+            update_response = db.client.table("intakes").update(
                 {
                     "flow_data": flow_data,
                     "current_step": step_num or 0,
@@ -215,7 +215,7 @@ class IntakeService:
         """
         try:
             # Get session
-            session_response = db.client.table("intake_sessions").select("*").eq("id", session_id).single().execute()
+            session_response = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
             if not session_response.data:
                 logger.error(f"Session not found: {session_id}")
                 return False
@@ -227,7 +227,7 @@ class IntakeService:
             new_status = "submitted"
 
             # Update session status - use direct client call to avoid user_id filter
-            update_response = db.client.table("intake_sessions").update(
+            update_response = db.client.table("intakes").update(
                 {
                     "status": new_status,
                     "current_step": IntakeService.get_total_steps(),

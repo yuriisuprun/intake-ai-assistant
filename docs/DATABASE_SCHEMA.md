@@ -52,12 +52,12 @@ CREATE POLICY "Users can delete their own clients"
   USING (auth.uid() = user_id);
 ```
 
-### 2. `intake_sessions`
+### 2. `intakes`
 
 Stores intake session records.
 
 ```sql
-CREATE TABLE intake_sessions (
+CREATE TABLE intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -74,28 +74,28 @@ CREATE TABLE intake_sessions (
 );
 
 -- Indexes
-CREATE INDEX idx_intake_sessions_client_id ON intake_sessions(client_id);
-CREATE INDEX idx_intake_sessions_user_id ON intake_sessions(user_id);
-CREATE INDEX idx_intake_sessions_status ON intake_sessions(status);
-CREATE INDEX idx_intake_sessions_created_at ON intake_sessions(created_at DESC);
+CREATE INDEX idx_intakes_client_id ON intakes(client_id);
+CREATE INDEX idx_intakes_user_id ON intakes(user_id);
+CREATE INDEX idx_intakes_status ON intakes(status);
+CREATE INDEX idx_intakes_created_at ON intakes(created_at DESC);
 
 -- RLS Policy: Users can only see their own sessions
-ALTER TABLE intake_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE intakes ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can insert their own sessions"
-  ON intake_sessions FOR INSERT
+  ON intakes FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update their own sessions"
-  ON intake_sessions FOR UPDATE
+  ON intakes FOR UPDATE
   USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their own sessions"
-  ON intake_sessions FOR DELETE
+  ON intakes FOR DELETE
   USING (auth.uid() = user_id);
 ```
 
@@ -106,7 +106,7 @@ Stores all conversation messages during intake.
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   role TEXT NOT NULL, -- 'client', 'system', 'lawyer'
   content TEXT NOT NULL,
   message_type TEXT, -- 'text', 'question', 'answer', 'document_reference'
@@ -126,7 +126,7 @@ CREATE POLICY "Users can view messages from their sessions"
   ON messages FOR SELECT
   USING (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 
@@ -134,7 +134,7 @@ CREATE POLICY "Users can insert messages to their sessions"
   ON messages FOR INSERT
   WITH CHECK (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 ```
@@ -146,7 +146,7 @@ Stores metadata for uploaded documents.
 ```sql
 CREATE TABLE uploaded_files (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   file_name TEXT NOT NULL,
   file_type TEXT, -- pdf, docx, txt, jpg, png, etc.
   file_size INTEGER, -- in bytes
@@ -168,7 +168,7 @@ CREATE POLICY "Users can view files from their sessions"
   ON uploaded_files FOR SELECT
   USING (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 
@@ -176,7 +176,7 @@ CREATE POLICY "Users can insert files to their sessions"
   ON uploaded_files FOR INSERT
   WITH CHECK (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 ```
@@ -331,8 +331,8 @@ CREATE POLICY "Users can delete their own clients"
   ON clients FOR DELETE
   USING (auth.uid() = user_id);
 
--- Create intake_sessions table
-CREATE TABLE intake_sessions (
+-- Create intakes table
+CREATE TABLE intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -348,33 +348,33 @@ CREATE TABLE intake_sessions (
   completed_at TIMESTAMP WITH TIME ZONE
 );
 
-CREATE INDEX idx_intake_sessions_client_id ON intake_sessions(client_id);
-CREATE INDEX idx_intake_sessions_user_id ON intake_sessions(user_id);
-CREATE INDEX idx_intake_sessions_status ON intake_sessions(status);
-CREATE INDEX idx_intake_sessions_created_at ON intake_sessions(created_at DESC);
+CREATE INDEX idx_intakes_client_id ON intakes(client_id);
+CREATE INDEX idx_intakes_user_id ON intakes(user_id);
+CREATE INDEX idx_intakes_status ON intakes(status);
+CREATE INDEX idx_intakes_created_at ON intakes(created_at DESC);
 
-ALTER TABLE intake_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE intakes ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own sessions"
-  ON intake_sessions FOR SELECT
+  ON intakes FOR SELECT
   USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can insert their own sessions"
-  ON intake_sessions FOR INSERT
+  ON intakes FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Users can update their own sessions"
-  ON intake_sessions FOR UPDATE
+  ON intakes FOR UPDATE
   USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete their own sessions"
-  ON intake_sessions FOR DELETE
+  ON intakes FOR DELETE
   USING (auth.uid() = user_id);
 
 -- Create messages table
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   role TEXT NOT NULL,
   content TEXT NOT NULL,
   message_type TEXT,
@@ -392,7 +392,7 @@ CREATE POLICY "Users can view messages from their sessions"
   ON messages FOR SELECT
   USING (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 
@@ -400,14 +400,14 @@ CREATE POLICY "Users can insert messages to their sessions"
   ON messages FOR INSERT
   WITH CHECK (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 
 -- Create uploaded_files table
 CREATE TABLE uploaded_files (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id UUID NOT NULL REFERENCES intake_sessions(id) ON DELETE CASCADE,
+  session_id UUID NOT NULL REFERENCES intakes(id) ON DELETE CASCADE,
   file_name TEXT NOT NULL,
   file_type TEXT,
   file_size INTEGER,
@@ -427,7 +427,7 @@ CREATE POLICY "Users can view files from their sessions"
   ON uploaded_files FOR SELECT
   USING (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 
@@ -435,7 +435,7 @@ CREATE POLICY "Users can insert files to their sessions"
   ON uploaded_files FOR INSERT
   WITH CHECK (
     session_id IN (
-      SELECT id FROM intake_sessions WHERE user_id = auth.uid()
+      SELECT id FROM intakes WHERE user_id = auth.uid()
     )
   );
 ```

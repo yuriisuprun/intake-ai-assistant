@@ -252,13 +252,13 @@ class AdminOperations:
         """Get overview report with statistics."""
         try:
             # Get total sessions
-            sessions_response = db.client.table("intake_sessions").select(
+            sessions_response = db.client.table("intakes").select(
                 "id", count="exact"
             ).execute()
             total_sessions = sessions_response.count or 0
             
             # Get completed sessions
-            completed_response = db.client.table("intake_sessions").select(
+            completed_response = db.client.table("intakes").select(
                 "id", count="exact"
             ).eq("status", "completed").execute()
             completed_sessions = completed_response.count or 0
@@ -291,7 +291,7 @@ class AdminOperations:
             start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
             
             # Get recent sessions
-            response = db.client.table("intake_sessions").select(
+            response = db.client.table("intakes").select(
                 "id, created_at, status"
             ).gte("created_at", start_date).execute()
             
@@ -329,7 +329,7 @@ class AdminOperations:
                     if status == "completed":
                         update_data["completed_at"] = datetime.utcnow().isoformat()
                     
-                    response = db.client.table("intake_sessions").update(
+                    response = db.client.table("intakes").update(
                         update_data
                     ).eq("id", session_id).execute()
                     
@@ -407,7 +407,7 @@ class AdminOperations:
             start_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
             
             # Build query
-            query = db.client.table("intake_sessions").select("*").gte(
+            query = db.client.table("intakes").select("*").gte(
                 "created_at", start_date
             )
             
@@ -504,7 +504,7 @@ class AdminOperations:
         """Advanced search for intakes across multiple fields."""
         try:
             # Start with all sessions
-            response = db.client.table("intake_sessions").select("*").limit(limit).execute()
+            response = db.client.table("intakes").select("*").limit(limit).execute()
             sessions = response.data or []
             
             # Apply text search
@@ -586,7 +586,7 @@ class AdminOperations:
             # Get last 90 days
             start_date = (datetime.utcnow() - timedelta(days=90)).isoformat()
             
-            response = db.client.table("intake_sessions").select(
+            response = db.client.table("intakes").select(
                 "created_at, completed_at, status"
             ).gte("created_at", start_date).execute()
             
