@@ -1,5 +1,5 @@
 # ============================================================================
-# Legal AI Intake Assistant - .gitignore
+# AI Intake Assistant - .gitignore
 # ============================================================================
 # This file specifies intentionally untracked files to ignore in Git
 # Following best practices for Python + Node.js + Next.js projects
@@ -447,7 +447,7 @@ temp/
 .tmp/
 
 # ============================================================================
-# PROJECT-SPECIFIC (Legal AI Intake Assistant)
+# PROJECT-SPECIFIC (AI Intake Assistant)
 # ============================================================================
 # Ollama models (if stored locally)
 ollama_models/
