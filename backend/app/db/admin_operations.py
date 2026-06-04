@@ -34,7 +34,7 @@ class AdminOperations:
     async def is_admin(user_id: UUID) -> bool:
         """Check if user is an admin."""
         role = await AdminOperations.get_user_role(user_id)
-        return role in ["admin", "lawyer", "manager"]
+        return role == "admin"
 
     @staticmethod
     async def create_audit_log(
