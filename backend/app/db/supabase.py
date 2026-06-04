@@ -15,6 +15,7 @@ class SupabaseDB:
 
     _instance: Optional["SupabaseDB"] = None
     _client: Optional[Client] = None
+    _service_role_client: Optional[Client] = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -26,15 +27,29 @@ class SupabaseDB:
             # Use service role key for write operations to bypass RLS
             key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
             self._client = create_client(settings.SUPABASE_URL, key)
+        
+        if self._service_role_client is None:
+            # Always use service role key to bypass RLS
+            key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
+            self._service_role_client = create_client(settings.SUPABASE_URL, key)
 
     @property
     def client(self) -> Client:
-        """Get Supabase client."""
+        """Get Supabase client (uses service role key by default)."""
         if self._client is None:
             # Use service role key for write operations to bypass RLS
             key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
             self._client = create_client(settings.SUPABASE_URL, key)
         return self._client
+
+    @property
+    def service_role_client(self) -> Client:
+        """Get Supabase service role client that bypasses RLS."""
+        if self._service_role_client is None:
+            # Always use service role key to bypass RLS
+            key = settings.SUPABASE_SERVICE_ROLE_KEY or settings.SUPABASE_KEY
+            self._service_role_client = create_client(settings.SUPABASE_URL, key)
+        return self._service_role_client
 
     # Clients
     async def create_client(self, user_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -128,7 +143,7 @@ class SupabaseDB:
                         "client_name": client_name,
                         "client_email": client_email,
                         "client_phone": client_phone,
-                        "status": "submitted",
+                        "status": "new",
                         "current_step": 0,
                         "flow_data": {},
                     }
@@ -145,7 +160,7 @@ class SupabaseDB:
         try:
             response = (
                 self.client.table("anonymous_intakes")
-                .insert({**data, "session_id": session_id, "status": "submitted"})
+                .insert({**data, "session_id": session_id, "status": "new"})
                 .execute()
             )
             return response.data[0] if response.data else None
