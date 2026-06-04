@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { apiClient } from '@/lib/api'
 import { 
-  BarChart3, Users, FileText, Clock, CheckCircle, AlertCircle, 
-  TrendingUp, Filter, Calendar, Download 
+  BarChart3, FileText, Clock, CheckCircle, AlertCircle, 
+  TrendingUp, Calendar 
 } from 'lucide-react'
 
 interface DashboardStats {

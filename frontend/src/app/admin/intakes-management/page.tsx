@@ -240,10 +240,10 @@ export default function IntakesManagementPage() {
     const colors: Record<string, { bg: string; text: string; icon: any }> = {
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
-      'submitted': { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: AlertTriangle },
+      'new': { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: AlertTriangle },
       'archived': { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
     }
-    const config = colors[status] || colors['submitted']
+    const config = colors[status] || colors['new']
     const Icon = config.icon
     return (
       <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${config.bg} ${config.text}`}>
@@ -358,7 +358,7 @@ export default function IntakesManagementPage() {
                 <option value="all">All Statuses</option>
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
-                <option value="submitted">Submitted</option>
+                <option value="new">New</option>
                 <option value="archived">Archived</option>
               </select>
             </div>
@@ -398,7 +398,7 @@ export default function IntakesManagementPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                {['in_progress', 'completed', 'archived'].map(status => (
+                {['new', 'assigned', 'in_progress', 'completed', 'archived'].map(status => (
                   <button
                     key={status}
                     onClick={() => handleBulkStatusUpdate(status)}

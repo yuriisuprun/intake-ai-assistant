@@ -11,7 +11,6 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [configError, setConfigError] = useState('')
 
   useEffect(() => {
     // No Supabase config check needed anymore
@@ -120,38 +119,6 @@ export default function AdminLogin() {
           </p>
         </div>
 
-        {/* Config Error Alert */}
-        {configError && (
-          <div 
-            className="rounded-lg mb-6"
-            style={{ 
-              backgroundColor: '#fee2e2',
-              border: '1px solid #fecaca',
-              color: '#991b1b',
-              padding: '12px 16px'
-            }}
-          >
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-              <svg 
-                className="w-5 h-5 flex-shrink-0" 
-                fill="currentColor" 
-                viewBox="0 0 20 20"
-                style={{ marginTop: '2px' }}
-              >
-                <path 
-                  fillRule="evenodd" 
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" 
-                  clipRule="evenodd" 
-                />
-              </svg>
-              <div>
-                <p className="font-semibold" style={{ fontSize: '0.875rem', marginBottom: '4px' }}>Configuration Error</p>
-                <p style={{ fontSize: '0.8125rem', lineHeight: '1.5' }}>{configError}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Error Alert */}
         {error && (
           <div 
@@ -224,7 +191,7 @@ export default function AdminLogin() {
               className="w-full rounded-lg outline-none transition"
               style={{ 
                 border: '1px solid #d1d5db',
-                backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff',
+                backgroundColor: loading ? '#f3f4f6' : '#ffffff',
                 color: '#111827',
                 padding: '10px 12px',
                 fontSize: '0.9375rem',
@@ -232,9 +199,9 @@ export default function AdminLogin() {
               }}
               placeholder="Enter your email"
               required
-              disabled={loading || !!configError}
+              disabled={loading}
               onFocus={(e) => {
-                if (!loading && !configError) {
+                if (!loading) {
                   e.currentTarget.style.borderColor = '#a855f7'
                   e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
                 }
@@ -258,7 +225,7 @@ export default function AdminLogin() {
               className="w-full rounded-lg outline-none transition"
               style={{ 
                 border: '1px solid #d1d5db',
-                backgroundColor: loading || !!configError ? '#f3f4f6' : '#ffffff',
+                backgroundColor: loading ? '#f3f4f6' : '#ffffff',
                 color: '#111827',
                 padding: '10px 12px',
                 fontSize: '0.9375rem',
@@ -266,9 +233,9 @@ export default function AdminLogin() {
               }}
               placeholder="Enter your password"
               required
-              disabled={loading || !!configError}
+              disabled={loading}
               onFocus={(e) => {
-                if (!loading && !configError) {
+                if (!loading) {
                   e.currentTarget.style.borderColor = '#a855f7'
                   e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
                 }
@@ -283,24 +250,24 @@ export default function AdminLogin() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || !!configError}
+            disabled={loading}
             className="w-full rounded-lg font-semibold transition flex items-center justify-center"
             style={{
-              backgroundColor: loading || !!configError ? '#d1d5db' : '#a855f7',
+              backgroundColor: loading ? '#d1d5db' : '#a855f7',
               color: '#ffffff',
-              cursor: loading || !!configError ? 'not-allowed' : 'pointer',
+              cursor: loading ? 'not-allowed' : 'pointer',
               padding: '11px 16px',
               fontSize: '0.9375rem',
               lineHeight: '1.5',
               marginBottom: '24px'
             }}
             onMouseEnter={(e) => {
-              if (!loading && !configError) {
+              if (!loading) {
                 e.currentTarget.style.backgroundColor = '#9333ea'
               }
             }}
             onMouseLeave={(e) => {
-              if (!loading && !configError) {
+              if (!loading) {
                 e.currentTarget.style.backgroundColor = '#a855f7'
               }
             }}

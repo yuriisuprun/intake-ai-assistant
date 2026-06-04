@@ -22,7 +22,7 @@ interface ClientsResponse {
 }
 
 export default function AdminClientsPage() {
-  const { user } = useAuth();
+  useAuth();
   const [clients, setClients] = useState<Client[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);

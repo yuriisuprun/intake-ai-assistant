@@ -149,15 +149,14 @@ export default function AdminIntakesPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
-      submitted: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
-      reviewed: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Eye },
+      new: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       assigned: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
       archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
     }
 
-    const config = statusConfig[status] || statusConfig.submitted
+    const config = statusConfig[status] || statusConfig.new
     const Icon = config.icon
 
     return (
@@ -232,8 +231,7 @@ export default function AdminIntakesPage() {
                 }}
               >
                 <option value="all">All Statuses</option>
-                <option value="submitted">Submitted</option>
-                <option value="reviewed">Reviewed</option>
+                <option value="new">New</option>
                 <option value="assigned">Assigned</option>
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
