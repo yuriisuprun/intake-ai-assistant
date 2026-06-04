@@ -203,7 +203,7 @@ class IntakeService:
     @staticmethod
     async def complete_intake(session_id: str, user_id: Optional[str]) -> bool:
         """
-        Mark intake as submitted. All intakes start with "submitted" status
+        Mark intake as submitted. All intakes start with "new" status
         and can only be changed to other statuses by admin action.
 
         Args:
@@ -222,9 +222,9 @@ class IntakeService:
 
             session_data = session_response.data
 
-            # All intakes should have status "submitted" when they complete the intake form
+            # All intakes should have status "new" when they complete the intake form
             # Status should only change via admin action
-            new_status = "submitted"
+            new_status = "new"
 
             # Update session status - use direct client call to avoid user_id filter
             update_response = db.client.table("intakes").update(

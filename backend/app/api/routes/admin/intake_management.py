@@ -14,7 +14,7 @@ from app.middleware.auth import require_admin
 from app.db.admin_operations import AdminOperations
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/intakes")
+router = APIRouter(prefix="/intake-management")
 
 
 # ============================================================================
@@ -32,7 +32,7 @@ async def bulk_update_status(
         if not session_ids:
             raise HTTPException(status_code=400, detail="No session IDs provided")
         
-        valid_statuses = ["in_progress", "completed", "archived"]
+        valid_statuses = ["new", "assigned", "in_progress", "completed", "archived"]
         if status not in valid_statuses:
             raise HTTPException(
                 status_code=400,

@@ -233,7 +233,7 @@ async def get_pending_review(
         response = (
             db.client.table("intakes")
             .select("*")
-            .eq("status", "submitted")
+            .eq("status", "new")
             .order("created_at")
             .limit(limit)
             .execute()

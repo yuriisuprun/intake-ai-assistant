@@ -21,7 +21,7 @@ router = APIRouter(prefix="/intakes")
 async def list_all_intakes(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    status: Optional[str] = Query(None, description="Filter by status: submitted, reviewed, assigned, archived"),
+    status: Optional[str] = Query(None, description="Filter by status: submitted, assigned, archived"),
     search: Optional[str] = Query(None, description="Search by client name or email"),
     user_id: str = Depends(require_admin())
 ):
@@ -68,27 +68,17 @@ async def get_intake_details(
         if not intake:
             raise HTTPException(status_code=404, detail="Intake not found")
 
-        # Get associated session
-        session_response = (
-            db.client.table("intakes")
-            .select("*")
-            .eq("id", intake["session_id"])
-            .single()
-            .execute()
-        )
-        session = session_response.data if session_response.data else None
+        # The intakes table is the session table, so no need to query again
+        # Get messages/responses using intake_id
+        messages = await db.get_messages(intake_id)
         
-        # Get messages/responses
-        messages = await db.get_messages(intake["session_id"])
-        
-        # Get notes
-        notes = await AdminOperations.get_notes(intake["session_id"])
+        # Get notes using intake_id
+        notes = await AdminOperations.get_notes(intake_id)
 
         return APIResponse(
             success=True,
             data={
                 "intake": intake,
-                "session": session,
                 "responses": messages,
                 "notes": notes,
             },
@@ -104,22 +94,22 @@ async def get_intake_details(
 @router.patch("/{intake_id}", response_model=APIResponse)
 async def update_intake(
     intake_id: str,
-    status: Optional[str] = None,
-    admin_notes: Optional[str] = None,
-    assigned_to: Optional[str] = None,
+    request_body: dict = Body(...),
     user_id: str = Depends(require_admin())
 ):
     """Update intake status, notes, and assignment (admin only)."""
     try:
+        status = request_body.get("status")
+        admin_notes = request_body.get("admin_notes")
+        assigned_to = request_body.get("assigned_to")
+        
         update_data = {}
         
         if status:
-            valid_statuses = ["submitted", "reviewed", "assigned", "archived"]
+            valid_statuses = ["new", "assigned", "archived", "in_progress", "completed"]
             if status not in valid_statuses:
                 raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
             update_data["status"] = status
-            if status == "reviewed":
-                update_data["reviewed_at"] = datetime.utcnow().isoformat()
         
         if admin_notes is not None:
             update_data["admin_notes"] = admin_notes
@@ -194,12 +184,14 @@ async def search_intakes_by_email(
 @router.post("/{intake_id}/notes", response_model=APIResponse)
 async def add_intake_note(
     intake_id: str,
-    note_text: str,
-    note_type: Optional[str] = "general",
+    request_body: dict = Body(...),
     user_id: str = Depends(require_admin())
 ):
     """Add a note to an intake (admin only)."""
     try:
+        note_text = request_body.get("note_text")
+        note_type = request_body.get("note_type", "general")
+        
         # Verify intake exists
         intake = await db.get_intake(intake_id)
         if not intake:
@@ -209,7 +201,7 @@ async def add_intake_note(
             raise HTTPException(status_code=400, detail="Note text cannot be empty")
 
         note = await AdminOperations.create_note(
-            session_id=intake["session_id"],
+            session_id=intake_id,
             admin_id=user_id,
             note_text=note_text,
             note_type=note_type
@@ -242,7 +234,7 @@ async def get_intake_notes(
         if not intake:
             raise HTTPException(status_code=404, detail="Intake not found")
 
-        notes = await AdminOperations.get_notes(intake["session_id"])
+        notes = await AdminOperations.get_notes(intake_id)
         
         return APIResponse(
             success=True,

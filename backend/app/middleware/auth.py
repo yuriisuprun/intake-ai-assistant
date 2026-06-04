@@ -15,21 +15,28 @@ logger = logging.getLogger(__name__)
 async def get_user_role(user_id: str) -> str:
     """Get user role from database."""
     try:
-        # Check if user is in team_members table with admin/staff role
+        # Use service_role client to bypass RLS when checking user role
+        # This prevents infinite recursion issues with RLS policies
         response = (
-            db.client.table("team_members")
-            .select("role")
+            db.service_role_client.table("team_members")
+            .select("role,status")
             .eq("user_id", user_id)
             .single()
             .execute()
         )
         
         if response.data:
-            return response.data.get("role", "client")
+            role = response.data.get("role", "client")
+            status = response.data.get("status", "active")
+            # Only return the role if the user is active
+            if status == "active":
+                return role
+            return "client"
         
         # If not in team_members, they're a regular client
         return "client"
     except Exception as e:
+        # If there's any error, default to client
         logger.error(f"Error getting user role: {e}")
         return "client"
 

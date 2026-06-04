@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Check, Clock, AlertCircle, Eye, CheckCircle } from 'lucide-react'
+import { X, Clock, AlertCircle, CheckCircle } from 'lucide-react'
 
 interface IntakeDetailModalProps {
   intake: any
@@ -29,15 +29,14 @@ export function IntakeDetailModal({
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
-      submitted: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
-      reviewed: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Eye },
+      new: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       assigned: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
       archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
     }
 
-    const config = statusConfig[status] || statusConfig.submitted
+    const config = statusConfig[status] || statusConfig.new
     const Icon = config.icon
 
     return (
@@ -58,8 +57,7 @@ export function IntakeDetailModal({
   }
 
   const statusOptions = [
-    'submitted', 'reviewed', 'assigned', 'archived',
-    'in_progress', 'completed'
+    'new', 'assigned', 'in_progress', 'completed', 'archived'
   ]
 
   return (
