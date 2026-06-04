@@ -63,7 +63,7 @@
 │  │ John Doe                                                            │ │
 │  │ john@example.com                                                    │ │
 │  │                                                                     │ │
-│  │ Status:     [⏳ In Progress]  [◆ Reviewed]  [∴ Assigned]  [✓ Done]│ │
+│  │ Status:     [⏳ In Progress]  [∴ Assigned]  [✓ Done]│ │
 │  │                                                                     │ │
 │  │ Client Information:                                                 │ │
 │  │ ├─ Name: John Doe                                                  │ │
@@ -111,7 +111,7 @@
 - [x] List anonymous intakes
 - [x] Filter by status and search
 - [x] View complete intake details
-- [x] Update status (submitted → reviewed → assigned → archived)
+- [x] Update status (submitted → assigned → archived)
 - [x] Add and manage notes
 - [x] Search by email
 - [x] Assign to team members
@@ -259,12 +259,6 @@ Frontend:
 ┌──────────────┐
 │  Submitted   │  ← Anonymous intake submitted
 │  (New)       │
-└──────┬───────┘
-       │ Admin reviews client info
-       ↓
-┌──────────────┐
-│  Reviewed    │  ← Admin has assessed
-│  (Assessed)  │
 └──────┬───────┘
        │ Admin assigns to team member
        ↓

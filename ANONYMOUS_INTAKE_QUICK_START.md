@@ -35,7 +35,7 @@ Your reference number (e.g., "A1B2C3D4") is the first 8 characters of your sessi
 - Results update in real-time
 
 **Filter**
-- Filter by status: Submitted, Reviewed, Assigned, Archived
+- Filter by status: Submitted, Assigned, Archived
 - Combine with search for precise results
 
 **View Details**
@@ -51,7 +51,7 @@ Your reference number (e.g., "A1B2C3D4") is the first 8 characters of your sessi
 
 **Status Workflow**
 ```
-Submitted → Reviewed → Assigned → Archived
+Submitted → Assigned → Archived
 ```
 
 ---
@@ -140,7 +140,7 @@ Update status:
 ```bash
 curl -X PATCH -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"status": "reviewed", "admin_notes": "Follow up needed"}' \
+  -d '{"status": "assigned", "admin_notes": "Follow up needed"}' \
   http://localhost:8000/api/admin/anonymous-intakes/{intake_id}
 ```
 

@@ -138,33 +138,39 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ### Update Intake Status
 
-**Endpoint:** `PATCH /intake/{session_id}/status`
+**Endpoint:** `PATCH /intakes/{intake_id}`
 
 **Path Parameters:**
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| session_id | string | UUID of intake session |
+| intake_id | string | UUID of intake |
 
 **Request Body:**
 ```json
 {
-  "status": "completed"
+  "status": "assigned",
+  "admin_notes": "Ready for assignment",
+  "assigned_to": "lawyer-user-id"
 }
 ```
 
-**Valid Statuses:** `in_progress`, `completed`, `archived`
+**Valid Statuses:** `submitted`, `assigned`, `in_progress`, `completed`, `archived`
+
+**All fields are optional. Include only what you want to update.**
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "id": "session-id",
-    "status": "completed",
-    "completed_at": "2026-06-02T16:00:00Z",
+    "id": "intake-id",
+    "status": "assigned",
+    "admin_notes": "Ready for assignment",
+    "assigned_to": "lawyer-user-id",
+    "assigned_at": "2026-06-02T16:00:00Z",
     "updated_at": "2026-06-02T16:00:00Z"
   },
-  "message": "Status updated to completed"
+  "message": "Intake updated successfully"
 }
 ```
 
@@ -172,12 +178,17 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ### Add Note to Intake
 
-**Endpoint:** `PATCH /intake/{session_id}/notes`
+**Endpoint:** `POST /intakes/{intake_id}/notes`
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| intake_id | string | UUID of intake |
 
 **Request Body:**
 ```json
 {
-  "note_text": "Client confirmed appointment",
+  "note_text": "Follow up needed by Friday",
   "note_type": "general"
 }
 ```
@@ -192,9 +203,9 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
     "id": "note-id",
     "session_id": "session-id",
     "admin_id": "admin-user-id",
-    "note_text": "Client confirmed appointment",
+    "note_text": "Follow up needed by Friday",
     "note_type": "general",
-    "created_at": "2026-06-02T16:30:00Z"
+    "created_at": "2026-06-02T17:00:00Z"
   },
   "message": "Note added successfully"
 }
@@ -204,7 +215,12 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ### Get Intake Notes
 
-**Endpoint:** `GET /intake/{session_id}/notes`
+**Endpoint:** `GET /intakes/{intake_id}/notes`
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| intake_id | string | UUID of intake |
 
 **Response:**
 ```json
@@ -217,7 +233,7 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
         "session_id": "session-id",
         "admin_id": "admin-id",
         "note_text": "Follow-up needed",
-        "note_type": "follow_up",
+        "note_type": "general",
         "created_at": "2026-06-02T15:00:00Z",
         "updated_at": "2026-06-02T15:00:00Z"
       }
@@ -229,48 +245,26 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ---
 
-### Assign Intake to Team Member
+## Anonymous Intakes Endpoints (Consolidated with /intakes)
 
-**Endpoint:** `PATCH /intake/{session_id}/assign`
+All anonymous and registered intakes are now consolidated under the `/intakes` endpoint.
 
-**Request Body:**
-```json
-{
-  "assigned_to_user_id": "lawyer-user-id"
-}
-```
+### List Intakes with Filtering
 
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "assignment-id",
-    "session_id": "session-id",
-    "assigned_to_user_id": "lawyer-user-id",
-    "assigned_by_user_id": "admin-user-id",
-    "assignment_status": "assigned",
-    "created_at": "2026-06-02T16:00:00Z"
-  },
-  "message": "Session assigned successfully"
-}
-```
-
----
-
-## Anonymous Intakes Endpoints
-
-### List Anonymous Intakes
-
-**Endpoint:** `GET /anonymous-intakes`
+**Endpoint:** `GET /intakes`
 
 **Query Parameters:**
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| skip | integer | 0 | Offset for pagination |
-| limit | integer | 20 | Max records to return |
-| status | string | null | submitted, reviewed, assigned, archived |
+| skip | integer | 0 | Number of records to skip |
+| limit | integer | 20 | Number of records to return (max 100) |
+| status | string | null | Filter by status: submitted, assigned, in_progress, completed, archived |
 | search | string | null | Search by client name or email |
+
+**Example:**
+```bash
+GET /intakes?skip=0&limit=20&status=submitted&search=john
+```
 
 **Response:**
 ```json
@@ -300,9 +294,14 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ---
 
-### Get Anonymous Intake Details
+### Get Intake Details
 
-**Endpoint:** `GET /anonymous-intakes/{intake_id}`
+**Endpoint:** `GET /intakes/{intake_id}`
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| intake_id | string | UUID of intake |
 
 **Response:**
 ```json
@@ -328,89 +327,9 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 ---
 
-### Update Anonymous Intake
+### Search Intakes by Email
 
-**Endpoint:** `PATCH /anonymous-intakes/{intake_id}`
-
-**Request Body:**
-```json
-{
-  "status": "reviewed",
-  "admin_notes": "Ready for assignment",
-  "assigned_to": "lawyer-user-id"
-}
-```
-
-**All fields are optional.**
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "intake-id",
-    "status": "reviewed",
-    "admin_notes": "Ready for assignment",
-    "assigned_to": "lawyer-user-id",
-    "reviewed_at": "2026-06-02T16:00:00Z",
-    "updated_at": "2026-06-02T16:00:00Z"
-  },
-  "message": "Anonymous intake updated successfully"
-}
-```
-
----
-
-### Add Note to Anonymous Intake
-
-**Endpoint:** `POST /anonymous-intakes/{intake_id}/notes`
-
-**Request Body:**
-```json
-{
-  "note_text": "Follow up needed by Friday",
-  "note_type": "follow_up"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "note-id",
-    "session_id": "session-id",
-    "admin_id": "admin-user-id",
-    "note_text": "Follow up needed by Friday",
-    "note_type": "follow_up",
-    "created_at": "2026-06-02T17:00:00Z"
-  },
-  "message": "Note added successfully"
-}
-```
-
----
-
-### Get Anonymous Intake Notes
-
-**Endpoint:** `GET /anonymous-intakes/{intake_id}/notes`
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "notes": [ /* notes array */ ],
-    "total": 3
-  }
-}
-```
-
----
-
-### Search Anonymous Intakes by Email
-
-**Endpoint:** `GET /anonymous-intakes/search/by-email?email={email}`
+**Endpoint:** `GET /intakes/search/by-email?email={email}`
 
 **Query Parameters:**
 | Parameter | Type | Required | Description |
@@ -419,7 +338,7 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 
 **Example:**
 ```bash
-GET /anonymous-intakes/search/by-email?email=jane@
+GET /intakes/search/by-email?email=jane@
 ```
 
 **Response:**
@@ -496,8 +415,7 @@ GET /anonymous-intakes/search/by-email?email=jane@
       "completed": 89,
       "archived": 0,
       "anon_submitted": 12,
-      "anon_reviewed": 5,
-      "anon_assigned": 3
+      "anon_assigned": 8
     },
     "total": 176
   }

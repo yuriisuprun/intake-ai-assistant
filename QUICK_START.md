@@ -481,6 +481,10 @@ Ollama (http://localhost:11434)
 ✅ Lawyer dashboard
 ✅ Authentication
 ✅ API endpoints
+✅ **Intake Status Management**
+  - Update intake status (new, assigned, in_progress, completed, archived)
+  - Admin notes on intakes
+  - Status change tracking via audit logs
 
 ## What's Next
 

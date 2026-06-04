@@ -55,7 +55,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 #### 2. Admin Dashboard (`frontend/src/app/admin/intakes/page.tsx`)
 - New admin page for managing intakes
 - Search by client name or email
-- Filter by status (submitted, reviewed, assigned, archived)
+- Filter by status (submitted, assigned, archived)
 - View detailed intake information
 - Update status and add admin notes
 - Status badges with icons
@@ -90,7 +90,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ✅ Search by name or email
 ✅ Filter by status
 ✅ View complete intake details
-✅ Update status (submitted → reviewed → assigned → archived)
+✅ Update status (submitted → assigned → archived)
 ✅ Add internal notes
 ✅ Track submission metadata
 
@@ -131,12 +131,12 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - client_email (TEXT)
 - client_phone (TEXT, optional)
 - legal_category (TEXT, optional)
-- status (TEXT: submitted, reviewed, assigned, archived)
+- status (TEXT: submitted, assigned, archived)
 - admin_notes (TEXT, optional)
 - assigned_to (UUID, FK to auth.users, optional)
 - created_at (TIMESTAMP)
 - updated_at (TIMESTAMP)
-- reviewed_at (TIMESTAMP, optional)
+- assigned_at (TIMESTAMP, optional)
 ```
 
 ### intake_sessions Changes
@@ -250,7 +250,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ## Future Enhancements
 
 1. **Email Notifications**
-   - Notify client when intake is reviewed
+   - Notify client when intake is assigned
    - Notify admin of new submissions
 
 2. **Intake Templates**

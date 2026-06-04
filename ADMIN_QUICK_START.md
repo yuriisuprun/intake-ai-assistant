@@ -41,7 +41,7 @@ Login → View Dashboard Stats → Identify Pending Items → Click "Review" →
 #### List View
 **Filters & Search:**
 - 🔍 **Search Box** - Find by client name or email
-- 🔽 **Status Filter** - All, Submitted, Reviewed, Assigned, Archived
+- 🔽 **Status Filter** - All, Submitted, Assigned, Archived
 - Shows total count and filtered results
 
 **Table Columns:**
@@ -59,7 +59,6 @@ Click the **View** button to open the intake details:
 - Current status badge (color-coded)
 - Quick buttons to change status
   - **Submitted** - Just received
-  - **Reviewed** - Admin has reviewed
   - **Assigned** - Given to team member
   - **Archived** - Closed/completed
 
@@ -99,8 +98,8 @@ Click the **View** button to open the intake details:
    - Click "Save Notes"
 
 4. **Update Status**
-   - Click **Reviewed** button to mark as reviewed
-   - Optionally click **Assigned** if assigning now
+   - Click **Assigned** button to mark as assigned
+   - Optionally add notes before assigning
 
 5. **Track**
    - Item moves from Pending to your assigned work
@@ -142,15 +141,14 @@ Click the **View** button to open the intake details:
 Typical progression:
 
 ```
-Submitted → Reviewed → Assigned → Completed/Archived
+Submitted → Assigned → Completed/Archived
 ```
 
 **Status Details:**
 
 | Status | Meaning | Next Step |
 |--------|---------|-----------|
-| **Submitted** | Pending admin review | Review and assess |
-| **Reviewed** | Admin has looked it over | Assign to team member |
+| **Submitted** | Pending admin action | Assess and review |
 | **Assigned** | Given to team member for action | Monitor progress |
 | **Archived** | Closed/completed | View history |
 
@@ -202,20 +200,12 @@ Submitted → Reviewed → Assigned → Completed/Archived
 
 ### 7. Common Tasks
 
-#### Mark Intake as Reviewed
-```
-1. Open intake details
-2. Click "Reviewed" button
-3. Add note if needed
-4. Observe "Reviewed" badge applied
-```
-
 #### Assign Intake to Team Member
 ```
 1. Open intake details
-2. Click "Assigned" button
-3. (Future: select team member from dropdown)
-4. System records assignment
+2. Click "Assigned" button to mark intake as assigned
+3. Add internal notes documenting the assignment
+4. System records the assignment
 ```
 
 #### Find All High-Urgency Intakes
@@ -317,7 +307,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 curl -X PATCH \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"status":"reviewed"}' \
+  -d '{"status":"assigned"}' \
   https://api.example.com/api/v1/admin/intake/{id}/status
 ```
 
