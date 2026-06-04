@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS anonymous_intakes (
   client_email TEXT NOT NULL,
   client_phone TEXT,
   legal_category TEXT,
-  status TEXT NOT NULL DEFAULT 'submitted', -- submitted, reviewed, assigned, archived
+  status TEXT NOT NULL DEFAULT 'new', -- new, assigned, archived
   admin_notes TEXT,
   assigned_to UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),

@@ -6,7 +6,7 @@
 -- Note: This is handled through Supabase Auth settings
 -- Users should have raw_user_meta_data with role field:
 -- {
---   "role": "client|admin|lawyer|manager",
+--   "role": "client|admin",
 --   "full_name": "...",
 --   "organization": "..."
 -- }
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS team_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   organization_id UUID, -- For multi-tenant support (future)
-  role VARCHAR(50) NOT NULL, -- admin, lawyer, manager, etc.
+  role VARCHAR(50) NOT NULL, -- admin or client
   status VARCHAR(50) DEFAULT 'active', -- active, inactive, suspended
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
@@ -121,7 +121,7 @@ CREATE POLICY "Admins can view all records"
     EXISTS (
       SELECT 1 FROM team_members
       WHERE user_id = auth.uid()
-      AND role IN ('admin', 'lawyer', 'manager')
+      AND role = 'admin'
       AND status = 'active'
     )
   );
@@ -137,7 +137,7 @@ CREATE POLICY "Admins can view all sessions"
     EXISTS (
       SELECT 1 FROM team_members
       WHERE user_id = auth.uid()
-      AND role IN ('admin', 'lawyer', 'manager')
+      AND role = 'admin'
       AND status = 'active'
     )
   );
@@ -149,7 +149,7 @@ CREATE POLICY "Admins can view notes"
     EXISTS (
       SELECT 1 FROM team_members
       WHERE user_id = auth.uid()
-      AND role IN ('admin', 'lawyer', 'manager')
+      AND role = 'admin'
       AND status = 'active'
     )
   );
@@ -160,7 +160,7 @@ CREATE POLICY "Admins can create notes"
     EXISTS (
       SELECT 1 FROM team_members
       WHERE user_id = auth.uid()
-      AND role IN ('admin', 'lawyer', 'manager')
+      AND role = 'admin'
       AND status = 'active'
     )
   );
@@ -172,7 +172,7 @@ CREATE POLICY "Admins can view assignments"
     EXISTS (
       SELECT 1 FROM team_members
       WHERE user_id = auth.uid()
-      AND role IN ('admin', 'manager')
+      AND role = 'admin'
       AND status = 'active'
     )
   );
@@ -190,39 +190,34 @@ CREATE POLICY "Admins can view audit log"
   );
 
 -- RLS Policies for team_members table
-CREATE POLICY "Admins can view team members"
+-- Note: This policy allows anyone to read their own team_members record to prevent infinite recursion
+CREATE POLICY "Users can view their own member record"
   ON team_members FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM team_members tm
-      WHERE tm.user_id = auth.uid()
-      AND tm.role IN ('admin', 'manager')
-      AND tm.status = 'active'
-    )
-  );
+  USING (auth.uid() = user_id);
 
 -- RLS Policies for admin_settings table
-CREATE POLICY "Admins can view settings"
-  ON admin_settings FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM team_members
-      WHERE user_id = auth.uid()
-      AND role = 'admin'
-      AND status = 'active'
-    )
-  );
-
-CREATE POLICY "Admins can update settings"
-  ON admin_settings FOR UPDATE
-  USING (
-    EXISTS (
-      SELECT 1 FROM team_members
-      WHERE user_id = auth.uid()
-      AND role = 'admin'
-      AND status = 'active'
-    )
-  );
+-- Disabled for service role to work properly with admin operations
+-- CREATE POLICY "Admins can view settings"
+--   ON admin_settings FOR SELECT
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM team_members
+--       WHERE user_id = auth.uid()
+--       AND role = 'admin'
+--       AND status = 'active'
+--     )
+--   );
+--
+-- CREATE POLICY "Admins can update settings"
+--   ON admin_settings FOR UPDATE
+--   USING (
+--     EXISTS (
+--       SELECT 1 FROM team_members
+--       WHERE user_id = auth.uid()
+--       AND role = 'admin'
+--       AND status = 'active'
+--     )
+--   );
 
 -- 8. Insert default settings
 INSERT INTO admin_settings (setting_key, setting_value, setting_type, description)
