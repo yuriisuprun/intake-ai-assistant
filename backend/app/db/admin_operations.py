@@ -423,12 +423,6 @@ class AdminOperations:
             in_progress = len([s for s in sessions if s.get("status") == "in_progress"])
             archived = len([s for s in sessions if s.get("status") == "archived"])
             
-            # Category breakdown
-            categories = {}
-            for session in sessions:
-                category = session.get("legal_category", "Other")
-                categories[category] = categories.get(category, 0) + 1
-            
             # Urgency breakdown
             urgencies = {}
             for session in sessions:
@@ -454,7 +448,6 @@ class AdminOperations:
                 "archived": archived,
                 "completion_rate": (completed / total * 100) if total > 0 else 0,
                 "average_completion_hours": round(avg_completion_time, 2),
-                "by_category": categories,
                 "by_urgency": urgencies,
             }
         except Exception as e:
@@ -523,10 +516,6 @@ class AdminOperations:
                         if query_lower in session["clients"].get("email", "").lower():
                             match = True
                 
-                # Check category
-                if query_lower in session.get("legal_category", "").lower():
-                    match = True
-                
                 # Check notes
                 if query_lower in session.get("notes", "").lower():
                     match = True
@@ -567,7 +556,6 @@ class AdminOperations:
                     "id": intake.get("id"),
                     "client": intake.get("client_name", "N/A"),
                     "email": intake.get("client_email", "N/A"),
-                    "category": intake.get("legal_category", "N/A"),
                     "status": intake.get("status"),
                     "created_at": intake.get("created_at"),
                     "updated_at": intake.get("updated_at"),

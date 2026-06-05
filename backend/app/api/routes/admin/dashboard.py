@@ -114,31 +114,17 @@ async def get_urgency_distribution():
 
 @router.get("/category-distribution", response_model=APIResponse)
 async def get_category_distribution():
-    """Get distribution of legal categories."""
+    """Get distribution of legal categories (deprecated endpoint)."""
     try:
-        logger.info("Category distribution requested")
-        response = (
-            db.client.table("intakes")
-            .select("legal_category, count")
-            .execute()
-        )
-        
-        category_counts = {}
-        for session in response.data or []:
-            category = session.get("legal_category", "General")
-            category_counts[category] = category_counts.get(category, 0) + 1
-        
+        logger.info("Category distribution requested - endpoint deprecated")
         return APIResponse(
-            success=True,
-            data={
-                "category_distribution": category_counts,
-                "total": sum(category_counts.values()),
-            },
+            success=False,
+            error="This endpoint is deprecated as legal_category has been removed from the system",
         )
 
     except Exception as e:
-        logger.error(f"Error getting category distribution: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to get category distribution: {str(e)}")
+        logger.error(f"Error in deprecated category endpoint: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Deprecated endpoint: {str(e)}")
 
 
 @router.get("/team-assignments", response_model=APIResponse)

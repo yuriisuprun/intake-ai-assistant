@@ -9,19 +9,6 @@ from enum import Enum
 
 
 # Enums
-class LegalCategory(str, Enum):
-    EMPLOYMENT = "Employment"
-    FAMILY = "Family"
-    CORPORATE = "Corporate"
-    REAL_ESTATE = "Real Estate"
-    INTELLECTUAL_PROPERTY = "Intellectual Property"
-    LITIGATION = "Litigation"
-    IMMIGRATION = "Immigration"
-    TAX = "Tax"
-    BANKRUPTCY = "Bankruptcy"
-    OTHER = "Other"
-
-
 class SessionStatus(str, Enum):
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -98,7 +85,6 @@ class IntakeSessionCreate(BaseModel):
 
 
 class IntakeSessionUpdate(BaseModel):
-    legal_category: Optional[str] = None
     status: Optional[SessionStatus] = None
     urgency: Optional[UrgencyLevel] = None
     notes: Optional[str] = None
@@ -114,7 +100,6 @@ class IntakeStepSubmit(BaseModel):
 class IntakeSessionResponse(BaseModel):
     id: str
     client_id: Optional[str]
-    legal_category: Optional[str]
     status: SessionStatus
     urgency: Optional[UrgencyLevel]
     current_step: int
@@ -143,7 +128,6 @@ class IntakeResponse(BaseModel):
     client_name: str
     client_email: str
     client_phone: Optional[str]
-    legal_category: Optional[str]
     status: str
     created_at: datetime
     updated_at: datetime
@@ -216,7 +200,6 @@ class RecommendedQuestion(BaseModel):
 
 class AISummaryResponse(BaseModel):
     summary: str
-    legal_category: LegalCategory
     urgency: UrgencyLevel
     key_facts: List[str]
     missing_information: List[str]

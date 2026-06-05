@@ -32,7 +32,6 @@ DOCUMENTS PROVIDED:
 Generate a JSON response with the following structure:
 {{
   "summary": "Brief 2-3 sentence summary of the client's situation",
-  "legal_category": "One of: Employment, Family, Corporate, Real Estate, Intellectual Property, Litigation, Immigration, Tax, Bankruptcy, Other",
   "urgency": "low|medium|high (based on facts provided, not legal judgment)",
   "key_facts": ["fact1", "fact2", "fact3", ...],
   "missing_information": ["info1", "info2", "info3", ...],

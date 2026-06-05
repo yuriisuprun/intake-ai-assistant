@@ -14,7 +14,7 @@ from app.core.prompts import (
     CATEGORY_DETECTION_PROMPT,
     URGENCY_ASSESSMENT_PROMPT,
 )
-from app.models.schemas import AISummaryResponse, LegalCategory, UrgencyLevel
+from app.models.schemas import AISummaryResponse, UrgencyLevel
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +73,6 @@ class SummaryService:
                 user_id,
                 {
                     "ai_summary": summary_data,
-                    "legal_category": summary_data.get("legal_category"),
                     "urgency": summary_data.get("urgency"),
                 },
             )
@@ -150,18 +149,11 @@ class SummaryService:
         try:
             # Ensure required fields
             summary = response.get("summary", "")
-            legal_category = response.get("legal_category", "Other")
             urgency = response.get("urgency", "medium")
             key_facts = response.get("key_facts", [])
             missing_info = response.get("missing_information", [])
             recommended_questions = response.get("recommended_next_questions", [])
             confidence = response.get("confidence", 0.5)
-
-            # Validate legal category
-            try:
-                legal_category = LegalCategory(legal_category).value
-            except ValueError:
-                legal_category = "Other"
 
             # Validate urgency
             try:
@@ -186,7 +178,6 @@ class SummaryService:
 
             return {
                 "summary": summary,
-                "legal_category": legal_category,
                 "urgency": urgency,
                 "key_facts": key_facts[:10],  # Limit to 10
                 "missing_information": missing_info[:10],  # Limit to 10
@@ -199,7 +190,6 @@ class SummaryService:
             logger.error(f"Error normalizing summary response: {e}")
             return {
                 "summary": "Unable to generate summary",
-                "legal_category": "Other",
                 "urgency": "medium",
                 "key_facts": [],
                 "missing_information": [],
@@ -209,25 +199,9 @@ class SummaryService:
             }
 
     async def detect_legal_category(self, description: str) -> Optional[str]:
-        """Detect legal category from description."""
-        try:
-            prompt = CATEGORY_DETECTION_PROMPT.format(description=description)
-            response = await self.ollama.generate_json(
-                prompt=prompt, system_prompt=SYSTEM_PROMPT, temperature=0.3
-            )
-
-            if response:
-                category = response.get("primary_category", "Other")
-                try:
-                    return LegalCategory(category).value
-                except ValueError:
-                    return "Other"
-
-            return None
-
-        except Exception as e:
-            logger.error(f"Error detecting legal category: {e}")
-            return None
+        """Detect legal category from description (deprecated - kept for backward compatibility)."""
+        # This method is deprecated as legal_category column has been removed
+        return None
 
     async def assess_urgency(self, facts: List[str]) -> Optional[str]:
         """Assess urgency level from facts."""
