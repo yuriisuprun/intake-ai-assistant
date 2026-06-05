@@ -39,18 +39,19 @@ cd intake-ai-assistant
 
 1. Go to **SQL Editor** (left sidebar)
 2. Click **"New Query"**
-3. Open `docs/DATABASE_SCHEMA.md`
-4. Copy the entire SQL migration script
-5. Paste into SQL Editor
-6. Click **"Run"** (or Ctrl+Enter)
-7. Wait for completion (should see green checkmark)
+3. Run migrations in this order:
+   - Copy and run each migration file from `backend/migrations/` directory
+   - Start with `001_*`, then `002_*`, etc. through `012_remove_client_user_ids_from_intakes.sql`
+   - Each migration should execute successfully before moving to the next
+4. Wait for completion (should see green checkmark for each)
 
 **What this creates:**
-- `clients` table - Client information
-- `intakes` table - Intake session records with client info columns
+- `clients` table - Client information (for reference purposes)
+- `intakes` table - Intake session records (standalone, with direct client info columns)
 - `messages` table - Conversation messages
 - `uploaded_files` table - File metadata
-- Row-Level Security (RLS) policies
+- `admin_notes` table - Admin notes on intakes
+- `team_assignments` table - Admin task assignments
 - Indexes for performance
 
 ### 2.4 Create Storage Buckets (Supabase Storage)
@@ -265,14 +266,7 @@ npm run dev
 ## First Test - Intake Form
 
 1. Go to http://localhost:3000
-2. Click "Sign Up" to create account
-3. Click "Start Intake" button
-4. **Client Selection Screen:**
-   - Click "Create New Client"
-   - Enter name: "John Doe"
-   - Enter email: "john@example.com"
-   - Click "Create Client"
-5. **Answer 8 Questions:**
+2. **Answer 8 Questions:**
    - Q1: Legal Area → Select "Employment"
    - Q2: Problem Description → Enter "I was wrongfully terminated"
    - Q3: Timeline → Enter "Started January 15, 2024"
@@ -281,10 +275,10 @@ npm run dev
    - Q6: Contact Preference → Select "Email"
    - Q7: Additional Info → Skip (optional)
    - Q8: (Reserved for future use)
-6. Click "Next" after each question
-7. See "Intake Complete!" message
-8. Redirected to Dashboard
-9. See completed session in list
+3. Click "Next" after each question
+4. See "Intake Complete!" message
+5. Redirected to Dashboard
+6. See completed session in list
 
 ## Troubleshooting
 
@@ -312,12 +306,12 @@ uvicorn app.main:app --port 8001
 
 ## Authentication & User Credentials
 
-**Important:** This system requires real user credentials. Demo credentials have been removed.
+**Important:** The intake system is now independent of user authentication. All intakes are stored in a unified table with direct client information.
 
-For setting up real admin and user accounts:
-- See `REAL_CREDENTIALS_SETUP.md` - Complete guide to creating real user accounts
-- Admin login: `http://localhost:3000/admin-login`
-- Client login: `http://localhost:3000/login`
+For admin features and case management:
+- See `REAL_CREDENTIALS_SETUP.md` - Setup for admin user accounts
+- Admin dashboard: `http://localhost:3000/admin`
+- For case management and team features
 
 ## Next Steps
 
@@ -390,15 +384,17 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 # Get all questions
 curl http://localhost:8000/api/intake/flow
 
-# Start intake session
+# Start intake session (no auth required)
 curl -X POST http://localhost:8000/api/intake/start \
-  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"client_id": "uuid"}'
+  -d '{
+    "client_name": "John Doe",
+    "client_email": "john@example.com",
+    "client_phone": "+1-555-0123"
+  }'
 
-# Submit answer to a question
+# Submit answer to a question (no auth required)
 curl -X POST http://localhost:8000/api/intake/step \
-  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "session_id": "uuid",
@@ -407,13 +403,11 @@ curl -X POST http://localhost:8000/api/intake/step \
     "question_type": "select"
   }'
 
-# Complete intake
-curl -X POST http://localhost:8000/api/intake/complete?session_id=uuid \
-  -H "Authorization: Bearer $TOKEN"
+# Complete intake (no auth required)
+curl -X POST http://localhost:8000/api/intake/complete?session_id=uuid
 
 # List sessions
-curl http://localhost:8000/api/intake/ \
-  -H "Authorization: Bearer $TOKEN"
+curl http://localhost:8000/api/intake/
 ```
 
 ### Other Endpoints
@@ -469,7 +463,8 @@ Ollama (http://localhost:11434)
   - Additional Info (Textarea)
   - (Reserved for future use)
 
-✅ Client selection/creation
+✅ Anonymous intake (no authentication required)
+✅ Direct client information storage in intakes table
 ✅ Question navigation (forward/backward)
 ✅ Answer validation (required fields)
 ✅ Progress tracking (stepper)
@@ -478,8 +473,7 @@ Ollama (http://localhost:11434)
 ✅ Database storage
 ✅ File uploads
 ✅ AI summaries via Ollama
-✅ Lawyer dashboard
-✅ Authentication
+✅ Admin dashboard
 ✅ API endpoints
 ✅ **Intake Status Management**
   - Update intake status (new, assigned, in_progress, completed, archived)

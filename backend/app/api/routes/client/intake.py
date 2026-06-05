@@ -2,7 +2,7 @@
 Client intake flow API routes.
 """
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from typing import Optional
 import logging
 
@@ -16,7 +16,6 @@ from app.models.schemas import (
 )
 from app.services.intake_service import IntakeService
 from app.db.supabase import db
-from app.api.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/intake")
@@ -38,17 +37,16 @@ async def get_intake_flow():
 
 @router.post("/start", response_model=APIResponse)
 async def start_intake(
-    request: IntakeSessionCreate, user_id: str = Depends(get_current_user)
+    request: IntakeSessionCreate
 ):
     """Start a new intake session."""
     try:
-        # Verify client exists and belongs to user
-        client = await db.get_client(request.client_id, user_id)
-        if not client:
-            raise HTTPException(status_code=404, detail="Client not found")
-
-        # Create intake session
-        session = await db.create_intake_session(user_id, request.client_id)
+        # Create intake session with client information
+        session = await db.create_intake_session(
+            client_name=request.client_name,
+            client_email=request.client_email,
+            client_phone=request.client_phone
+        )
 
         if not session:
             raise HTTPException(status_code=500, detail="Failed to create intake session")
@@ -78,7 +76,7 @@ async def start_intake(
 
 @router.post("/step", response_model=APIResponse)
 async def submit_intake_step(
-    request: IntakeStepSubmit, user_id: str = Depends(get_current_user)
+    request: IntakeStepSubmit
 ):
     """Submit an intake step."""
     try:
@@ -92,7 +90,7 @@ async def submit_intake_step(
         # Submit step
         success = await IntakeService.submit_step(
             request.session_id,
-            user_id,
+            None,  # No user_id needed
             request.step_key,
             request.answer,
             request.question_type,
@@ -102,7 +100,7 @@ async def submit_intake_step(
             raise HTTPException(status_code=500, detail="Failed to submit step")
 
         # Get updated session
-        session = await db.get_intake_session(request.session_id, user_id)
+        session = await db.get_intake_session(request.session_id)
 
         return APIResponse(
             success=True,
@@ -119,18 +117,18 @@ async def submit_intake_step(
 
 @router.post("/complete", response_model=APIResponse)
 async def complete_intake(
-    session_id: str, user_id: str = Depends(get_current_user)
+    session_id: str
 ):
     """Complete intake session."""
     try:
         # Complete intake
-        success = await IntakeService.complete_intake(session_id, user_id)
+        success = await IntakeService.complete_intake(session_id, None)
 
         if not success:
             raise HTTPException(status_code=500, detail="Failed to complete intake")
 
         # Get updated session
-        session = await db.get_intake_session(session_id, user_id)
+        session = await db.get_intake_session(session_id)
 
         return APIResponse(
             success=True,
@@ -147,11 +145,11 @@ async def complete_intake(
 
 @router.get("/{session_id}", response_model=APIResponse)
 async def get_intake_session(
-    session_id: str, user_id: str = Depends(get_current_user)
+    session_id: str
 ):
     """Get intake session details."""
     try:
-        session = await db.get_intake_session(session_id, user_id)
+        session = await db.get_intake_session(session_id)
 
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
@@ -170,11 +168,11 @@ async def get_intake_session(
 
 @router.get("/", response_model=APIResponse)
 async def list_intake_sessions(
-    skip: int = 0, limit: int = 10, user_id: str = Depends(get_current_user)
+    skip: int = 0, limit: int = 10
 ):
-    """List intake sessions for user."""
+    """List intake sessions."""
     try:
-        sessions, total = await db.list_intake_sessions(user_id, skip, limit)
+        sessions, total = await db.list_intake_sessions(skip, limit)
 
         return APIResponse(
             success=True,

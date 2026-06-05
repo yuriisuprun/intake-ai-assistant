@@ -128,18 +128,17 @@ class SupabaseDB:
 
     # Intake Sessions
     async def create_intake_session(
-        self, user_id: Optional[str] = None, client_id: Optional[str] = None,
-        client_name: Optional[str] = None, client_email: Optional[str] = None,
+        self,
+        client_name: Optional[str] = None, 
+        client_email: Optional[str] = None,
         client_phone: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Create a new intake session (registered or unregistered)."""
+        """Create a new intake session with client information."""
         try:
             response = (
                 self.client.table("intakes")
                 .insert(
                     {
-                        "user_id": user_id,
-                        "client_id": client_id,
                         "client_name": client_name,
                         "client_email": client_email,
                         "client_phone": client_phone,
@@ -224,7 +223,7 @@ class SupabaseDB:
             raise
 
     async def get_intake_session(
-        self, session_id: str, user_id: str
+        self, session_id: str
     ) -> Optional[Dict[str, Any]]:
         """Get intake session by ID."""
         try:
@@ -232,7 +231,6 @@ class SupabaseDB:
                 self.client.table("intakes")
                 .select("*")
                 .eq("id", session_id)
-                .eq("user_id", user_id)
                 .single()
                 .execute()
             )
@@ -242,24 +240,22 @@ class SupabaseDB:
             return None
 
     async def list_intake_sessions(
-        self, user_id: str, skip: int = 0, limit: int = 10
+        self, skip: int = 0, limit: int = 10
     ) -> tuple[List[Dict[str, Any]], int]:
-        """List intake sessions for user."""
+        """List all intake sessions."""
         try:
             # Get total count
             count_response = (
                 self.client.table("intakes")
                 .select("id", count="exact")
-                .eq("user_id", user_id)
                 .execute()
             )
             total = count_response.count or 0
 
-            # Get paginated results with client info
+            # Get paginated results
             response = (
                 self.client.table("intakes")
-                .select("*, clients(id, full_name, email)")
-                .eq("user_id", user_id)
+                .select("*")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
                 .execute()
@@ -272,7 +268,7 @@ class SupabaseDB:
     async def list_all_intake_sessions(
         self, skip: int = 0, limit: int = 20
     ) -> tuple[List[Dict[str, Any]], int]:
-        """List all intake sessions (admin only) - includes both registered and intakes."""
+        """List all intake sessions."""
         try:
             # Get total count
             count_response = (
@@ -282,10 +278,10 @@ class SupabaseDB:
             )
             total = count_response.count or 0
 
-            # Get paginated results with client info (optional join)
+            # Get paginated results
             response = (
                 self.client.table("intakes")
-                .select("*, clients(id, full_name, email)")
+                .select("*")
                 .order("created_at", desc=True)
                 .range(skip, skip + limit - 1)
                 .execute()
@@ -296,7 +292,7 @@ class SupabaseDB:
             return [], 0
 
     async def update_intake_session(
-        self, session_id: str, user_id: str, data: Dict[str, Any]
+        self, session_id: str, data: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Update intake session."""
         try:
@@ -304,7 +300,6 @@ class SupabaseDB:
                 self.client.table("intakes")
                 .update(data)
                 .eq("id", session_id)
-                .eq("user_id", user_id)
                 .execute()
             )
             return response.data[0] if response.data else None
@@ -315,11 +310,11 @@ class SupabaseDB:
     async def get_intake_session_admin(
         self, session_id: str
     ) -> Optional[Dict[str, Any]]:
-        """Get intake session by ID (admin only - no user_id check)."""
+        """Get intake session by ID."""
         try:
             response = (
                 self.client.table("intakes")
-                .select("*, clients(id, full_name, email)")
+                .select("*")
                 .eq("id", session_id)
                 .single()
                 .execute()

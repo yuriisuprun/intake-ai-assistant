@@ -2,11 +2,12 @@
 
 ## 🎯 Project Overview
 
-A production-ready SaaS MVP for law firms to collect structured client intake data, generate AI-powered case summaries, and prepare consultation notes using local Ollama LLM.
+A production-ready SaaS MVP for law firms to collect structured client intake data anonymously (no authentication required), generate AI-powered case summaries, and prepare consultation notes using local Ollama LLM.
 
 **Status:** MVP Ready for Development
 **Timeline:** 2-3 weeks for solo developer
 **Tech Stack:** Next.js + FastAPI + Supabase + Ollama
+**Key Feature:** Independent intakes table - no user authentication required for intake submission
 
 ## 📦 What's Included
 
@@ -60,10 +61,10 @@ A production-ready SaaS MVP for law firms to collect structured client intake da
 Client Browser
     ↓
 Next.js Frontend (TypeScript)
-    ↓ HTTPS
+    ↓ HTTPS (no auth required for intake)
 FastAPI Backend (Python)
     ↓
-Supabase (PostgreSQL + Auth + Storage)
+Supabase (PostgreSQL + Storage) - Independent intakes table
     ↓
 Ollama (Local LLM - Mistral 7B)
 ```
@@ -76,6 +77,7 @@ Ollama (Local LLM - Mistral 7B)
 - Support for text, textarea, select, radio, date, file inputs
 - Client-side and server-side validation
 - Progress tracking
+- No authentication required - fully anonymous
 
 ### 2. AI Summary Engine
 - Collects all intake messages
@@ -103,8 +105,8 @@ Ollama (Local LLM - Mistral 7B)
 - Filtering and search
 
 ### 5. Security
-- Supabase Auth (JWT tokens)
-- Row-Level Security (RLS)
+- Supabase Auth (JWT tokens) - for admin features
+- Standalone intakes table (no RLS needed for anonymous intakes)
 - Encrypted data in transit (HTTPS)
 - Encrypted data at rest
 - File upload validation
@@ -114,24 +116,26 @@ Ollama (Local LLM - Mistral 7B)
 ## 📊 Database Schema
 
 **Tables:**
-- `clients` - Client information
-- `intakes` - Unified intake session records with client info columns (client_name, client_email, client_phone)
+- `clients` - Client information (for reference purposes)
+- `intakes` - Standalone intake session records with direct client info (client_name, client_email, client_phone)
 - `messages` - Conversation messages
 - `uploaded_files` - Document metadata
+- `admin_notes` - Admin notes on intakes
+- `team_assignments` - Admin task assignments
 
 **Features:**
-- Row-Level Security (RLS) enabled
+- Independent intakes table (no required foreign keys)
 - Automatic timestamps
 - JSONB fields for flexible data
 - Indexes for performance
-- Consolidated schema with direct client info columns in intakes table
+- Direct client info columns in intakes table
 
 ## 🔌 API Endpoints
 
-**Intake:**
+**Intake (No Authentication Required):**
 - `GET /api/intake/flow` - Get intake flow definition
-- `POST /api/intake/start` - Start new session
-- `POST /api/intake/step` - Submit step
+- `POST /api/intake/start` - Start new session (with client_name, client_email, client_phone)
+- `POST /api/intake/step` - Submit step (anonymous session)
 - `POST /api/intake/complete` - Complete intake
 - `GET /api/intake/{id}` - Get session
 - `GET /api/intake/` - List sessions
@@ -177,7 +181,7 @@ Ollama (Local LLM - Mistral 7B)
    source venv/bin/activate
    pip install -r requirements.txt
    cp .env.example .env
-   # Edit .env with Supabase credentials
+   # .env uses Supabase credentials (no user_id needed for intake)
    uvicorn app.main:app --reload
    ```
 

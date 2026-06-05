@@ -77,11 +77,10 @@ class ClientResponse(BaseModel):
 
 # Intake Session Models
 class IntakeSessionCreate(BaseModel):
-    client_id: Optional[str] = None  # For registered clients
-    # For unregistered intakes
-    client_name: Optional[str] = None
-    client_email: Optional[str] = None
-    client_phone: Optional[str] = None
+    # Client information (required for new intake)
+    client_name: str = Field(..., min_length=1, max_length=255)
+    client_email: EmailStr
+    client_phone: Optional[str] = Field(None, max_length=20)
 
 
 class IntakeSessionUpdate(BaseModel):
@@ -98,7 +97,6 @@ class IntakeStepSubmit(BaseModel):
 
 class IntakeSessionResponse(BaseModel):
     id: str
-    client_id: Optional[str]
     status: SessionStatus
     current_step: int
     # Intake flow fields (flattened from former flow_data)
@@ -109,7 +107,7 @@ class IntakeSessionResponse(BaseModel):
     desired_outcome: Optional[str] = None
     contact_preference: Optional[str] = None
     additional_info: Optional[str] = None
-    # Client info
+    # Client info (stored directly in intakes table)
     client_name: Optional[str] = None
     client_email: Optional[str] = None
     client_phone: Optional[str] = None
@@ -119,7 +117,6 @@ class IntakeSessionResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime]
-    clients: Optional[Dict[str, Any]] = None  # Client info from join
 
     class Config:
         from_attributes = True

@@ -4,10 +4,11 @@ Admin notes management API routes.
 
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from uuid import UUID
 import logging
 
 from app.models.schemas import APIResponse
-from app.db.supabase import db
+from app.db.admin_operations import AdminOperations
 from app.api.dependencies import get_current_user
 
 logger = logging.getLogger(__name__)
@@ -34,13 +35,11 @@ async def create_note(
     try:
         # TODO: Add role-based authorization check
         # Create note
-        note = await db.create_note(
-            {
-                "session_id": request.session_id,
-                "content": request.content,
-                "note_type": request.note_type,
-                "created_by": user_id,
-            }
+        note = await AdminOperations.create_note(
+            session_id=UUID(request.session_id),
+            admin_id=UUID(user_id),
+            note_text=request.content,
+            note_type=request.note_type,
         )
 
         if not note:
@@ -67,7 +66,7 @@ async def get_notes(
     try:
         # TODO: Add role-based authorization check
         # Get notes
-        notes = await db.get_notes(session_id)
+        notes = await AdminOperations.get_notes(UUID(session_id))
         
         if not notes:
             notes = []
@@ -93,7 +92,10 @@ async def update_note(
     try:
         # TODO: Add role-based authorization check
         # Update note
-        note = await db.update_note(note_id, {"content": request.content})
+        note = await AdminOperations.update_note(
+            note_id=UUID(note_id),
+            note_text=request.content,
+        )
 
         if not note:
             raise HTTPException(status_code=500, detail="Failed to update note")
@@ -119,7 +121,7 @@ async def delete_note(
     try:
         # TODO: Add role-based authorization check
         # Delete note
-        success = await db.delete_note(note_id)
+        success = await AdminOperations.delete_note(UUID(note_id))
 
         if not success:
             raise HTTPException(status_code=500, detail="Failed to delete note")
