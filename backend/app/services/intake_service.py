@@ -154,12 +154,6 @@ class IntakeService:
             
             session = session_response.data
 
-            # Get flow data
-            flow_data = session.get("flow_data", {}) or {}
-
-            # Store answer
-            flow_data[step_key] = answer
-
             # Find step number
             step_num = None
             for q in IntakeService.INTAKE_FLOW:
@@ -182,12 +176,19 @@ class IntakeService:
                 }
             )
 
+            # Build update dict with the column name matching the step_key
+            update_data = {"current_step": step_num or 0}
+            
+            # Map step_key to database column name
+            # Special case for urgency question which maps to urgency_description column
+            if step_key == "urgency":
+                update_data["urgency_description"] = answer
+            else:
+                update_data[step_key] = answer
+
             # Update session - use direct client call to avoid user_id filter
             update_response = db.client.table("intakes").update(
-                {
-                    "flow_data": flow_data,
-                    "current_step": step_num or 0,
-                }
+                update_data
             ).eq("id", session_id).execute()
 
             if not update_response.data:

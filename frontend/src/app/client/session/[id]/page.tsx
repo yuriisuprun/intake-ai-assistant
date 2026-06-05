@@ -9,9 +9,14 @@ interface SessionData {
   id: string;
   client_id: string;
   status: string;
-  legal_category: string;
+  legal_area: string;
   urgency: string;
-  flow_data: Record<string, any>;
+  problem_description: string;
+  timeline?: string;
+  urgency_description?: string;
+  desired_outcome?: string;
+  contact_preference?: string;
+  additional_info?: string;
   created_at: string;
   completed_at?: string;
 }
@@ -113,22 +118,22 @@ export default function ClientSessionPage() {
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Legal Category</p>
-            <p className="text-lg font-semibold">{session.legal_category || 'N/A'}</p>
+            <p className="text-sm text-gray-600">Legal Area</p>
+            <p className="text-lg font-semibold">{session.legal_area || 'N/A'}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Urgency</p>
             <p className="text-lg font-semibold">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  session.urgency === 'high'
+                  session.urgency_description?.includes('High')
                     ? 'bg-red-100 text-red-800'
-                    : session.urgency === 'medium'
+                    : session.urgency_description?.includes('Medium')
                     ? 'bg-orange-100 text-orange-800'
                     : 'bg-blue-100 text-blue-800'
                 }`}
               >
-                {session.urgency || 'N/A'}
+                {session.urgency_description || 'N/A'}
               </span>
             </p>
           </div>
@@ -145,14 +150,36 @@ export default function ClientSessionPage() {
       <div className="bg-white rounded-lg shadow p-6 mb-8">
         <h2 className="text-xl font-bold mb-4">Submitted Information</h2>
         <div className="space-y-4">
-          {Object.entries(session.flow_data).map(([key, value]) => (
-            <div key={key} className="border-b border-gray-200 pb-4 last:border-b-0">
-              <p className="text-sm text-gray-600 font-medium">{key}</p>
-              <p className="text-gray-900 mt-1">
-                {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-              </p>
+          {session.problem_description && (
+            <div className="border-b border-gray-200 pb-4">
+              <p className="text-sm text-gray-600 font-medium">Problem Description</p>
+              <p className="text-gray-900 mt-1">{session.problem_description}</p>
             </div>
-          ))}
+          )}
+          {session.timeline && (
+            <div className="border-b border-gray-200 pb-4">
+              <p className="text-sm text-gray-600 font-medium">Timeline</p>
+              <p className="text-gray-900 mt-1">{session.timeline}</p>
+            </div>
+          )}
+          {session.desired_outcome && (
+            <div className="border-b border-gray-200 pb-4">
+              <p className="text-sm text-gray-600 font-medium">Desired Outcome</p>
+              <p className="text-gray-900 mt-1">{session.desired_outcome}</p>
+            </div>
+          )}
+          {session.contact_preference && (
+            <div className="border-b border-gray-200 pb-4">
+              <p className="text-sm text-gray-600 font-medium">Contact Preference</p>
+              <p className="text-gray-900 mt-1">{session.contact_preference}</p>
+            </div>
+          )}
+          {session.additional_info && (
+            <div className="border-b border-gray-200 pb-4">
+              <p className="text-sm text-gray-600 font-medium">Additional Information</p>
+              <p className="text-gray-900 mt-1">{session.additional_info}</p>
+            </div>
+          )}
         </div>
       </div>
 

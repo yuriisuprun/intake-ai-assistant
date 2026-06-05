@@ -252,7 +252,18 @@ CREATE TABLE intakes (
   urgency TEXT, -- low, medium, high
   ai_summary JSONB,
   current_step INTEGER DEFAULT 0,
-  flow_data JSONB,
+  -- Intake flow fields (flattened from former nested structure)
+  client_name TEXT,
+  client_email TEXT,
+  client_phone TEXT,
+  legal_area TEXT,
+  problem_description TEXT,
+  timeline TEXT,
+  urgency_description TEXT,
+  desired_outcome TEXT,
+  contact_preference TEXT,
+  additional_info TEXT,
+  -- Other fields
   notes TEXT,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),

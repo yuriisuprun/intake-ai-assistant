@@ -103,9 +103,21 @@ class IntakeSessionResponse(BaseModel):
     status: SessionStatus
     urgency: Optional[UrgencyLevel]
     current_step: int
-    flow_data: Optional[Dict[str, Any]]
-    ai_summary: Optional[Dict[str, Any]]
-    notes: Optional[str]
+    # Intake flow fields (flattened from former flow_data)
+    legal_area: Optional[str] = None
+    problem_description: Optional[str] = None
+    timeline: Optional[str] = None
+    urgency_description: Optional[str] = None  # from urgency question
+    desired_outcome: Optional[str] = None
+    contact_preference: Optional[str] = None
+    additional_info: Optional[str] = None
+    # Client info
+    client_name: Optional[str] = None
+    client_email: Optional[str] = None
+    client_phone: Optional[str] = None
+    # Other fields
+    ai_summary: Optional[Dict[str, Any]] = None
+    notes: Optional[str] = None
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime]

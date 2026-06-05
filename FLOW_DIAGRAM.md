@@ -268,8 +268,7 @@ IntakePage Component
    │       "id": "session-uuid",
    │       "client_id": "client-uuid",
    │       "status": "in_progress",
-   │       "current_step": 0,
-   │       "flow_data": {}
+   │       "current_step": 0
    │     }
    │   }
    └── Status: 200 OK
@@ -288,9 +287,7 @@ IntakePage Component
    │     "data": {
    │       "id": "session-uuid",
    │       "current_step": 1,
-   │       "flow_data": {
-   │         "legal_area": "Employment"
-   │       }
+   │       "legal_area": "Employment"
    │     }
    │   }
    └── Status: 200 OK
@@ -338,7 +335,16 @@ IntakePage Component
 │ client_id (UUID) FK      │
 │ status (enum)            │
 │ current_step (int)       │
-│ flow_data (JSON)         │
+│ legal_area (text)        │
+│ problem_description      │
+│   (text)                 │
+│ timeline (text)          │
+│ urgency_description      │
+│   (text)                 │
+│ desired_outcome (text)   │
+│ contact_preference       │
+│   (text)                 │
+│ additional_info (text)   │
 │ ai_summary (JSON)        │
 │ created_at (timestamp)   │
 │ updated_at (timestamp)   │

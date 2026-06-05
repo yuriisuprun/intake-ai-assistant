@@ -145,7 +145,6 @@ class SupabaseDB:
                         "client_phone": client_phone,
                         "status": "new",
                         "current_step": 0,
-                        "flow_data": {},
                     }
                 )
                 .execute()
