@@ -282,6 +282,10 @@ class IntakeService:
         if question.get("required") and not answer:
             return False, "This field is required"
 
+        # If answer is empty and not required, skip further validation
+        if not answer:
+            return True, None
+
         # Check type-specific validation
         question_type = question.get("question_type")
 

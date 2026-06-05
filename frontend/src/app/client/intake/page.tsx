@@ -92,17 +92,49 @@ export default function ClientIntakePage() {
 
     try {
       setSubmitting(true);
+
+      // Handle file upload separately
+      let finalAnswer = answer;
+      if (question.question_type === 'file' && answer instanceof File) {
+        try {
+          // Upload file first
+          const formData = new FormData();
+          formData.append('file', answer);
+          formData.append('session_id', sessionId);
+
+          const uploadResponse = await apiClient.post('/client/files/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          if (uploadResponse.data.success) {
+            // Store the filename as the answer
+            finalAnswer = answer.name;
+          } else {
+            setError('Failed to upload file');
+            setSubmitting(false);
+            return;
+          }
+        } catch (uploadErr) {
+          setError('Error uploading file');
+          console.error(uploadErr);
+          setSubmitting(false);
+          return;
+        }
+      }
+
       const response = await apiClient.post('/client/intake/step', {
         session_id: sessionId,
         step_key: question.key,
-        answer,
+        answer: finalAnswer,
         question_type: question.question_type,
       });
 
       if (response.data.success) {
         setAnswers({
           ...answers,
-          [question.key]: answer,
+          [question.key]: finalAnswer,
         });
 
         if (currentStep < flow.total_steps - 1) {

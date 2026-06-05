@@ -282,61 +282,62 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Pending Intakes */}
-        <div 
-          style={{ 
-            backgroundColor: '#ffffff', 
-            borderRadius: '0.5rem', 
-            padding: '1.5rem',
-            border: '1px solid #e5e7eb',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-          }}
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold" style={{ color: '#111827' }}>Pending Review</h2>
-            <AlertCircle size={20} style={{ color: '#f59e0b' }} />
-          </div>
+          <div 
+            style={{ 
+              backgroundColor: '#ffffff', 
+              borderRadius: '0.5rem', 
+              padding: '1.5rem',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold" style={{ color: '#111827' }}>Pending Review</h2>
+              <AlertCircle size={20} style={{ color: '#f59e0b' }} />
+            </div>
 
-          {pendingIntakes.length === 0 ? (
-            <div className="py-8 text-center">
-              <CheckCircle size={48} style={{ color: '#10b981', margin: '0 auto 1rem' }} />
-              <p style={{ color: '#4b5563' }}>All intakes have been reviewed!</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Submitted</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingIntakes.map((intake, idx) => (
-                    <tr key={intake.id} style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb' }} className="hover:bg-gray-50 transition">
-                      <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
-                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
-                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
-                        {new Date(intake.created_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={() => router.push(`/admin/intakes?id=${intake.id}`)}
-                          className="font-medium transition"
-                          style={{ color: '#a855f7' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
-                        >
-                          Review
-                        </button>
-                      </td>
+            {pendingIntakes.length === 0 ? (
+              <div className="py-8 text-center">
+                <CheckCircle size={48} style={{ color: '#10b981', margin: '0 auto 1rem' }} />
+                <p style={{ color: '#4b5563' }}>All intakes have been reviewed!</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+                    <tr>
+                      <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Submitted</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {pendingIntakes.map((intake, idx) => (
+                      <tr key={intake.id} style={{ borderBottom: '1px solid #e5e7eb', backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb' }} className="hover:bg-gray-50 transition">
+                        <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
+                        <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
+                        <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
+                          {new Date(intake.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <button
+                            onClick={() => router.push(`/admin/intakes?id=${intake.id}`)}
+                            className="font-medium transition"
+                            style={{ color: '#a855f7' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+                          >
+                            Review
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -25,8 +25,8 @@ async def upload_file(
 ):
     """Upload a file to a session."""
     try:
-        # Verify session belongs to user
-        session = await db.get_intake_session(session_id, user_id)
+        # Verify session exists
+        session = await db.get_intake_session(session_id)
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
 
@@ -128,8 +128,8 @@ async def get_files(
 ):
     """Get files for a session."""
     try:
-        # Verify session belongs to user
-        session = await db.get_intake_session(session_id, user_id)
+        # Verify session exists
+        session = await db.get_intake_session(session_id)
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
 
@@ -162,10 +162,10 @@ async def get_file(
         if not file:
             raise HTTPException(status_code=404, detail="File not found")
 
-        # Verify session belongs to user
-        session = await db.get_intake_session(file["session_id"], user_id)
+        # Verify session exists
+        session = await db.get_intake_session(file["session_id"])
         if not session:
-            raise HTTPException(status_code=403, detail="Access denied")
+            raise HTTPException(status_code=404, detail="Session not found")
 
         return APIResponse(
             success=True,
