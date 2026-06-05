@@ -55,11 +55,9 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
         "client_name": "John Doe",
         "client_email": "john@example.com",
         "status": "in_progress",
-        "legal_category": "Employment",
         "urgency": "high",
         "created_at": "2026-06-02T10:00:00Z",
         "updated_at": "2026-06-02T14:30:00Z",
-        "is_anonymous": false,
         "current_step": 3
       }
     ],
@@ -278,7 +276,6 @@ GET /intakes?skip=0&limit=20&status=submitted&search=john
         "client_name": "Jane Smith",
         "client_email": "jane@example.com",
         "client_phone": "+1-555-0123",
-        "legal_category": "Family",
         "status": "submitted",
         "created_at": "2026-06-02T09:00:00Z",
         "updated_at": "2026-06-02T09:00:00Z"

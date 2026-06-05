@@ -247,12 +247,16 @@ CREATE TABLE clients (
 CREATE TABLE intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id),
-  legal_category TEXT,
+  user_id UUID REFERENCES auth.users(id),
   status TEXT DEFAULT 'in_progress', -- in_progress, completed, archived
-  ai_summary JSONB,
   urgency TEXT, -- low, medium, high
+  ai_summary JSONB,
+  current_step INTEGER DEFAULT 0,
+  flow_data JSONB,
+  notes TEXT,
   created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
+  updated_at TIMESTAMP DEFAULT now(),
+  completed_at TIMESTAMP
 );
 ```
 
@@ -353,7 +357,6 @@ Client Information:
 Generate a JSON response with:
 {
   "summary": "Brief case summary (2-3 sentences)",
-  "legal_category": "Employment|Family|Corporate|...",
   "urgency": "low|medium|high",
   "key_facts": ["fact1", "fact2", ...],
   "missing_information": ["info1", "info2", ...],

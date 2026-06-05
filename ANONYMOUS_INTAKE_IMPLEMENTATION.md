@@ -126,23 +126,23 @@ Successfully implemented a complete anonymous intake system that allows unregist
 ### anonymous_intakes Table
 ```sql
 - id (UUID, PK)
-- session_id (UUID, FK to intake_sessions)
+- session_id (UUID, FK to intakes)
 - client_name (TEXT)
 - client_email (TEXT)
 - client_phone (TEXT, optional)
-- legal_category (TEXT, optional)
 - status (TEXT: submitted, assigned, archived)
 - admin_notes (TEXT, optional)
 - assigned_to (UUID, FK to auth.users, optional)
 - created_at (TIMESTAMP)
 - updated_at (TIMESTAMP)
-- assigned_at (TIMESTAMP, optional)
+- reviewed_at (TIMESTAMP, optional)
 ```
 
-### intake_sessions Changes
+### intakes Changes
 ```sql
-- Modified: user_id (now nullable for anonymous intakes)
-- Added: client_name (TEXT, for direct client info)
+- user_id (UUID, nullable for anonymous intakes)
+- client_name (TEXT, for direct client info)
+- status (TEXT: in_progress, completed, archived)
 - Added: client_email (TEXT, for direct client info)
 - Added: client_phone (TEXT, optional for direct client info)
 ```

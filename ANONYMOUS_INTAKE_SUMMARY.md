@@ -142,22 +142,22 @@ Update Status & Add Notes
 ### New Table: anonymous_intakes
 ```sql
 - id (UUID, Primary Key)
-- session_id (UUID, Foreign Key to intake_sessions)
+- session_id (UUID, Foreign Key to intakes)
 - client_name (TEXT)
 - client_email (TEXT)
 - client_phone (TEXT, optional)
-- legal_category (TEXT, optional)
 - status (TEXT: submitted, assigned, archived)
 - admin_notes (TEXT, optional)
 - assigned_to (UUID, Foreign Key to auth.users, optional)
 - created_at (TIMESTAMP)
 - updated_at (TIMESTAMP)
-- assigned_at (TIMESTAMP, optional)
+- reviewed_at (TIMESTAMP, optional)
 ```
 
-### Modified Table: intake_sessions
+### Modified Table: intakes
 ```sql
-- Added: client_name (TEXT)
+- client_name (TEXT) - for direct client info
+- user_id (nullable) - for anonymous intakes
 - Added: client_email (TEXT)
 - Added: client_phone (TEXT)
 - Modified: user_id (now nullable for intakes)
