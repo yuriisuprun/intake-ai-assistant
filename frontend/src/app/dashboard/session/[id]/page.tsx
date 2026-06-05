@@ -28,12 +28,10 @@ interface SessionDetail {
   client_id: string
   legal_category?: string
   status: string
-  urgency?: string
   created_at: string
   summary?: {
     summary: string
     legal_category: string
-    urgency: string
     key_facts: string[]
     missing_information: string[]
     recommended_next_questions: string[]
@@ -208,7 +206,7 @@ export default function SessionDetailPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Session Info */}
           <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
                 <p className="text-sm text-gray-600">Status</p>
                 <p className="font-semibold text-gray-900 capitalize">{session.status}</p>
@@ -216,16 +214,6 @@ export default function SessionDetailPage() {
               <div>
                 <p className="text-sm text-gray-600">Legal Category</p>
                 <p className="font-semibold text-gray-900">{session.legal_category || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Urgency</p>
-                <p className={`font-semibold capitalize ${
-                  session.urgency === 'high' ? 'text-red-600' :
-                  session.urgency === 'medium' ? 'text-yellow-600' :
-                  'text-green-600'
-                }`}>
-                  {session.urgency || 'N/A'}
-                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Created</p>

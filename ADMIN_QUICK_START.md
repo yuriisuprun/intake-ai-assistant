@@ -23,7 +23,7 @@
 
 **What you see:**
 - Quick stats cards at the top
-- Status and urgency distribution charts
+- Status distribution chart
 - Pending items list
 - Team workload information
 
@@ -208,12 +208,13 @@ Submitted → Assigned → Completed/Archived
 4. System records the assignment
 ```
 
-#### Find All High-Urgency Intakes
+#### Find All Employment Intakes
 ```
 1. Go to Intakes page
-2. Select "High" from urgency filter (if available)
-3. Review filtered list
-4. Process in priority order
+2. Filter Status = "In Progress" (if needed)
+3. Search for "employment"
+4. Review filtered list
+5. Process as needed
 ```
 
 #### Track Team Productivity

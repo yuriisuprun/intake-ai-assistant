@@ -9,7 +9,6 @@ interface Session {
   id: string;
   status: string;
   legal_category: string;
-  urgency: string;
   created_at: string;
   completed_at?: string;
 }
@@ -133,19 +132,6 @@ export default function ClientDashboardPage() {
                   >
                     {session.status}
                   </span>
-                  {session.urgency && (
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        session.urgency === 'high'
-                          ? 'bg-red-100 text-red-800'
-                          : session.urgency === 'medium'
-                          ? 'bg-orange-100 text-orange-800'
-                          : 'bg-blue-100 text-blue-800'
-                      }`}
-                    >
-                      {session.urgency}
-                    </span>
-                  )}
                 </div>
               </Link>
             ))

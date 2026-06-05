@@ -35,7 +35,6 @@ All responses follow the standard APIResponse format:
 | skip | integer | 0 | Number of records to skip |
 | limit | integer | 20 | Number of records to return (max 100) |
 | status | string | null | Filter by status: in_progress, completed, archived |
-| urgency | string | null | Filter by urgency: low, medium, high |
 | category | string | null | Filter by legal category |
 | search | string | null | Search by client name or email |
 
@@ -55,7 +54,6 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
         "client_name": "John Doe",
         "client_email": "john@example.com",
         "status": "in_progress",
-        "urgency": "high",
         "created_at": "2026-06-02T10:00:00Z",
         "updated_at": "2026-06-02T14:30:00Z",
         "current_step": 3
@@ -423,20 +421,15 @@ GET /intakes/search/by-email?email=jane@
 
 ### Get Urgency Distribution
 
-**Endpoint:** `GET /dashboard/urgency-distribution`
+**Endpoint:** `GET /dashboard/urgency-distribution` (DEPRECATED)
+
+**Note:** This endpoint has been deprecated as the urgency column has been removed from the intakes table. Urgency information is captured in the `urgency_description` field which contains the user's response to the intake question.
 
 **Response:**
 ```json
 {
-  "success": true,
-  "data": {
-    "urgency_distribution": {
-      "low": 78,
-      "medium": 56,
-      "high": 22
-    },
-    "total": 156
-  }
+  "success": false,
+  "error": "This endpoint is deprecated as urgency column has been removed from the system"
 }
 ```
 

@@ -423,11 +423,11 @@ class AdminOperations:
             in_progress = len([s for s in sessions if s.get("status") == "in_progress"])
             archived = len([s for s in sessions if s.get("status") == "archived"])
             
-            # Urgency breakdown
-            urgencies = {}
+            # Status breakdown
+            statuses = {}
             for session in sessions:
-                urgency = session.get("urgency", "low")
-                urgencies[urgency] = urgencies.get(urgency, 0) + 1
+                status = session.get("status", "unknown")
+                statuses[status] = statuses.get(status, 0) + 1
             
             # Average completion time
             completion_times = []
@@ -448,7 +448,7 @@ class AdminOperations:
                 "archived": archived,
                 "completion_rate": (completed / total * 100) if total > 0 else 0,
                 "average_completion_hours": round(avg_completion_time, 2),
-                "by_urgency": urgencies,
+                "by_status": statuses,
             }
         except Exception as e:
             logger.error(f"Error getting metrics: {e}")
@@ -524,8 +524,6 @@ class AdminOperations:
                     # Apply additional filters
                     if filters:
                         if filters.get("status") and session.get("status") != filters["status"]:
-                            continue
-                        if filters.get("urgency") and session.get("urgency") != filters["urgency"]:
                             continue
                     
                     results.append(session)

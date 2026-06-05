@@ -5,7 +5,6 @@ import { AlertCircle, CheckCircle, Lightbulb } from 'lucide-react'
 interface Summary {
   summary: string
   legal_category: string
-  urgency: string
   key_facts: string[]
   missing_information: string[]
   recommended_next_questions: string[]
@@ -42,20 +41,10 @@ function SummaryPanelComponent({ summary, isLoading = false }: SummaryPanelProps
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Case Summary</h3>
         <p className="text-gray-700 leading-relaxed">{summary.summary}</p>
 
-        <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t">
+        <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t">
           <div>
             <p className="text-sm text-gray-600">Legal Category</p>
             <p className="font-semibold text-gray-900">{summary.legal_category}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Urgency</p>
-            <p className={`font-semibold ${
-              summary.urgency === 'high' ? 'text-red-600' :
-              summary.urgency === 'medium' ? 'text-yellow-600' :
-              'text-green-600'
-            }`}>
-              {summary.urgency.charAt(0).toUpperCase() + summary.urgency.slice(1)}
-            </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Confidence</p>

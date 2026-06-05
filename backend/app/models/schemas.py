@@ -86,7 +86,6 @@ class IntakeSessionCreate(BaseModel):
 
 class IntakeSessionUpdate(BaseModel):
     status: Optional[SessionStatus] = None
-    urgency: Optional[UrgencyLevel] = None
     notes: Optional[str] = None
 
 
@@ -101,7 +100,6 @@ class IntakeSessionResponse(BaseModel):
     id: str
     client_id: Optional[str]
     status: SessionStatus
-    urgency: Optional[UrgencyLevel]
     current_step: int
     # Intake flow fields (flattened from former flow_data)
     legal_area: Optional[str] = None

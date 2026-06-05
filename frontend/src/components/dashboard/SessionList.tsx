@@ -8,7 +8,6 @@ interface Session {
   client_id: string
   legal_category?: string
   status: string
-  urgency?: string
   created_at: string
   clients?: {
     id: string
@@ -36,19 +35,6 @@ function SessionListComponent({ sessions, isLoading = false }: SessionListProps)
         </Link>
       </div>
     )
-  }
-
-  const getUrgencyColor = (urgency?: string) => {
-    switch (urgency) {
-      case 'high':
-        return 'bg-red-100 text-red-800'
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'low':
-        return 'bg-green-100 text-green-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
   }
 
   const getStatusIcon = (status: string) => {
@@ -87,12 +73,6 @@ function SessionListComponent({ sessions, isLoading = false }: SessionListProps)
                   <Calendar size={16} />
                   {new Date(session.created_at).toLocaleDateString()}
                 </div>
-
-                {session.urgency && (
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getUrgencyColor(session.urgency)}`}>
-                    {session.urgency.charAt(0).toUpperCase() + session.urgency.slice(1)}
-                  </span>
-                )}
 
                 <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
                   {session.status === 'completed' ? 'Completed' : 'In Progress'}

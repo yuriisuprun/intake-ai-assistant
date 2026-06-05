@@ -10,7 +10,6 @@ interface SessionData {
   client_id: string;
   status: string;
   legal_area: string;
-  urgency: string;
   problem_description: string;
   timeline?: string;
   urgency_description?: string;
@@ -102,7 +101,7 @@ export default function ClientSessionPage() {
 
       {/* Session Status */}
       <div className="bg-white rounded-lg shadow p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <p className="text-sm text-gray-600">Status</p>
             <p className="text-lg font-semibold">
@@ -120,22 +119,6 @@ export default function ClientSessionPage() {
           <div>
             <p className="text-sm text-gray-600">Legal Area</p>
             <p className="text-lg font-semibold">{session.legal_area || 'N/A'}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">Urgency</p>
-            <p className="text-lg font-semibold">
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  session.urgency_description?.includes('High')
-                    ? 'bg-red-100 text-red-800'
-                    : session.urgency_description?.includes('Medium')
-                    ? 'bg-orange-100 text-orange-800'
-                    : 'bg-blue-100 text-blue-800'
-                }`}
-              >
-                {session.urgency_description || 'N/A'}
-              </span>
-            </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Submitted</p>

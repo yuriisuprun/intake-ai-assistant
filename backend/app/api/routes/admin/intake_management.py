@@ -96,7 +96,6 @@ async def bulk_assign(
 async def search_intakes(
     query: str = Query(..., min_length=2, description="Search query"),
     status: Optional[str] = Query(None, description="Filter by status"),
-    urgency: Optional[str] = Query(None, description="Filter by urgency"),
     category: Optional[str] = Query(None, description="Filter by legal category"),
     limit: int = Query(50, ge=1, le=200, description="Maximum results"),
     user_id: str = Depends(require_admin())
@@ -105,7 +104,6 @@ async def search_intakes(
     try:
         filters = {
             "status": status,
-            "urgency": urgency,
             "category": category,
         }
         # Remove None values
@@ -206,7 +204,6 @@ async def get_team_workload(
 async def export_intakes(
     status: Optional[str] = Query(None, description="Filter by status"),
     category: Optional[str] = Query(None, description="Filter by category"),
-    urgency: Optional[str] = Query(None, description="Filter by urgency"),
     user_id: str = Depends(require_admin())
 ):
     """Export intakes data for reporting/analysis (admin only)."""
@@ -214,7 +211,6 @@ async def export_intakes(
         filters = {
             "status": status,
             "category": category,
-            "urgency": urgency,
         }
         # Remove None values
         filters = {k: v for k, v in filters.items() if v}
@@ -306,13 +302,6 @@ async def flag_for_review(
             note_text=f"[{priority.upper()} REVIEW FLAG] {reason}",
             note_type="urgent" if priority == "high" else "general"
         )
-        
-        # Update urgency if flagged as high priority
-        if priority == "high":
-            db.client.table("intakes").update({
-                "urgency": "high",
-                "updated_at": datetime.utcnow().isoformat(),
-            }).eq("id", session_id).execute()
         
         # Log action
         await AdminOperations.create_audit_log(

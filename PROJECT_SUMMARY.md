@@ -85,7 +85,6 @@ Ollama (Local LLM - Mistral 7B)
 - Includes:
   - Case summary
   - Legal category detection
-  - Urgency assessment
   - Key facts extraction
   - Missing information identification
   - Recommended follow-up questions
@@ -99,7 +98,6 @@ Ollama (Local LLM - Mistral 7B)
 ### 4. Lawyer Dashboard
 - List of intake sessions
 - AI-generated summaries
-- Urgency badges
 - Document viewer
 - Full chat transcript
 - Filtering and search

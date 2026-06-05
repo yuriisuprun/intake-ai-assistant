@@ -23,11 +23,11 @@
 │  └──────────────┘  └──────────────┘  └──────────────┘  └─────────────┘  │
 │                                                                           │
 │  ┌─────────────────────────────────┐  ┌──────────────────────────────┐   │
-│  │ Status Distribution              │  │ Urgency Levels               │   │
+│  │ Status Distribution              │  │ Team Workload Distribution   │   │
 │  ├─────────────────────────────────┤  ├──────────────────────────────┤   │
-│  │ In Progress    ████████░░  67   │  │ High    ██░░░░░░░░░░░  22   │   │
-│  │ Completed      ███████████░ 89  │  │ Medium  █████░░░░░░░░  56   │   │
-│  │ Submitted      ██░░░░░░░░░░  12  │  │ Low     ████████░░░░░  78   │   │
+│  │ In Progress    ████████░░  67   │  │ Lawyer 1       ███████░  7   │   │
+│  │ Completed      ███████████░ 89  │  │ Lawyer 2       ████░░░░  4   │   │
+│  │ Submitted      ██░░░░░░░░░░  12  │  │ Lawyer 3       ██░░░░░░  2   │   │
 │  └─────────────────────────────────┘  └──────────────────────────────┘   │
 │                                                                           │
 │  ┌────────────────────────────────────────────────────────────────────┐  │
@@ -97,7 +97,7 @@
 
 ### ✅ Intake Management
 - [x] List all intakes with pagination
-- [x] Advanced filtering (status, urgency, category)
+- [x] Advanced filtering (status, category)
 - [x] Full-text search by name/email
 - [x] View detailed intake information
 - [x] View all intake responses from client
@@ -121,8 +121,6 @@
 - [x] Overview statistics (total, in-progress, completed, completion rate)
 - [x] Activity report by day
 - [x] Status distribution chart
-- [x] Urgency level breakdown
-- [x] Legal category distribution
 - [x] Team member workload overview
 - [x] Pending review items list
 - [x] Audit log viewer

@@ -83,35 +83,6 @@ async def get_status_distribution():
         raise HTTPException(status_code=500, detail=f"Failed to get status distribution: {str(e)}")
 
 
-@router.get("/urgency-distribution", response_model=APIResponse)
-async def get_urgency_distribution():
-    """Get distribution of intake urgency levels."""
-    try:
-        logger.info("Urgency distribution requested")
-        response = (
-            db.client.table("intakes")
-            .select("urgency", count="exact")
-            .execute()
-        )
-        
-        urgency_counts = {}
-        for session in response.data or []:
-            urgency = session.get("urgency", "low")
-            urgency_counts[urgency] = urgency_counts.get(urgency, 0) + 1
-        
-        return APIResponse(
-            success=True,
-            data={
-                "urgency_distribution": urgency_counts,
-                "total": sum(urgency_counts.values()),
-            },
-        )
-
-    except Exception as e:
-        logger.error(f"Error getting urgency distribution: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Failed to get urgency distribution: {str(e)}")
-
-
 @router.get("/category-distribution", response_model=APIResponse)
 async def get_category_distribution():
     """Get distribution of legal categories (deprecated endpoint)."""

@@ -25,10 +25,6 @@ interface StatusDistribution {
   [key: string]: number
 }
 
-interface UrgencyDistribution {
-  [key: string]: number
-}
-
 interface PendingIntake {
   id: string
   client_name: string
@@ -44,7 +40,6 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [activity, setActivity] = useState<ActivityData | null>(null)
   const [statusDist, setStatusDist] = useState<StatusDistribution>({})
-  const [urgencyDist, setUrgencyDist] = useState<UrgencyDistribution>({})
   const [pendingIntakes, setPendingIntakes] = useState<PendingIntake[]>([])
   const [daysRange, setDaysRange] = useState(7)
 
@@ -69,7 +64,6 @@ export default function AdminDashboardPage() {
           fetchOverviewStats(),
           fetchActivityReport(),
           fetchStatusDistribution(),
-          fetchUrgencyDistribution(),
           fetchPendingIntakes(),
         ])
       } catch (err) {
@@ -113,17 +107,6 @@ export default function AdminDashboardPage() {
       }
     } catch (err) {
       console.error('Error fetching status distribution:', err)
-    }
-  }
-
-  const fetchUrgencyDistribution = async () => {
-    try {
-      const response = await apiClient.get('/api/v1/admin/dashboard/urgency-distribution')
-      if (response.success) {
-        setUrgencyDist(response.data.urgency_distribution || {})
-      }
-    } catch (err) {
-      console.error('Error fetching urgency distribution:', err)
     }
   }
 
@@ -298,56 +281,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Urgency Distribution */}
-          <div 
-            style={{ 
-              backgroundColor: '#ffffff', 
-              borderRadius: '0.5rem', 
-              padding: '1.5rem',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            }}
-          >
-            <h2 className="text-lg font-semibold mb-4" style={{ color: '#111827' }}>Urgency Levels</h2>
-            <div className="space-y-3">
-              {['high', 'medium', 'low'].map((urgency) => {
-                const count = urgencyDist[urgency] || 0
-                const colorMap = { high: '#ef4444', medium: '#f59e0b', low: '#10b981' }
-                return (
-                  <div key={urgency}>
-                    <div className="flex justify-between mb-1">
-                      <span style={{ color: '#4b5563', fontSize: '0.875rem' }}>
-                        {urgency.toUpperCase()}
-                      </span>
-                      <span style={{ color: '#111827', fontSize: '0.875rem', fontWeight: 500 }}>
-                        {count}
-                      </span>
-                    </div>
-                    <div 
-                      style={{ 
-                        backgroundColor: '#e5e7eb', 
-                        borderRadius: '0.25rem', 
-                        height: '0.5rem',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      <div 
-                        style={{ 
-                          backgroundColor: colorMap[urgency as keyof typeof colorMap], 
-                          height: '100%',
-                          width: `${stats?.total_sessions ? (count / stats.total_sessions * 100) : 0}%`,
-                          transition: 'width 0.3s ease'
-                        }}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Pending Intakes */}
+          {/* Pending Intakes */}
         <div 
           style={{ 
             backgroundColor: '#ffffff', 

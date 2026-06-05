@@ -15,7 +15,6 @@ interface Intake {
   client_email: string
   status: string
   legal_category: string
-  urgency: string
   created_at: string
   updated_at: string
 }
@@ -27,7 +26,6 @@ interface MetricsData {
   completion_rate: number
   average_completion_hours: number
   by_category: Record<string, number>
-  by_urgency: Record<string, number>
 }
 
 export default function IntakesManagementPage() {
@@ -39,7 +37,6 @@ export default function IntakesManagementPage() {
   const [selectedIntakes, setSelectedIntakes] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
-  const [urgencyFilter, setUrgencyFilter] = useState('all')
   const [metrics, setMetrics] = useState<MetricsData | null>(null)
   const [bulkOperationLoading, setBulkOperationLoading] = useState(false)
   const [bulkStatusAction, setBulkStatusAction] = useState<string | null>(null)
@@ -127,12 +124,8 @@ export default function IntakesManagementPage() {
       filtered = filtered.filter(i => i.status === statusFilter)
     }
 
-    if (urgencyFilter !== 'all') {
-      filtered = filtered.filter(i => i.urgency === urgencyFilter)
-    }
-
     setFilteredIntakes(filtered)
-  }, [searchTerm, statusFilter, urgencyFilter, intakes])
+  }, [searchTerm, statusFilter, intakes])
 
   // Toggle intake selection
   const toggleIntakeSelection = (intakeId: string) => {
@@ -206,14 +199,13 @@ export default function IntakesManagementPage() {
   }
 
   const convertToCSV = (data: any[]) => {
-    const headers = ['ID', 'Client', 'Email', 'Category', 'Status', 'Urgency', 'Created At']
+    const headers = ['ID', 'Client', 'Email', 'Category', 'Status', 'Created At']
     const rows = data.map(item => [
       item.id,
       item.client,
       item.email,
       item.category,
       item.status,
-      item.urgency,
       item.created_at,
     ])
 
@@ -363,19 +355,6 @@ export default function IntakesManagementPage() {
               </select>
             </div>
 
-            {/* Urgency Filter */}
-            <select
-              value={urgencyFilter}
-              onChange={(e) => setUrgencyFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg outline-none transition"
-              style={{ border: '1px solid #d1d5db' }}
-            >
-              <option value="all">All Urgencies</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-
             {/* Export Button */}
             <button
               onClick={handleExport}
@@ -456,7 +435,6 @@ export default function IntakesManagementPage() {
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Category</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Urgency</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Created</th>
                   </tr>
                 </thead>
@@ -488,9 +466,6 @@ export default function IntakesManagementPage() {
                       </td>
                       <td className="px-6 py-4 text-sm">
                         {getStatusBadge(intake.status)}
-                      </td>
-                      <td className={`px-6 py-4 text-sm font-medium ${getUrgencyColor(intake.urgency)}`}>
-                        {intake.urgency.toUpperCase()}
                       </td>
                       <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
                         {new Date(intake.created_at).toLocaleDateString()}

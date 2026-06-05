@@ -276,11 +276,11 @@ npm run dev
    - Q1: Legal Area → Select "Employment"
    - Q2: Problem Description → Enter "I was wrongfully terminated"
    - Q3: Timeline → Enter "Started January 15, 2024"
-   - Q4: Urgency → Select "High - Urgent"
-   - Q5: Desired Outcome → Enter "Reinstatement and back pay"
-   - Q6: Documents → Skip (optional)
-   - Q7: Contact Preference → Select "Email"
-   - Q8: Additional Info → Skip (optional)
+   - Q4: Desired Outcome → Enter "Reinstatement and back pay"
+   - Q5: Documents → Skip (optional)
+   - Q6: Contact Preference → Select "Email"
+   - Q7: Additional Info → Skip (optional)
+   - Q8: (Reserved for future use)
 6. Click "Next" after each question
 7. See "Intake Complete!" message
 8. Redirected to Dashboard
@@ -463,11 +463,11 @@ Ollama (http://localhost:11434)
   - Legal Area (Select)
   - Problem Description (Textarea)
   - Timeline (Text)
-  - Urgency (Select)
   - Desired Outcome (Textarea)
   - Documents (File Upload)
   - Contact Preference (Select)
   - Additional Info (Textarea)
+  - (Reserved for future use)
 
 ✅ Client selection/creation
 ✅ Question navigation (forward/backward)
