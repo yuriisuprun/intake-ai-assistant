@@ -134,11 +134,34 @@ export default function PublicIntakePage() {
       setSubmitting(true)
       setError('')
 
+      // Handle file upload separately
+      let finalAnswer = answer
+      if (currentQuestion.question_type === 'file' && answer instanceof File) {
+        try {
+          // Upload file first using the dedicated uploadFile method
+          const uploadResponse = await apiClient.uploadFile(sessionId, answer)
+
+          if (uploadResponse.success) {
+            // Store the filename as the answer
+            finalAnswer = answer.name
+          } else {
+            setError('Failed to upload file')
+            setSubmitting(false)
+            return
+          }
+        } catch (uploadErr: any) {
+          setError('Error uploading file: ' + (uploadErr.message || 'Unknown error'))
+          console.error(uploadErr)
+          setSubmitting(false)
+          return
+        }
+      }
+
       // Submit step
       await apiClient.submitIntakeStep({
         session_id: sessionId,
         step_key: currentQuestion.key,
-        answer: answer,
+        answer: finalAnswer,
         question_type: currentQuestion.question_type,
       })
 

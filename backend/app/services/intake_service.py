@@ -146,14 +146,6 @@ class IntakeService:
             True if successful, False otherwise
         """
         try:
-            # Get current session
-            session_response = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
-            if not session_response.data:
-                logger.error(f"Session not found: {session_id}")
-                return False
-            
-            session = session_response.data
-
             # Find step number
             step_num = None
             for q in IntakeService.INTAKE_FLOW:
@@ -161,23 +153,31 @@ class IntakeService:
                     step_num = q["step"]
                     break
 
+            if step_num is None:
+                logger.error(f"Question key not found: {step_key}")
+                return False
+
             # Create message record
-            await db.create_message(
-                {
-                    "session_id": session_id,
-                    "role": "client",
-                    "content": str(answer),
-                    "message_type": "answer",
-                    "metadata": {
-                        "question_key": step_key,
-                        "question_type": question_type,
-                        "step": step_num,
-                    },
-                }
-            )
+            try:
+                await db.create_message(
+                    {
+                        "session_id": session_id,
+                        "role": "client",
+                        "content": str(answer) if answer else "",
+                        "message_type": "answer",
+                        "metadata": {
+                            "question_key": step_key,
+                            "question_type": question_type,
+                            "step": step_num,
+                        },
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Error creating message record: {e}")
+                # Don't fail the whole operation if message creation fails
 
             # Build update dict with the column name matching the step_key
-            update_data = {"current_step": step_num or 0}
+            update_data = {"current_step": step_num}
             
             # Map step_key to database column name
             # Special case for urgency question which maps to urgency_description column
@@ -187,12 +187,16 @@ class IntakeService:
                 update_data[step_key] = answer
 
             # Update session - use direct client call to avoid user_id filter
-            update_response = db.client.table("intakes").update(
-                update_data
-            ).eq("id", session_id).execute()
+            try:
+                update_response = db.client.table("intakes").update(
+                    update_data
+                ).eq("id", session_id).execute()
 
-            if not update_response.data:
-                logger.error(f"Failed to update session: {session_id}")
+                if not update_response.data:
+                    logger.error(f"Failed to update session: {session_id}")
+                    return False
+            except Exception as e:
+                logger.error(f"Database error updating session: {e}", exc_info=True)
                 return False
 
             return True

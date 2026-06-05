@@ -122,13 +122,8 @@ export default function ClientIntakePage() {
       let finalAnswer = answer;
       if (question.question_type === 'file' && answer instanceof File) {
         try {
-          // Upload file first
-          const formData = new FormData();
-          formData.append('file', answer);
-
-          const uploadResponse = await apiClient.post('/api/client/files/upload', formData, {
-            params: { session_id: sessionId },
-          });
+          // Upload file first using the dedicated uploadFile method
+          const uploadResponse = await apiClient.uploadFile(sessionId, answer);
 
           if (uploadResponse.success) {
             // Store the filename as the answer
