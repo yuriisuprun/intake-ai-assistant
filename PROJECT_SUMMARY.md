@@ -125,10 +125,11 @@ Ollama (Local LLM - Mistral 7B)
 
 **Features:**
 - Independent intakes table (no required foreign keys)
-- Automatic timestamps
+- Automatic timestamps (created_at, updated_at)
 - JSONB fields for flexible data
 - Indexes for performance
 - Direct client info columns in intakes table
+- Completion time calculated from status and updated_at timestamps
 
 ## 🔌 API Endpoints
 

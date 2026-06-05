@@ -41,7 +41,7 @@ cd intake-ai-assistant
 2. Click **"New Query"**
 3. Run migrations in this order:
    - Copy and run each migration file from `backend/migrations/` directory
-   - Start with `001_*`, then `002_*`, etc. through `012_remove_client_user_ids_from_intakes.sql`
+   - Start with `001_*`, then `002_*`, etc. through `014_drop_completed_at_column.sql`
    - Each migration should execute successfully before moving to the next
 4. Wait for completion (should see green checkmark for each)
 

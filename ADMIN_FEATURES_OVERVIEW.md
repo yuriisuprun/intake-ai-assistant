@@ -205,7 +205,7 @@ Backend:
 ├─ Checks user has admin role (require_admin)
 ├─ Validates status is valid
 ├─ Updates intake_sessions.status
-├─ Sets completed_at timestamp
+├─ Updates updated_at timestamp
 ├─ Creates audit_log entry
 ├─ Returns updated session
 └─ Response: 200 OK with updated data

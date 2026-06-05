@@ -348,8 +348,8 @@ IntakePage Component
 │ ai_summary (JSON)        │
 │ created_at (timestamp)   │
 │ updated_at (timestamp)   │
-│ completed_at (timestamp) │
 └──────────────────────────┘
+(Note: Completion time derived from status & updated_at)
          │
          │ 1:N
          │

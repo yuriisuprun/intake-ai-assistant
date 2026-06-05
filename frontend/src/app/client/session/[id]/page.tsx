@@ -17,7 +17,6 @@ interface SessionData {
   contact_preference?: string;
   additional_info?: string;
   created_at: string;
-  completed_at?: string;
 }
 
 interface Message {

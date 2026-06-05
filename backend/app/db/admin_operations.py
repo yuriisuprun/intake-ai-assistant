@@ -342,9 +342,6 @@ class AdminOperations:
                         "updated_at": datetime.utcnow().isoformat(),
                     }
                     
-                    if status == "completed":
-                        update_data["completed_at"] = datetime.utcnow().isoformat()
-                    
                     response = db.client.table("intakes").update(
                         update_data
                     ).eq("id", session_id).execute()
@@ -445,13 +442,13 @@ class AdminOperations:
                 status = session.get("status", "unknown")
                 statuses[status] = statuses.get(status, 0) + 1
             
-            # Average completion time
+            # Average completion time (calculated from created_at to updated_at for completed sessions)
             completion_times = []
             for session in sessions:
                 if session.get("status") == "completed":
                     created = datetime.fromisoformat(session["created_at"].replace("Z", "+00:00"))
-                    completed_at = datetime.fromisoformat(session.get("completed_at", session["created_at"]).replace("Z", "+00:00"))
-                    delta = (completed_at - created).total_seconds() / 3600  # Hours
+                    updated = datetime.fromisoformat(session["updated_at"].replace("Z", "+00:00"))
+                    delta = (updated - created).total_seconds() / 3600  # Hours
                     completion_times.append(delta)
             
             avg_completion_time = sum(completion_times) / len(completion_times) if completion_times else 0
@@ -589,7 +586,7 @@ class AdminOperations:
             start_date = (datetime.utcnow() - timedelta(days=90)).isoformat()
             
             response = db.client.table("intakes").select(
-                "created_at, completed_at, status"
+                "created_at, updated_at, status"
             ).gte("created_at", start_date).execute()
             
             sessions = response.data or []
@@ -600,11 +597,11 @@ class AdminOperations:
             
             completion_times = []
             for session in sessions:
-                if session.get("status") == "completed" and session.get("completed_at"):
+                if session.get("status") == "completed":
                     try:
                         created = datetime.fromisoformat(session["created_at"].replace("Z", "+00:00"))
-                        completed = datetime.fromisoformat(session["completed_at"].replace("Z", "+00:00"))
-                        hours = (completed - created).total_seconds() / 3600
+                        updated = datetime.fromisoformat(session["updated_at"].replace("Z", "+00:00"))
+                        hours = (updated - created).total_seconds() / 3600
                         completion_times.append(hours)
                     except:
                         pass

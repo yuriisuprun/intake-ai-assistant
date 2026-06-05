@@ -116,7 +116,6 @@ class IntakeSessionResponse(BaseModel):
     notes: Optional[str] = None
     created_at: datetime
     updated_at: datetime
-    completed_at: Optional[datetime]
 
     class Config:
         from_attributes = True

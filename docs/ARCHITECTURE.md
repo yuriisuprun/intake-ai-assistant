@@ -266,10 +266,11 @@ CREATE TABLE intakes (
   -- Other fields
   notes TEXT,
   created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  completed_at TIMESTAMP
+  updated_at TIMESTAMP DEFAULT now()
 );
 ```
+
+**Note:** Completion time is calculated from `status` and `updated_at` timestamps (no separate `completed_at` column needed).
 
 ### Messages Table
 ```sql
