@@ -68,78 +68,94 @@ class AdminOperations:
             return False
 
     @staticmethod
-    async def create_note(
+    async def add_note(
         session_id: UUID,
-        admin_id: UUID,
         note_text: str,
-        note_type: str = "general",
     ) -> Optional[Dict[str, Any]]:
-        """Create a note for a session."""
+        """Add a note to an intake session by appending to the notes column."""
         try:
-            response = db.client.table("admin_notes").insert({
-                "session_id": str(session_id),
-                "admin_id": str(admin_id),
-                "note_text": note_text,
-                "note_type": note_type,
-                "created_at": datetime.utcnow().isoformat(),
-            }).execute()
+            # Get current notes from the intake
+            response = db.client.table("intakes").select("notes, id").eq(
+                "id", str(session_id)
+            ).single().execute()
             
-            if response.data:
-                return response.data[0]
-            return None
-        except Exception as e:
-            print(f"Error creating note: {e}")
-            return None
-
-    @staticmethod
-    async def get_notes(session_id: UUID) -> List[Dict[str, Any]]:
-        """Get all notes for a session."""
-        try:
-            response = db.client.table("admin_notes").select("*").eq(
-                "session_id", str(session_id)
-            ).order("created_at", desc=True).execute()
+            if not response.data:
+                logger.error(f"Intake {session_id} not found")
+                return None
             
-            return response.data or []
-        except Exception as e:
-            print(f"Error getting notes: {e}")
-            return []
-
-    @staticmethod
-    async def update_note(
-        note_id: UUID,
-        note_text: str,
-        note_type: Optional[str] = None,
-    ) -> Optional[Dict[str, Any]]:
-        """Update a note."""
-        try:
-            update_data = {
-                "note_text": note_text,
+            current_notes = response.data.get("notes") or ""
+            
+            # Append new note with timestamp
+            timestamp = datetime.utcnow().isoformat()
+            new_note_entry = f"\n[{timestamp}] {note_text}"
+            updated_notes = current_notes + new_note_entry if current_notes else note_text
+            
+            # Update the intake with the new notes
+            update_response = db.client.table("intakes").update({
+                "notes": updated_notes,
                 "updated_at": datetime.utcnow().isoformat(),
-            }
-            if note_type:
-                update_data["note_type"] = note_type
+            }).eq("id", str(session_id)).execute()
             
-            response = db.client.table("admin_notes").update(
-                update_data
-            ).eq("id", str(note_id)).execute()
-            
-            if response.data:
-                return response.data[0]
+            if update_response.data:
+                return {
+                    "success": True,
+                    "notes": updated_notes,
+                    "session_id": str(session_id),
+                }
             return None
         except Exception as e:
-            print(f"Error updating note: {e}")
+            logger.error(f"Error adding note: {e}")
             return None
 
     @staticmethod
-    async def delete_note(note_id: UUID) -> bool:
-        """Delete a note."""
+    async def get_notes(session_id: UUID) -> Optional[str]:
+        """Get notes for a session."""
         try:
-            db.client.table("admin_notes").delete().eq(
-                "id", str(note_id)
-            ).execute()
+            response = db.client.table("intakes").select("notes").eq(
+                "id", str(session_id)
+            ).single().execute()
+            
+            if response.data:
+                return response.data.get("notes")
+            return None
+        except Exception as e:
+            logger.error(f"Error getting notes: {e}")
+            return None
+
+    @staticmethod
+    async def update_notes(
+        session_id: UUID,
+        note_text: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Update the notes field for an intake session."""
+        try:
+            update_response = db.client.table("intakes").update({
+                "notes": note_text,
+                "updated_at": datetime.utcnow().isoformat(),
+            }).eq("id", str(session_id)).execute()
+            
+            if update_response.data:
+                return {
+                    "success": True,
+                    "notes": note_text,
+                    "session_id": str(session_id),
+                }
+            return None
+        except Exception as e:
+            logger.error(f"Error updating notes: {e}")
+            return None
+
+    @staticmethod
+    async def clear_notes(session_id: UUID) -> bool:
+        """Clear all notes for an intake session."""
+        try:
+            db.client.table("intakes").update({
+                "notes": None,
+                "updated_at": datetime.utcnow().isoformat(),
+            }).eq("id", str(session_id)).execute()
             return True
         except Exception as e:
-            print(f"Error deleting note: {e}")
+            logger.error(f"Error clearing notes: {e}")
             return False
 
     @staticmethod

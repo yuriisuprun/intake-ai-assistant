@@ -68,19 +68,14 @@ async def get_intake_details(
         if not intake:
             raise HTTPException(status_code=404, detail="Intake not found")
 
-        # The intakes table is the session table, so no need to query again
         # Get messages/responses using intake_id
         messages = await db.get_messages(intake_id)
-        
-        # Get notes using intake_id
-        notes = await AdminOperations.get_notes(intake_id)
 
         return APIResponse(
             success=True,
             data={
                 "intake": intake,
                 "responses": messages,
-                "notes": notes,
             },
         )
 
@@ -97,10 +92,9 @@ async def update_intake(
     request_body: dict = Body(...),
     user_id: str = Depends(require_admin())
 ):
-    """Update intake status, notes, and assignment (admin only)."""
+    """Update intake status and assignment (admin only)."""
     try:
         status = request_body.get("status")
-        admin_notes = request_body.get("admin_notes")
         assigned_to = request_body.get("assigned_to")
         
         update_data = {}
@@ -110,9 +104,6 @@ async def update_intake(
             if status not in valid_statuses:
                 raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
             update_data["status"] = status
-        
-        if admin_notes is not None:
-            update_data["admin_notes"] = admin_notes
         
         if assigned_to:
             update_data["assigned_to"] = assigned_to
@@ -190,7 +181,6 @@ async def add_intake_note(
     """Add a note to an intake (admin only)."""
     try:
         note_text = request_body.get("note_text")
-        note_type = request_body.get("note_type", "general")
         
         # Verify intake exists
         intake = await db.get_intake(intake_id)
@@ -200,19 +190,17 @@ async def add_intake_note(
         if not note_text or not note_text.strip():
             raise HTTPException(status_code=400, detail="Note text cannot be empty")
 
-        note = await AdminOperations.create_note(
+        result = await AdminOperations.add_note(
             session_id=intake_id,
-            admin_id=user_id,
             note_text=note_text,
-            note_type=note_type
         )
 
-        if not note:
-            raise HTTPException(status_code=500, detail="Failed to create note")
+        if not result:
+            raise HTTPException(status_code=500, detail="Failed to add note")
 
         return APIResponse(
             success=True,
-            data=note,
+            data=result,
             message="Note added successfully"
         )
 
@@ -227,7 +215,7 @@ async def add_intake_note(
 async def get_intake_notes(
     intake_id: str, user_id: str = Depends(require_admin())
 ):
-    """Get all notes for an intake (admin only)."""
+    """Get notes for an intake (admin only)."""
     try:
         # Verify intake exists
         intake = await db.get_intake(intake_id)
@@ -239,8 +227,8 @@ async def get_intake_notes(
         return APIResponse(
             success=True,
             data={
-                "notes": notes,
-                "total": len(notes),
+                "session_id": intake_id,
+                "notes": notes or "",
             },
         )
 

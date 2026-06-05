@@ -1,5 +1,6 @@
 """
 Admin notes management API routes.
+Simplified to work with the notes column in the intakes table.
 """
 
 from fastapi import APIRouter, HTTPException, Depends
@@ -19,63 +20,55 @@ class NoteCreate(BaseModel):
     """Note creation request."""
     session_id: str
     content: str
-    note_type: str = "general"
 
 
-class NoteUpdate(BaseModel):
-    """Note update request."""
+class NotesUpdate(BaseModel):
+    """Notes update request - replaces all notes."""
+    session_id: str
     content: str
 
 
 @router.post("", response_model=APIResponse)
-async def create_note(
+async def add_note(
     request: NoteCreate, user_id: str = Depends(get_current_user)
 ):
-    """Create a note for a session (admin only)."""
+    """Add a note to a session (appends to existing notes)."""
     try:
-        # TODO: Add role-based authorization check
-        # Create note
-        note = await AdminOperations.create_note(
+        # Add note
+        result = await AdminOperations.add_note(
             session_id=UUID(request.session_id),
-            admin_id=UUID(user_id),
             note_text=request.content,
-            note_type=request.note_type,
         )
 
-        if not note:
-            raise HTTPException(status_code=500, detail="Failed to create note")
+        if not result:
+            raise HTTPException(status_code=500, detail="Failed to add note")
 
         return APIResponse(
             success=True,
-            data=note,
-            message="Note created successfully",
+            data=result,
+            message="Note added successfully",
         )
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error creating note: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create note")
+        logger.error(f"Error adding note: {e}")
+        raise HTTPException(status_code=500, detail="Failed to add note")
 
 
 @router.get("/{session_id}", response_model=APIResponse)
 async def get_notes(
     session_id: str, user_id: str = Depends(get_current_user)
 ):
-    """Get all notes for a session (admin only)."""
+    """Get notes for a session."""
     try:
-        # TODO: Add role-based authorization check
-        # Get notes
         notes = await AdminOperations.get_notes(UUID(session_id))
-        
-        if not notes:
-            notes = []
 
         return APIResponse(
             success=True,
             data={
-                "notes": notes,
-                "total": len(notes),
+                "session_id": session_id,
+                "notes": notes or "",
             },
         )
 
@@ -84,55 +77,51 @@ async def get_notes(
         raise HTTPException(status_code=500, detail="Failed to get notes")
 
 
-@router.put("/{note_id}", response_model=APIResponse)
-async def update_note(
-    note_id: str, request: NoteUpdate, user_id: str = Depends(get_current_user)
+@router.put("/{session_id}", response_model=APIResponse)
+async def update_notes(
+    session_id: str, request: NotesUpdate, user_id: str = Depends(get_current_user)
 ):
-    """Update a note (admin only)."""
+    """Update (replace) all notes for a session."""
     try:
-        # TODO: Add role-based authorization check
-        # Update note
-        note = await AdminOperations.update_note(
-            note_id=UUID(note_id),
+        result = await AdminOperations.update_notes(
+            session_id=UUID(session_id),
             note_text=request.content,
         )
 
-        if not note:
-            raise HTTPException(status_code=500, detail="Failed to update note")
+        if not result:
+            raise HTTPException(status_code=500, detail="Failed to update notes")
 
         return APIResponse(
             success=True,
-            data=note,
-            message="Note updated successfully",
+            data=result,
+            message="Notes updated successfully",
         )
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error updating note: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update note")
+        logger.error(f"Error updating notes: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update notes")
 
 
-@router.delete("/{note_id}", response_model=APIResponse)
-async def delete_note(
-    note_id: str, user_id: str = Depends(get_current_user)
+@router.delete("/{session_id}", response_model=APIResponse)
+async def clear_notes(
+    session_id: str, user_id: str = Depends(get_current_user)
 ):
-    """Delete a note (admin only)."""
+    """Clear all notes for a session."""
     try:
-        # TODO: Add role-based authorization check
-        # Delete note
-        success = await AdminOperations.delete_note(UUID(note_id))
+        success = await AdminOperations.clear_notes(UUID(session_id))
 
         if not success:
-            raise HTTPException(status_code=500, detail="Failed to delete note")
+            raise HTTPException(status_code=500, detail="Failed to clear notes")
 
         return APIResponse(
             success=True,
-            message="Note deleted successfully",
+            message="Notes cleared successfully",
         )
 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deleting note: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete note")
+        logger.error(f"Error clearing notes: {e}")
+        raise HTTPException(status_code=500, detail="Failed to clear notes")
