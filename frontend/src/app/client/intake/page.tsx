@@ -41,9 +41,9 @@ export default function ClientIntakePage() {
   useEffect(() => {
     const fetchFlow = async () => {
       try {
-        const response = await apiClient.get('/client/intake/flow');
-        if (response.data.success) {
-          setFlow(response.data.data);
+        const response = await apiClient.get('/api/client/intake/flow');
+        if (response.success) {
+          setFlow(response.data);
         }
       } catch (err) {
         setError('Failed to load intake form');
@@ -53,24 +53,49 @@ export default function ClientIntakePage() {
       }
     };
 
+    // Also fetch existing clients
+    const fetchClients = async () => {
+      try {
+        const response = await apiClient.get('/api/client/profile');
+        if (response.success && response.data) {
+          setClients(Array.isArray(response.data) ? response.data : []);
+        }
+      } catch (err) {
+        console.log('Could not fetch existing clients');
+      }
+    };
+
     fetchFlow();
+    fetchClients();
   }, []);
 
   // Start intake session
   const handleStartIntake = async () => {
-    if (!selectedClientId) {
+    let clientName = '';
+    let clientEmail = '';
+    
+    // Find selected client info
+    const selectedClient = clients.find(c => c.id === selectedClientId);
+    if (selectedClient) {
+      clientName = selectedClient.full_name;
+      clientEmail = selectedClient.email;
+    }
+    
+    if (!clientName || !clientEmail) {
       setError('Please select or create a client');
       return;
     }
 
     try {
       setSubmitting(true);
-      const response = await apiClient.post('/client/intake/start', {
-        client_id: selectedClientId,
+      const response = await apiClient.post('/api/client/intake/start', {
+        client_name: clientName,
+        client_email: clientEmail,
+        client_phone: null,
       });
 
-      if (response.data.success) {
-        setSessionId(response.data.data.id);
+      if (response.success) {
+        setSessionId(response.data.id);
         setCurrentStep(0);
         setShowClientForm(false);
       } else {
@@ -100,15 +125,12 @@ export default function ClientIntakePage() {
           // Upload file first
           const formData = new FormData();
           formData.append('file', answer);
-          formData.append('session_id', sessionId);
 
-          const uploadResponse = await apiClient.post('/client/files/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+          const uploadResponse = await apiClient.post('/api/client/files/upload', formData, {
+            params: { session_id: sessionId },
           });
 
-          if (uploadResponse.data.success) {
+          if (uploadResponse.success) {
             // Store the filename as the answer
             finalAnswer = answer.name;
           } else {
@@ -124,14 +146,14 @@ export default function ClientIntakePage() {
         }
       }
 
-      const response = await apiClient.post('/client/intake/step', {
+      const response = await apiClient.post('/api/client/intake/step', {
         session_id: sessionId,
         step_key: question.key,
         answer: finalAnswer,
         question_type: question.question_type,
       });
 
-      if (response.data.success) {
+      if (response.success) {
         setAnswers({
           ...answers,
           [question.key]: finalAnswer,
@@ -160,11 +182,11 @@ export default function ClientIntakePage() {
 
     try {
       setSubmitting(true);
-      const response = await apiClient.post('/client/intake/complete', {
+      const response = await apiClient.post('/api/client/intake/complete', {
         session_id: sessionId,
       });
 
-      if (response.data.success) {
+      if (response.success) {
         router.push('/client/dashboard');
       } else {
         setError('Failed to complete intake');
@@ -186,13 +208,13 @@ export default function ClientIntakePage() {
 
     try {
       setSubmitting(true);
-      const response = await apiClient.post('/client/profile', {
+      const response = await apiClient.post('/api/client/profile', {
         full_name: newClientName,
         email: newClientEmail,
       });
 
-      if (response.data.success) {
-        const newClient = response.data.data;
+      if (response.success) {
+        const newClient = response.data;
         setClients([...clients, newClient]);
         setSelectedClientId(newClient.id);
         setNewClientName('');
