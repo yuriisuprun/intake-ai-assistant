@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"  # development, staging, production
 
     # API
-    API_PREFIX: str = "/api"
+    API_PREFIX: str = "/api/v1"
     CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:8000"]
 
     # Database
