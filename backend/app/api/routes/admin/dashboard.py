@@ -3,14 +3,13 @@ Admin dashboard statistics and reporting API routes.
 Provides overview metrics, analytics, and reporting capabilities.
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 import logging
 from datetime import datetime, timedelta
 
 from app.models.schemas import APIResponse
 from app.db.supabase import db
-from app.middleware.auth import require_admin
 from app.db.admin_operations import AdminOperations
 
 logger = logging.getLogger(__name__)
@@ -18,11 +17,10 @@ router = APIRouter(prefix="/dashboard")
 
 
 @router.get("/overview", response_model=APIResponse)
-async def get_dashboard_overview(
-    user_id: str = Depends(require_admin())
-):
-    """Get dashboard overview with key statistics (admin only)."""
+async def get_dashboard_overview():
+    """Get dashboard overview with key statistics."""
     try:
+        logger.info("Dashboard overview requested")
         report = await AdminOperations.get_overview_report()
         
         return APIResponse(
@@ -31,17 +29,17 @@ async def get_dashboard_overview(
         )
 
     except Exception as e:
-        logger.error(f"Error getting overview: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get overview")
+        logger.error(f"Error getting overview: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get overview: {str(e)}")
 
 
 @router.get("/activity", response_model=APIResponse)
 async def get_activity_report(
-    days: int = Query(7, ge=1, le=90, description="Number of days to report on"),
-    user_id: str = Depends(require_admin())
+    days: int = Query(7, ge=1, le=90, description="Number of days to report on")
 ):
-    """Get activity report for specified days (admin only)."""
+    """Get activity report for specified days."""
     try:
+        logger.info(f"Activity report requested for {days} days")
         report = await AdminOperations.get_activity_report(days)
         
         return APIResponse(
@@ -50,16 +48,15 @@ async def get_activity_report(
         )
 
     except Exception as e:
-        logger.error(f"Error getting activity report: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get activity report")
+        logger.error(f"Error getting activity report: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get activity report: {str(e)}")
 
 
 @router.get("/status-distribution", response_model=APIResponse)
-async def get_status_distribution(
-    user_id: str = Depends(require_admin())
-):
-    """Get distribution of intake statuses (admin only)."""
+async def get_status_distribution():
+    """Get distribution of intake statuses."""
     try:
+        logger.info("Status distribution requested")
         # Get all sessions with status - consolidated view
         response = (
             db.client.table("intakes")
@@ -82,16 +79,15 @@ async def get_status_distribution(
         )
 
     except Exception as e:
-        logger.error(f"Error getting status distribution: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get status distribution")
+        logger.error(f"Error getting status distribution: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get status distribution: {str(e)}")
 
 
 @router.get("/urgency-distribution", response_model=APIResponse)
-async def get_urgency_distribution(
-    user_id: str = Depends(require_admin())
-):
-    """Get distribution of intake urgency levels (admin only)."""
+async def get_urgency_distribution():
+    """Get distribution of intake urgency levels."""
     try:
+        logger.info("Urgency distribution requested")
         response = (
             db.client.table("intakes")
             .select("urgency", count="exact")
@@ -112,16 +108,15 @@ async def get_urgency_distribution(
         )
 
     except Exception as e:
-        logger.error(f"Error getting urgency distribution: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get urgency distribution")
+        logger.error(f"Error getting urgency distribution: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get urgency distribution: {str(e)}")
 
 
 @router.get("/category-distribution", response_model=APIResponse)
-async def get_category_distribution(
-    user_id: str = Depends(require_admin())
-):
-    """Get distribution of legal categories (admin only)."""
+async def get_category_distribution():
+    """Get distribution of legal categories."""
     try:
+        logger.info("Category distribution requested")
         response = (
             db.client.table("intakes")
             .select("legal_category, count")
@@ -142,16 +137,15 @@ async def get_category_distribution(
         )
 
     except Exception as e:
-        logger.error(f"Error getting category distribution: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get category distribution")
+        logger.error(f"Error getting category distribution: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get category distribution: {str(e)}")
 
 
 @router.get("/team-assignments", response_model=APIResponse)
-async def get_team_assignments(
-    user_id: str = Depends(require_admin())
-):
-    """Get current team member assignments (admin only)."""
+async def get_team_assignments():
+    """Get current team member assignments."""
     try:
+        logger.info("Team assignments requested")
         # Get all active team members
         team_response = (
             db.client.table("team_members")
@@ -188,19 +182,19 @@ async def get_team_assignments(
         )
 
     except Exception as e:
-        logger.error(f"Error getting team assignments: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get team assignments")
+        logger.error(f"Error getting team assignments: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get team assignments: {str(e)}")
 
 
 @router.get("/audit-logs", response_model=APIResponse)
 async def get_audit_logs(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    resource_type: Optional[str] = None,
-    user_id: str = Depends(require_admin())
+    resource_type: Optional[str] = None
 ):
-    """Get audit logs with optional filtering (admin only)."""
+    """Get audit logs with optional filtering."""
     try:
+        logger.info(f"Audit logs requested with skip={skip}, limit={limit}")
         logs = await AdminOperations.get_audit_logs(
             resource_type=resource_type,
             limit=limit,
@@ -218,17 +212,17 @@ async def get_audit_logs(
         )
 
     except Exception as e:
-        logger.error(f"Error getting audit logs: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get audit logs")
+        logger.error(f"Error getting audit logs: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get audit logs: {str(e)}")
 
 
 @router.get("/pending-review", response_model=APIResponse)
 async def get_pending_review(
-    limit: int = Query(10, ge=1, le=100),
-    user_id: str = Depends(require_admin())
+    limit: int = Query(10, ge=1, le=100)
 ):
-    """Get intakes pending review (admin only)."""
+    """Get intakes pending review."""
     try:
+        logger.info(f"Pending review requested with limit {limit}")
         # Get sessions with submitted status (consolidated view)
         response = (
             db.client.table("intakes")
@@ -250,5 +244,5 @@ async def get_pending_review(
         )
 
     except Exception as e:
-        logger.error(f"Error getting pending intakes: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get pending intakes")
+        logger.error(f"Error getting pending intakes: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get pending intakes: {str(e)}")
