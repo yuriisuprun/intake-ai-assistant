@@ -88,6 +88,7 @@ app.include_router(auth.router, tags=["auth"])
 # Shared routes
 app.include_router(messages.router, prefix=settings.API_PREFIX, tags=["messages"])
 app.include_router(public_intake.router, prefix=settings.API_PREFIX, tags=["public-intake"])
+app.include_router(files.router, prefix=settings.API_PREFIX, tags=["public-files"])
 
 # Client routes
 app.include_router(intake.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-intake"])

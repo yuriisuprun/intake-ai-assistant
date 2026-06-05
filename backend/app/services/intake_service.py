@@ -183,6 +183,9 @@ class IntakeService:
             # Special case for urgency question which maps to urgency_description column
             if step_key == "urgency":
                 update_data["urgency_description"] = answer
+            elif step_key == "documents":
+                # Documents field stores the filename/document info as text
+                update_data["documents"] = str(answer) if answer else None
             else:
                 update_data[step_key] = answer
 

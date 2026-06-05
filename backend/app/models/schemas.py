@@ -105,6 +105,7 @@ class IntakeSessionResponse(BaseModel):
     timeline: Optional[str] = None
     urgency_description: Optional[str] = None  # from urgency question
     desired_outcome: Optional[str] = None
+    documents: Optional[str] = None
     contact_preference: Optional[str] = None
     additional_info: Optional[str] = None
     # Client info (stored directly in intakes table)
