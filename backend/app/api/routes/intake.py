@@ -84,13 +84,14 @@ async def submit_intake_step(
 ):
     """Submit an intake step answer."""
     try:
-        # Get session
-        session = db.client.table("intakes").select("*").eq("id", request.session_id).single().execute()
-        
-        if not session.data:
+        # Validate session exists
+        try:
+            session = db.client.table("intakes").select("id").eq("id", request.session_id).single().execute()
+            if not session.data:
+                raise HTTPException(status_code=404, detail="Session not found")
+        except Exception as e:
+            logger.error(f"Error fetching session {request.session_id}: {e}")
             raise HTTPException(status_code=404, detail="Session not found")
-
-        session_data = session.data
 
         # Validate answer
         is_valid, error_msg = IntakeService.validate_answer(request.step_key, request.answer)

@@ -86,6 +86,15 @@ async def submit_intake_step(
 ):
     """Submit an intake step."""
     try:
+        # Validate session exists
+        try:
+            session = await db.get_intake_session(request.session_id)
+            if not session:
+                raise HTTPException(status_code=404, detail="Session not found")
+        except Exception as e:
+            logger.error(f"Error fetching session {request.session_id}: {e}")
+            raise HTTPException(status_code=404, detail="Session not found")
+        
         # Validate answer
         is_valid, error_msg = IntakeService.validate_answer(
             request.step_key, request.answer

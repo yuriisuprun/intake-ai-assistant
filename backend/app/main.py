@@ -5,6 +5,7 @@ FastAPI main application.
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from contextlib import asynccontextmanager
 import logging
 import json
@@ -60,6 +61,28 @@ app.add_middleware(
 
 
 # Exception handlers
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle Pydantic validation errors."""
+    logger.error(f"Validation error on {request.url.path}: {exc.errors()}")
+    errors = []
+    for error in exc.errors():
+        errors.append({
+            "field": ".".join(str(x) for x in error["loc"][1:]),
+            "message": error["msg"],
+            "type": error["type"],
+        })
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "error": "validation_error",
+            "message": "Request validation failed",
+            "details": errors,
+        },
+    )
+
+
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     """Handle general exceptions."""

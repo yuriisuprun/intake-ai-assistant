@@ -89,10 +89,14 @@ class IntakeSessionUpdate(BaseModel):
 
 
 class IntakeStepSubmit(BaseModel):
-    session_id: str
-    step_key: str
-    answer: Any
-    question_type: str  # text, textarea, select, radio, date, file
+    session_id: str = Field(..., min_length=1)
+    step_key: str = Field(..., min_length=1)
+    answer: Optional[Any] = None  # Allow None for optional fields
+    question_type: str = Field(..., min_length=1)  # text, textarea, select, radio, date, file
+    
+    class Config:
+        # Ensure Pydantic is more lenient with type coercion
+        use_enum_values = True
 
 
 class IntakeSessionResponse(BaseModel):

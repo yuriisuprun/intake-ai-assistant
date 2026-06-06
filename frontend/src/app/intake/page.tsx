@@ -162,7 +162,7 @@ export default function PublicIntakePage() {
       await apiClient.submitIntakeStep({
         session_id: sessionId,
         step_key: currentQuestion.key,
-        answer: finalAnswer,
+        answer: finalAnswer !== undefined ? finalAnswer : null,
         question_type: currentQuestion.question_type,
       })
 
