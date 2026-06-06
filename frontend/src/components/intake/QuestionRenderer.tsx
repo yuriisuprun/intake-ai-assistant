@@ -52,7 +52,7 @@ function InputField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          required={required}
+          required={required || undefined}
           aria-label={ariaLabel}
           aria-required={required}
           className={baseClasses}
@@ -66,7 +66,7 @@ function InputField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           rows={6}
-          required={required}
+          required={required || undefined}
           aria-label={ariaLabel}
           aria-required={required}
           className={baseClasses}
@@ -79,7 +79,7 @@ function InputField({
           type="date"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          required={required}
+          required={required || undefined}
           aria-label={ariaLabel}
           aria-required={required}
           className={baseClasses}
@@ -99,7 +99,7 @@ function InputField({
               onChange={(e) => onChange(e.target.files?.[0] || null)}
               className="hidden"
               multiple={false}
-              required={required}
+              required={required || undefined}
               aria-label={ariaLabel}
               aria-required={required}
             />
@@ -193,7 +193,7 @@ function QuestionRendererComponent({
         <select
           value={value}
           onChange={(e) => handleChange(e.target.value)}
-          required={question.required}
+          required={question.required || undefined}
           aria-label={question.question}
           aria-required={question.required}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -219,7 +219,7 @@ function QuestionRendererComponent({
                 value={option}
                 checked={value === option}
                 onChange={(e) => handleChange(e.target.value)}
-                required={question.required}
+                required={question.required || undefined}
                 aria-required={question.required}
                 className="w-4 h-4 text-blue-600"
               />

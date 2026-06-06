@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from typing import Optional
 import logging
 
+from pydantic import BaseModel
 from app.models.schemas import (
     IntakeSessionCreate,
     IntakeSessionResponse,
@@ -19,6 +20,11 @@ from app.db.supabase import db
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/intake")
+
+
+class CompleteIntakeRequest(BaseModel):
+    """Request body for completing an intake."""
+    session_id: str
 
 
 @router.get("/flow", response_model=IntakeFlowResponse)
@@ -116,11 +122,11 @@ async def submit_intake_step(
 
 
 @router.post("/complete", response_model=APIResponse)
-async def complete_intake(
-    session_id: str
-):
+async def complete_intake(request: CompleteIntakeRequest):
     """Complete intake session."""
     try:
+        session_id = request.session_id
+        
         # Complete intake
         success = await IntakeService.complete_intake(session_id, None)
 
