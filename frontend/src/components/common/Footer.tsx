@@ -143,9 +143,6 @@ export default function Footer() {
               </a>
             </p>
           </div>
-          <p style={{ color: '#6b7280' }} className="text-sm mt-4 md:mt-0">
-            📋 Intake Assistant - Streamlining intake workflows
-          </p>
         </div>
       </div>
     </footer>
