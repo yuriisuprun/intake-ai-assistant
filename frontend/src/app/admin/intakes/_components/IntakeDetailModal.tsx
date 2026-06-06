@@ -29,7 +29,7 @@ export function IntakeDetailModal({
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
-      new: { bg: 'bg-white', text: 'text-gray-800', icon: Clock },
+      new: { bg: 'bg-gray-200', text: 'text-gray-800', icon: Clock },
       assigned: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: CheckCircle },
       archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },

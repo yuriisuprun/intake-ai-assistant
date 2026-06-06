@@ -232,7 +232,7 @@ export default function IntakesManagementPage() {
     const colors: Record<string, { bg: string; text: string; icon: any }> = {
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
-      'new': { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: AlertTriangle },
+      'new': { bg: 'bg-gray-200', text: 'text-gray-800', icon: AlertTriangle },
       'archived': { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
     }
     const config = colors[status] || colors['new']
