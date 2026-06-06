@@ -39,40 +39,29 @@ export default function AdminLayout({
       {/* Header */}
       <header style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', borderBottom: '1px solid #e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-8">
-            <Link href="/admin/intakes" className="text-2xl font-bold" style={{ color: '#a855f7' }}>
-              Intake Assistant
+          <Link href="/admin/intakes" className="text-2xl font-bold" style={{ color: '#a855f7' }}>
+            Intake Assistant
+          </Link>
+          <nav className="hidden md:flex space-x-6 items-center">
+            <Link
+              href="/admin/dashboard"
+              className="transition"
+              style={{ color: '#4b5563' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
+            >
+              Dashboard
             </Link>
-            <nav className="hidden md:flex space-x-6">
-              <Link
-                href="/admin/dashboard"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/admin/intakes"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Intakes
-              </Link>
-              <Link
-                href="/admin/clients"
-                className="transition"
-                style={{ color: '#4b5563' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-              >
-                Clients
-              </Link>
-            </nav>
-          </div>
+            <Link
+              href="/admin/intakes"
+              className="transition"
+              style={{ color: '#4b5563' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
+            >
+              Intakes
+            </Link>
+          </nav>
           <div className="flex items-center space-x-4">
             <span className="text-sm" style={{ color: '#4b5563' }}>{user.email}</span>
             <button
