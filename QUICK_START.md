@@ -266,15 +266,14 @@ npm run dev
 ## First Test - Intake Form
 
 1. Go to http://localhost:3000
-2. **Answer 8 Questions:**
+2. **Answer 7 Questions:**
    - Q1: Legal Area → Select "Employment"
    - Q2: Problem Description → Enter "I was wrongfully terminated"
    - Q3: Timeline → Enter "Started January 15, 2024"
-   - Q4: Desired Outcome → Enter "Reinstatement and back pay"
-   - Q5: Documents → Skip (optional)
+   - Q4: Urgency → Select "High - Urgent"
+   - Q5: Desired Outcome → Enter "Reinstatement and back pay"
    - Q6: Contact Preference → Select "Email"
    - Q7: Additional Info → Skip (optional)
-   - Q8: (Reserved for future use)
 3. Click "Next" after each question
 4. See "Intake Complete!" message
 5. Redirected to Dashboard
@@ -427,7 +426,7 @@ Browser (http://localhost:3000)
     ↓
 Next.js Frontend
     ├── Home Page
-    ├── Intake Form (8 questions)
+    ├── Intake Form (7 questions)
     │   ├── Client Selection
     │   ├── Question Stepper
     │   └── Answer Submission
@@ -453,15 +452,14 @@ Ollama (http://localhost:11434)
 
 ## What's Working
 
-✅ **Intake Form (8 Questions)**
+✅ **Intake Form (7 Questions)**
   - Legal Area (Select)
   - Problem Description (Textarea)
   - Timeline (Text)
+  - Urgency (Select)
   - Desired Outcome (Textarea)
-  - Documents (File Upload)
   - Contact Preference (Select)
   - Additional Info (Textarea)
-  - (Reserved for future use)
 
 ✅ Anonymous intake (no authentication required)
 ✅ Direct client information storage in intakes table

@@ -76,17 +76,8 @@ class IntakeService:
             "help_text": "This helps us understand your goals",
         },
         {
-            "key": "documents",
-            "step": 6,
-            "question": "Do you have any documents to upload?",
-            "description": "Upload relevant documents (contracts, emails, etc.)",
-            "question_type": "file",
-            "required": False,
-            "help_text": "You can upload PDFs, Word documents, images, etc.",
-        },
-        {
             "key": "contact_preference",
-            "step": 7,
+            "step": 6,
             "question": "How would you prefer to be contacted?",
             "description": "Choose your preferred communication method",
             "question_type": "select",
@@ -96,7 +87,7 @@ class IntakeService:
         },
         {
             "key": "additional_info",
-            "step": 8,
+            "step": 7,
             "question": "Is there anything else we should know?",
             "description": "Any additional information that might be relevant",
             "question_type": "textarea",
@@ -179,15 +170,18 @@ class IntakeService:
             # Build update dict with the column name matching the step_key
             update_data = {"current_step": step_num}
             
+            # Convert empty answers to None for optional fields
+            answer_value = None if not answer else answer
+            
             # Map step_key to database column name
             # Special case for urgency question which maps to urgency_description column
             if step_key == "urgency":
-                update_data["urgency_description"] = answer
+                update_data["urgency_description"] = answer_value
             elif step_key == "documents":
                 # Documents field stores the filename/document info as text
-                update_data["documents"] = str(answer) if answer else None
+                update_data["documents"] = str(answer_value) if answer_value else None
             else:
-                update_data[step_key] = answer
+                update_data[step_key] = answer_value
 
             # Update session - use direct client call to avoid user_id filter
             try:

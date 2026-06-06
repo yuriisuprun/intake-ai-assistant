@@ -72,7 +72,7 @@ Ollama (Local LLM - Mistral 7B)
 ## 🔑 Key Features
 
 ### 1. Structured Intake Flow
-- 8-step guided intake process
+- 7-step guided intake process
 - JSON-driven question definitions
 - Support for text, textarea, select, radio, date, file inputs
 - Client-side and server-side validation
