@@ -135,15 +135,23 @@ class SupabaseDB:
     ) -> Dict[str, Any]:
         """Create a new intake session with client information."""
         try:
+            import uuid
+            
+            # Generate a reference number (first 8 characters of UUID, uppercase)
+            session_id = str(uuid.uuid4())
+            reference_number = session_id[:8].upper()
+            
             response = (
                 self.client.table("intakes")
                 .insert(
                     {
+                        "id": session_id,
                         "client_name": client_name,
                         "client_email": client_email,
                         "client_phone": client_phone,
                         "status": "new",
                         "current_step": 0,
+                        "reference_number": reference_number,
                     }
                 )
                 .execute()

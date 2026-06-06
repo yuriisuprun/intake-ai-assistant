@@ -149,8 +149,8 @@ export default function AdminIntakesPage() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
-      new: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
-      assigned: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
+      new: { bg: 'bg-white', text: 'text-gray-800', icon: Clock },
+      assigned: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: CheckCircle },
       archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
@@ -258,6 +258,7 @@ export default function AdminIntakesPage() {
               <table className="w-full">
                 <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                   <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Reference #</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Status</th>
@@ -268,6 +269,7 @@ export default function AdminIntakesPage() {
                 <tbody style={{ borderTop: '1px solid #e5e7eb' }}>
                   {filteredIntakes.map((intake, idx) => (
                     <tr key={intake.id} style={{ borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e5e7eb' : 'none', backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb' }} className="hover:bg-gray-50 transition">
+                      <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: '#a855f7' }}>{intake.reference_number || intake.id.substring(0, 8).toUpperCase()}</td>
                       <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
                       <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
                       <td className="px-6 py-4 text-sm">

@@ -20,7 +20,7 @@ router = APIRouter(prefix="/dashboard")
 async def get_dashboard_overview():
     """Get dashboard overview with key statistics."""
     try:
-        logger.info("Dashboard overview requested")
+        logger.info("Dashboard overview endpoint called - fetching overview report")
         report = await AdminOperations.get_overview_report()
         
         return APIResponse(

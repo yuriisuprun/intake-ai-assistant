@@ -279,16 +279,24 @@ class AdminOperations:
             ).eq("status", "completed").execute()
             completed_sessions = completed_response.count or 0
             
+            # Get in progress sessions
+            in_progress_response = db.client.table("intakes").select(
+                "id", count="exact"
+            ).eq("status", "in_progress").execute()
+            in_progress_sessions = in_progress_response.count or 0
+            
             # Get total clients
             clients_response = db.client.table("clients").select(
                 "id", count="exact"
             ).execute()
             total_clients = clients_response.count or 0
             
+            logger.info(f"Dashboard stats - Total: {total_sessions}, Completed: {completed_sessions}, In Progress: {in_progress_sessions}")
+            
             return {
                 "total_sessions": total_sessions,
                 "completed_sessions": completed_sessions,
-                "in_progress_sessions": total_sessions - completed_sessions,
+                "in_progress_sessions": in_progress_sessions,
                 "total_clients": total_clients,
                 "completion_rate": (
                     (completed_sessions / total_sessions * 100)
@@ -297,7 +305,7 @@ class AdminOperations:
                 ),
             }
         except Exception as e:
-            print(f"Error getting overview report: {e}")
+            logger.error(f"Error getting overview report: {e}")
             return {}
 
     @staticmethod

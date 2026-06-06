@@ -94,7 +94,8 @@ export default function PublicIntakePage() {
       if (response.success && response.data) {
         const sessionId = response.data.id || response.data
         setSessionId(sessionId)
-        setReferenceNumber(sessionId.substring(0, 8).toUpperCase())
+        // Use reference_number from API response (stored in database)
+        setReferenceNumber(response.data.reference_number)
         setClientInfoSubmitted(true)
         setCurrentQuestionIndex(0)
       } else {

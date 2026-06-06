@@ -65,6 +65,7 @@ async def start_intake(request: IntakeSessionCreate):
             success=True,
             data={
                 "id": session["id"],
+                "reference_number": session.get("reference_number"),
                 "status": session.get("status"),
                 "current_step": session.get("current_step"),
             },

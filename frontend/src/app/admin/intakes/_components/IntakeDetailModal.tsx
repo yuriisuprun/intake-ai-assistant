@@ -29,8 +29,8 @@ export function IntakeDetailModal({
 
   const getStatusBadge = (status: string) => {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
-      new: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
-      assigned: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
+      new: { bg: 'bg-white', text: 'text-gray-800', icon: Clock },
+      assigned: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: CheckCircle },
       archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
@@ -218,9 +218,9 @@ export function IntakeDetailModal({
                 <p className="text-xs" style={{ color: '#6b7280' }}>
                   Submitted: {new Date(intake.created_at).toLocaleString()}
                 </p>
-                {intake.session_id && (
+                {intake.reference_number && (
                   <p className="text-xs" style={{ color: '#6b7280' }}>
-                    Reference: {intake.session_id.substring(0, 8).toUpperCase()}
+                    Reference Number: <span className="font-mono font-semibold">{intake.reference_number}</span>
                   </p>
                 )}
                 {intake.updated_at && (

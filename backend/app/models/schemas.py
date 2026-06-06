@@ -97,6 +97,7 @@ class IntakeStepSubmit(BaseModel):
 
 class IntakeSessionResponse(BaseModel):
     id: str
+    reference_number: str
     status: SessionStatus
     current_step: int
     # Intake flow fields (flattened from former flow_data)
