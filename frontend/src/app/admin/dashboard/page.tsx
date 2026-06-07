@@ -210,8 +210,14 @@ export default function AdminDashboardPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            title="Total Intakes"
-            value={stats?.total_sessions || 0}
+            title="New"
+            value={statusDist['new'] || 0}
+            icon={AlertCircle}
+            color="#f59e0b"
+          />
+          <StatCard
+            title="Assigned"
+            value={statusDist['assigned'] || 0}
             icon={FileText}
             color="#a855f7"
           />
@@ -220,12 +226,6 @@ export default function AdminDashboardPage() {
             value={stats?.in_progress_sessions || 0}
             icon={Clock}
             color="#f59e0b"
-          />
-          <StatCard
-            title="Completed"
-            value={stats?.completed_sessions || 0}
-            icon={CheckCircle}
-            color="#10b981"
           />
           <StatCard
             title="Completion Rate"
