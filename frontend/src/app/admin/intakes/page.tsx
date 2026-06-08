@@ -267,60 +267,106 @@ export default function AdminIntakesPage() {
     )
   }
 
+  // Calculate stats
+  const totalIntakes = intakes.length
+  const newIntakes = intakes.filter(i => i.status === 'new').length
+  const inProgressIntakes = intakes.filter(i => i.status === 'in_progress').length
+  const completedIntakes = intakes.filter(i => i.status === 'completed').length
+
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
-      <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}> Client submissions management</h1>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+      {/* Header Section */}
+      <div style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-2" style={{ color: '#0f172a' }}>Intakes</h1>
+            <p style={{ color: '#64748b', fontSize: '1rem' }}>Manage and track all client submissions</p>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div style={{ backgroundColor: '#f1f5f9', borderRadius: '0.75rem', padding: '1rem', border: '1px solid #e2e8f0' }}>
+              <p style={{ color: '#64748b', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>Total Intakes</p>
+              <p className="text-2xl font-bold" style={{ color: '#0f172a' }}>{totalIntakes}</p>
+            </div>
+            <div style={{ backgroundColor: '#fef3c7', borderRadius: '0.75rem', padding: '1rem', border: '1px solid #fcd34d' }}>
+              <p style={{ color: '#78350f', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>New</p>
+              <p className="text-2xl font-bold" style={{ color: '#78350f' }}>{newIntakes}</p>
+            </div>
+            <div style={{ backgroundColor: '#dbeafe', borderRadius: '0.75rem', padding: '1rem', border: '1px solid #93c5fd' }}>
+              <p style={{ color: '#1e40af', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>In Progress</p>
+              <p className="text-2xl font-bold" style={{ color: '#1e40af' }}>{inProgressIntakes}</p>
+            </div>
+            <div style={{ backgroundColor: '#dcfce7', borderRadius: '0.75rem', padding: '1rem', border: '1px solid #86efac' }}>
+              <p style={{ color: '#166534', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>Completed</p>
+              <p className="text-2xl font-bold" style={{ color: '#166534' }}>{completedIntakes}</p>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Bulk Actions Bar */}
         <BulkActionsBar selectedCount={selectedIntakes.size}
           onDeleteSelected={handleBulkDeleteClick}
           isDeleting={bulkDeleting}
           onClear={() => setSelectedIntakes(new Set())}/>
 
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', padding: '1.5rem', marginBottom: '1.5rem', border: '1px solid #e5e7eb' }}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3" size={20} style={{ color: '#9ca3af' }} />
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg outline-none transition"
-                style={{ 
-                  border: '1px solid #d1d5db',
-                  boxShadow: 'none'
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#d1d5db'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              />
+        {/* Filters Section */}
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.75rem', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)', padding: '1.5rem', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+            {/* Search Input */}
+            <div className="lg:col-span-2">
+              <label style={{ display: 'block', color: '#0f172a', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem' }}>Search</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-3.5" size={18} style={{ color: '#94a3b8' }} />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, or reference..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-lg outline-none transition"
+                  style={{ 
+                    border: '1px solid #cbd5e1',
+                    fontSize: '0.9375rem',
+                    backgroundColor: '#f8fafc'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = '#a855f7'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                    e.currentTarget.style.backgroundColor = '#ffffff'
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = '#cbd5e1'
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.backgroundColor = '#f8fafc'
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Filter size={20} style={{ color: '#9ca3af' }} />
+            {/* Status Filter */}
+            <div>
+              <label style={{ display: 'block', color: '#0f172a', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem' }}>Status</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="flex-1 px-4 py-2 rounded-lg outline-none transition"
+                className="w-full px-4 py-2 rounded-lg outline-none transition"
                 style={{ 
-                  border: '1px solid #d1d5db',
-                  boxShadow: 'none'
+                  border: '1px solid #cbd5e1',
+                  fontSize: '0.9375rem',
+                  backgroundColor: '#f8fafc'
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#d1d5db'
-                  e.currentTarget.style.boxShadow = '0 0 0 2px rgba(168, 85, 247, 0.2)'
+                  e.currentTarget.style.borderColor = '#a855f7'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                  e.currentTarget.style.backgroundColor = '#ffffff'
                 }}
                 onBlur={(e) => {
+                  e.currentTarget.style.borderColor = '#cbd5e1'
                   e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.backgroundColor = '#f8fafc'
                 }}
               >
                 <option value="all">All Statuses</option>
@@ -330,102 +376,140 @@ export default function AdminIntakesPage() {
                 <option value="completed">Completed</option>
               </select>
             </div>
+          </div>
 
-            <div style={{ textAlign: 'right' }}>
-              <p className="text-sm" style={{ color: '#4b5563' }}>
-                Showing {filteredIntakes.length} of {intakes.length} intakes
-              </p>
-            </div>
+          {/* Results Count */}
+          <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+            <p className="text-sm" style={{ color: '#64748b' }}>
+              {filteredIntakes.length} of {totalIntakes} {totalIntakes === 1 ? 'intake' : 'intakes'} shown
+              {statusFilter !== 'all' && ` • Filtered by: ${statusFilter.replace('_', ' ')}`}
+              {searchTerm && ` • Search: "${searchTerm}"`}
+            </p>
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+        {/* Table Section */}
+        <div style={{ backgroundColor: '#ffffff', borderRadius: '0.75rem', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
           {filteredIntakes.length === 0 ? (
-            <div className="p-8 text-center">
-              <AlertCircle className="mx-auto mb-4" size={48} style={{ color: '#9ca3af' }} />
-              <p style={{ color: '#4b5563' }}>No intakes found</p>
+            <div className="p-12 text-center">
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                <div style={{ backgroundColor: '#f1f5f9', borderRadius: '50%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <AlertCircle size={32} style={{ color: '#94a3b8' }} />
+                </div>
+              </div>
+              <p className="text-lg font-semibold" style={{ color: '#0f172a', marginBottom: '0.5rem' }}>No intakes found</p>
+              <p style={{ color: '#64748b' }}>
+                {searchTerm || statusFilter !== 'all' 
+                  ? 'Try adjusting your filters or search terms'
+                  : 'No client submissions yet. They will appear here when submitted.'}
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+                <thead style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                   <tr>
-                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', width: '2.5rem' }}>
+                    <th style={{ padding: '1rem', textAlign: 'center', width: '2.75rem' }}>
                       <input
                         type="checkbox"
                         checked={selectedIntakes.size === filteredIntakes.length && filteredIntakes.length > 0}
                         onChange={handleSelectAll}
                         style={{
                           cursor: 'pointer',
-                          width: '1.125rem',
-                          height: '1.125rem',
+                          width: '1.25rem',
+                          height: '1.25rem',
+                          accentColor: '#a855f7',
                         }}
+                        title="Select all intakes on this page"
                       />
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Reference #</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Submitted</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Actions</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Reference</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Client</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Email</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Status</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Submitted</th>
+                    <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide" style={{ color: '#64748b' }}>Actions</th>
                   </tr>
                 </thead>
-                <tbody style={{ borderTop: '1px solid #e5e7eb' }}>
+                <tbody>
                   {filteredIntakes.map((intake, idx) => (
                     <tr
                       key={intake.id}
                       style={{
-                        borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e5e7eb' : 'none',
+                        borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e2e8f0' : 'none',
                         backgroundColor: selectedIntakes.has(intake.id)
-                          ? '#f3f4f6'
-                          : idx % 2 === 0
-                            ? '#ffffff'
-                            : '#f9fafb',
+                          ? '#f0f4ff'
+                          : '#ffffff',
                       }}
-                      className="hover:bg-gray-50 transition"
+                      className="hover:bg-slate-50 transition"
                     >
-                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>
+                      <td style={{ padding: '1rem', textAlign: 'center' }}>
                         <input
                           type="checkbox"
                           checked={selectedIntakes.has(intake.id)}
                           onChange={() => handleSelectIntake(intake.id)}
                           style={{
                             cursor: 'pointer',
-                            width: '1.125rem',
-                            height: '1.125rem',
+                            width: '1.25rem',
+                            height: '1.25rem',
+                            accentColor: '#a855f7',
                           }}
                         />
                       </td>
                       <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: '#a855f7' }}>{intake.reference_number || intake.id.substring(0, 8).toUpperCase()}</td>
-                      <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
-                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
+                      <td className="px-6 py-4 text-sm font-medium" style={{ color: '#0f172a' }}>{intake.client_name}</td>
+                      <td className="px-6 py-4 text-sm" style={{ color: '#64748b' }}>{intake.client_email}</td>
                       <td className="px-6 py-4 text-sm">
                         {getStatusBadge(intake.status)}
                       </td>
-                      <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>
-                        {new Date(intake.created_at).toLocaleDateString()}
+                      <td className="px-6 py-4 text-sm" style={{ color: '#64748b' }}>
+                        {new Date(intake.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                       </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                      <td className="px-6 py-4 text-sm text-right">
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'flex-end' }}>
                           <button
                             onClick={() => handleViewDetails(intake)}
-                            className="font-medium flex items-center gap-1 transition"
-                            style={{ color: '#a855f7' }}
-                            onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+                            className="px-3 py-1.5 rounded-md font-medium flex items-center gap-2 transition"
+                            style={{ 
+                              backgroundColor: '#a855f7',
+                              color: '#ffffff',
+                              fontSize: '0.875rem',
+                              border: '1px solid #a855f7'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#9333ea'
+                              e.currentTarget.style.borderColor = '#9333ea'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#a855f7'
+                              e.currentTarget.style.borderColor = '#a855f7'
+                            }}
+                            title="View intake details"
                           >
                             <Eye size={16} />
-                            View
+                            <span className="hidden sm:inline">View</span>
                           </button>
                           <button
                             onClick={() => handleDeleteClick(intake)}
-                            className="font-medium flex items-center gap-1 transition"
-                            style={{ color: '#ef4444' }}
+                            className="px-3 py-1.5 rounded-md font-medium flex items-center gap-2 transition"
+                            style={{ 
+                              backgroundColor: 'transparent',
+                              color: '#ef4444',
+                              fontSize: '0.875rem',
+                              border: '1px solid #fecaca'
+                            }}
                             title="Delete intake"
-                            onMouseEnter={(e) => (e.currentTarget.style.color = '#dc2626')}
-                            onMouseLeave={(e) => (e.currentTarget.style.color = '#ef4444')}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fee2e2'
+                              e.currentTarget.style.borderColor = '#fecaca'
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'transparent'
+                              e.currentTarget.style.borderColor = '#fecaca'
+                            }}
                           >
                             <Trash2 size={16} />
+                            <span className="hidden sm:inline">Delete</span>
                           </button>
                         </div>
                       </td>
