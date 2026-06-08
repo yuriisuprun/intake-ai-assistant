@@ -276,12 +276,10 @@ export default function AdminIntakesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <BulkActionsBar
-          selectedCount={selectedIntakes.size}
+        <BulkActionsBar selectedCount={selectedIntakes.size}
           onDeleteSelected={handleBulkDeleteClick}
           isDeleting={bulkDeleting}
-          onClear={() => setSelectedIntakes(new Set())}
-        />
+          onClear={() => setSelectedIntakes(new Set())}/>
 
         <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', padding: '1.5rem', marginBottom: '1.5rem', border: '1px solid #e5e7eb' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
