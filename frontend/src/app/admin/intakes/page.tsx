@@ -8,7 +8,7 @@ import { Eye, Search, Filter, AlertCircle, Clock, CheckCircle, Trash2 } from 'lu
 import { IntakeDetailModal } from './_components/IntakeDetailModal'
 import { DeleteConfirmationModal } from './_components/DeleteConfirmationModal'
 import { BulkActionsBar } from './_components/BulkActionsBar'
-import { ToastNotification, useToast, type ToastType } from './_components/ToastNotification'
+import { ToastNotification, useToast } from './_components/ToastNotification'
 
 interface Intake {
   id: string
@@ -27,7 +27,7 @@ interface Intake {
 export default function AdminIntakesPage() {
   const router = useRouter()
   const { toasts, showToast, setToasts } = useToast()
-  const [user, setUser] = useState<any>(null)
+  const [setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [intakes, setIntakes] = useState<Intake[]>([])
   const [filteredIntakes, setFilteredIntakes] = useState<Intake[]>([])
@@ -35,7 +35,7 @@ export default function AdminIntakesPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedIntake, setSelectedIntake] = useState<Intake | null>(null)
   const [showDetails, setShowDetails] = useState(false)
-  const [intakeDetails, setIntakeDetails] = useState<any>(null)
+  const [setIntakeDetails] = useState<any>(null)
   const [loadingDetails, setLoadingDetails] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const [deleteIntake, setDeleteIntake] = useState<Intake | null>(null)
@@ -271,8 +271,7 @@ export default function AdminIntakesPage() {
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}>Intakes Management</h1>
-          <p style={{ color: '#4b5563', marginTop: '0.25rem' }}>Manage all client submissions</p>
+          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}> Client submissions Management</h1>
         </div>
       </div>
 
