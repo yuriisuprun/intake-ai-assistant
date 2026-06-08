@@ -111,7 +111,7 @@
 - [x] List anonymous intakes
 - [x] Filter by status and search
 - [x] View complete intake details
-- [x] Update status (submitted → assigned → archived)
+- [x] Update status (submitted → assigned → completed)
 - [x] Add and manage notes
 - [x] Search by email
 - [x] Assign to team members
@@ -267,14 +267,8 @@ Frontend:
        │ Work completed
        ↓
 ┌──────────────┐
-│  Completed   │  ← Case handled
+│  Completed   │  ← Case resolved/finalized
 │  (Done)      │
-└──────┬───────┘
-       │ Can archive
-       ↓
-┌──────────────┐
-│  Archived    │  ← Closed
-│  (Historical)│
 └──────────────┘
 ```
 

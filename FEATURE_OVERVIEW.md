@@ -122,7 +122,7 @@
 │  │ John Doe                                              [×]  │  │
 │  │ john@example.com                                          │  │
 │  │                                                             │  │
-│  │ Status: [Submitted] [Assigned] [Archived]     │  │
+│  │ Status: [Submitted] [Assigned] [In Progress] [Completed]  │  │
 │  │                                                             │  │
 │  │ Client Information                                         │  │
 │  │ ┌──────────────────────────────────────────────────────┐  │  │

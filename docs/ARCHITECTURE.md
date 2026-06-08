@@ -248,7 +248,7 @@ CREATE TABLE intakes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES clients(id),
   user_id UUID REFERENCES auth.users(id),
-  status TEXT DEFAULT 'in_progress', -- in_progress, completed, archived
+  status TEXT DEFAULT 'in_progress', -- in_progress, completed
   urgency TEXT, -- low, medium, high
   ai_summary JSONB,
   current_step INTEGER DEFAULT 0,

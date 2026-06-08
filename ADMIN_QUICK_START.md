@@ -41,7 +41,7 @@ Login → View Dashboard Stats → Identify Pending Items → Click "Review" →
 #### List View
 **Filters & Search:**
 - 🔍 **Search Box** - Find by client name or email
-- 🔽 **Status Filter** - All, Submitted, Assigned, Archived
+- 🔽 **Status Filter** - All, Submitted, Assigned, In Progress, Completed
 - Shows total count and filtered results
 
 **Table Columns:**
@@ -141,7 +141,7 @@ Click the **View** button to open the intake details:
 Typical progression:
 
 ```
-Submitted → Assigned → Completed/Archived
+Submitted → Assigned → In Progress → Completed
 ```
 
 **Status Details:**
@@ -150,7 +150,8 @@ Submitted → Assigned → Completed/Archived
 |--------|---------|-----------|
 | **Submitted** | Pending admin action | Assess and review |
 | **Assigned** | Given to team member for action | Monitor progress |
-| **Archived** | Closed/completed | View history |
+| **In Progress** | Being actively worked on | Track status |
+| **Completed** | Case resolved/finalized | View history |
 
 ### 5. Notes & Documentation
 

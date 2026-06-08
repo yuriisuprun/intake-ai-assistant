@@ -34,7 +34,7 @@ All responses follow the standard APIResponse format:
 |-----------|------|---------|-------------|
 | skip | integer | 0 | Number of records to skip |
 | limit | integer | 20 | Number of records to return (max 100) |
-| status | string | null | Filter by status: in_progress, completed, archived |
+| status | string | null | Filter by status: in_progress, completed |
 | category | string | null | Filter by legal category |
 | search | string | null | Search by client name or email |
 
@@ -150,7 +150,7 @@ GET /intake?skip=0&limit=20&status=in_progress&search=john
 }
 ```
 
-**Valid Statuses:** `submitted`, `assigned`, `in_progress`, `completed`, `archived`
+**Valid Statuses:** `new`, `assigned`, `in_progress`, `completed`
 
 **All fields are optional. Include only what you want to update.**
 
@@ -254,7 +254,7 @@ All anonymous and registered intakes are now consolidated under the `/intakes` e
 |-----------|------|---------|-------------|
 | skip | integer | 0 | Number of records to skip |
 | limit | integer | 20 | Number of records to return (max 100) |
-| status | string | null | Filter by status: submitted, assigned, in_progress, completed, archived |
+| status | string | null | Filter by status: new, assigned, in_progress, completed |
 | search | string | null | Search by client name or email |
 
 **Example:**
@@ -408,9 +408,8 @@ GET /intakes/search/by-email?email=jane@
     "status_distribution": {
       "in_progress": 67,
       "completed": 89,
-      "archived": 0,
-      "anon_submitted": 12,
-      "anon_assigned": 8
+      "new": 12,
+      "assigned": 8
     },
     "total": 176
   }
@@ -564,7 +563,7 @@ GET /intakes/search/by-email?email=jane@
 ```json
 {
   "success": false,
-  "error": "Invalid status. Must be one of: in_progress, completed, archived",
+  "error": "Invalid status. Must be one of: in_progress, completed",
   "message": "Invalid status"
 }
 ```

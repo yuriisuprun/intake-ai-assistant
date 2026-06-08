@@ -35,7 +35,7 @@ Your reference number (e.g., "A1B2C3D4") is the first 8 characters of your sessi
 - Results update in real-time
 
 **Filter**
-- Filter by status: Submitted, Assigned, Archived
+- Filter by status: Submitted, Assigned, In Progress, Completed
 - Combine with search for precise results
 
 **View Details**
@@ -51,7 +51,7 @@ Your reference number (e.g., "A1B2C3D4") is the first 8 characters of your sessi
 
 **Status Workflow**
 ```
-Submitted → Assigned → Archived
+Submitted → Assigned → In Progress → Completed
 ```
 
 ---

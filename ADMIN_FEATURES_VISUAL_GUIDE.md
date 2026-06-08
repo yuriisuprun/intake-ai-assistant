@@ -75,7 +75,7 @@
 │ BULK ACTIONS (when items selected)                         │
 │ ┌────────────────────────────────────────────────────────┐ │
 │ │ ✓ 5 intakes selected                                   │ │
-│ │ [Mark In Progress] [Mark Completed] [Mark Archived]    │ │
+│ │ [Mark New] [Mark Assigned] [Mark In Progress] [Mark Completed]    │ │
 │ └────────────────────────────────────────────────────────┘ │
 │                                                             │
 ├─────────────────────────────────────────────────────────────┤
@@ -118,7 +118,7 @@ START
   │
   ├─→ [Blue bar appears showing selection count]
   │   ✓ 5 intakes selected
-  │   [Mark In Progress] [Mark Completed] [Mark Archived]
+  │   [Mark New] [Mark Assigned] [Mark In Progress] [Mark Completed]
   │
   ├─→ [Choose desired status]
   │   Example: Click "Mark Completed"
@@ -198,8 +198,8 @@ Status Badges:
 │ Submitted       🟡 Yellow badge                          │
 │ [Clock/alert shows pending review]                      │
 │                                                          │
-│ Archived        ⚪ Gray badge                            │
-│ [Neutral color for closed items]                        │
+│ Completed      🟢 Green badge                           │
+│ [Checkmark shows case resolved]                         │
 └──────────────────────────────────────────────────────────┘
 
 STATUS INDICATORS:

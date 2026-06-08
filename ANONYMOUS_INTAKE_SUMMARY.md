@@ -17,7 +17,7 @@ Successfully implemented a complete anonymous intake system that allows unregist
 - **Centralized Dashboard**: Single view of all intakes
 - **Smart Filtering**: Search by name/email, filter by status
 - **Detailed Management**: View full responses, add notes, update status
-- **Workflow Support**: Status tracking (new → assigned → archived)
+- **Workflow Support**: Status tracking (new → assigned → in_progress → completed)
 - **Efficient Operations**: Bulk operations and quick status updates
 
 ## 📊 What Was Built
@@ -146,7 +146,7 @@ Update Status & Add Notes
 - client_name (TEXT)
 - client_email (TEXT)
 - client_phone (TEXT, optional)
-- status (TEXT: submitted, assigned, archived)
+- status (TEXT: submitted, assigned, in_progress, completed)
 - admin_notes (TEXT, optional)
 - assigned_to (UUID, Foreign Key to auth.users, optional)
 - created_at (TIMESTAMP)
