@@ -271,7 +271,7 @@ export default function AdminIntakesPage() {
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <div style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}> Client submissions Management</h1>
+          <h1 className="text-3xl font-bold" style={{ color: '#111827' }}> Client submissions management</h1>
         </div>
       </div>
 
