@@ -61,7 +61,7 @@ export default function SignUp() {
         }, 3000)
       } else if (data?.user) {
         // Auto-login if email confirmation is not required
-        router.push('/admin/dashboard')
+        router.push('/admin/intakes')
       }
     } catch (err: any) {
       console.error('Sign up error:', err)

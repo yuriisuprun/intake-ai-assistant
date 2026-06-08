@@ -46,8 +46,8 @@ export default function Login() {
         throw loginError
       }
 
-      // Redirect to admin dashboard after login
-      router.push('/admin/dashboard')
+      // Redirect to admin intakes page after login
+      router.push('/admin/intakes')
     } catch (err: any) {
       console.error('Login error:', err)
       setError(err.message || 'Failed to log in. Please try again.')

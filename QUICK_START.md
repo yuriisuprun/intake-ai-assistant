@@ -276,8 +276,7 @@ npm run dev
    - Q7: Additional Info → Skip (optional)
 3. Click "Next" after each question
 4. See "Intake Complete!" message
-5. Redirected to Dashboard
-6. See completed session in list
+5. Redirected to Intake form page
 
 ## Troubleshooting
 
@@ -330,7 +329,6 @@ For admin features and case management:
 | `backend/app/services/ollama_service.py` | LLM integration |
 | `backend/app/services/summary_service.py` | AI summaries |
 | `frontend/src/app/intake/page.tsx` | **Intake form page** |
-| `frontend/src/app/dashboard/page.tsx` | Dashboard with sessions |
 | `frontend/src/components/intake/IntakeStepper.tsx` | Progress indicator |
 | `frontend/src/components/intake/QuestionRenderer.tsx` | Question display |
 | `frontend/src/app/page.tsx` | Landing page |
@@ -430,7 +428,6 @@ Next.js Frontend
     │   ├── Client Selection
     │   ├── Question Stepper
     │   └── Answer Submission
-    └── Dashboard (View Sessions)
     ↓
 FastAPI Backend (http://localhost:8000)
     ├── /api/intake/flow (Get questions)
@@ -467,12 +464,10 @@ Ollama (http://localhost:11434)
 ✅ Answer validation (required fields)
 ✅ Progress tracking (stepper)
 ✅ Session persistence
-✅ Dashboard with sessions
 ✅ Database storage
 ✅ File uploads
 ✅ AI summaries via Ollama
 ✅ Admin dashboard
-✅ API endpoints
 ✅ **Intake Status Management**
   - Update intake status (new, assigned, in_progress, completed)
   - Admin notes on intakes

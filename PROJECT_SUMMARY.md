@@ -46,8 +46,6 @@ A production-ready SaaS MVP for law firms to collect structured client intake da
 - ✅ `src/lib/supabase.ts` - Supabase client
 - ✅ `src/components/intake/IntakeStepper.tsx` - Progress indicator
 - ✅ `src/components/intake/QuestionRenderer.tsx` - Dynamic form
-- ✅ `src/components/dashboard/SessionList.tsx` - Session list
-- ✅ `src/components/dashboard/SummaryPanel.tsx` - Summary display
 - ✅ `package.json` - Dependencies
 - ✅ `tsconfig.json` - TypeScript config
 - ✅ `next.config.js` - Next.js config
@@ -97,12 +95,10 @@ Ollama (Local LLM - Mistral 7B)
 - Secure file storage (Supabase)
 - Signed URLs for access
 
-### 4. Lawyer Dashboard
+### 4. Lawyer Intakes Page
 - List of intake sessions
 - AI-generated summaries
 - Document viewer
-- Full chat transcript
-- Filtering and search
 
 ### 5. Security
 - Supabase Auth (JWT tokens) - for admin features

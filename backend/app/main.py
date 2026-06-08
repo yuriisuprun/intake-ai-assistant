@@ -13,14 +13,13 @@ import json
 from app.core.config import settings
 from app.services.ollama_service import close_ollama_service
 from app.api.routes import messages, intake as public_intake, auth
-from app.api.routes.client import intake, files, profile, dashboard
+from app.api.routes.client import intake, files, profile
 from app.api.routes.admin import (
     clients as admin_clients,
     intakes as admin_intakes,
     intake_management as admin_intake_management,
     summary as admin_summary,
     notes as admin_notes,
-    dashboard as admin_dashboard,
 )
 from app.middleware.audit import AuditLoggingMiddleware
 
@@ -117,7 +116,6 @@ app.include_router(files.router, prefix=settings.API_PREFIX, tags=["public-files
 app.include_router(intake.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-intake"])
 app.include_router(files.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-files"])
 app.include_router(profile.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-profile"])
-app.include_router(dashboard.router, prefix=f"{settings.API_PREFIX}/client", tags=["client-dashboard"])
 
 # Admin routes
 app.include_router(admin_clients.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-clients"])
@@ -125,7 +123,6 @@ app.include_router(admin_intakes.router, prefix=f"{settings.API_PREFIX}/admin", 
 app.include_router(admin_intake_management.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-intake-management"])
 app.include_router(admin_summary.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-summary"])
 app.include_router(admin_notes.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-notes"])
-app.include_router(admin_dashboard.router, prefix=f"{settings.API_PREFIX}/admin", tags=["admin-dashboard"])
 
 
 # Root endpoint

@@ -182,7 +182,7 @@ export default function ClientIntakePage() {
       });
 
       if (response.success) {
-        router.push('/client/dashboard');
+        router.push('/client/intake');
       } else {
         setError('Failed to complete intake');
       }

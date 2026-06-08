@@ -54,11 +54,11 @@ export default function AdminLogin() {
       localStorage.setItem('user_email', data.email)
       localStorage.setItem('user_role', data.role)
 
-      setSuccess('Login successful! Redirecting to dashboard...')
+      setSuccess('Login successful! Redirecting to intakes...')
       
       // Small delay to show success message, then redirect
       setTimeout(() => {
-        router.push('/admin/dashboard')
+        router.push('/admin/intakes')
       }, 800)
     } catch (err: any) {
       console.error('Admin login error:', err)

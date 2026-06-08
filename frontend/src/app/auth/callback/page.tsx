@@ -16,8 +16,8 @@ export default function AuthCallbackPage() {
         try {
           // Exchange the code for a session
           await supabase.auth.exchangeCodeForSession(code)
-          // Redirect to admin dashboard
-          router.push('/admin/dashboard')
+          // Redirect to admin intakes page
+          router.push('/admin/intakes')
         } catch (error) {
           console.error('Error exchanging code for session:', error)
           router.push('/login')
