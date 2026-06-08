@@ -474,7 +474,7 @@ Ollama (http://localhost:11434)
 ✅ Admin dashboard
 ✅ API endpoints
 ✅ **Intake Status Management**
-  - Update intake status (new, assigned, in_progress, completed, archived)
+  - Update intake status (new, assigned, in_progress, completed)
   - Admin notes on intakes
   - Status change tracking via audit logs
 
