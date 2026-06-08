@@ -78,88 +78,15 @@ export default function AdminLayout({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         {children}
       </main>
 
       {/* Footer */}
-      <footer style={{ backgroundColor: '#ffffff', marginTop: '48px', borderTop: '1px solid #e5e7eb' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="text-lg font-semibold mb-4" style={{ color: '#111827' }}>Admin Dashboard</h3>
-              <p style={{ color: '#4b5563' }}>
-                Manage intake sessions and team members.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4" style={{ color: '#111827' }}>Quick Links</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link 
-                    href="/admin/dashboard" 
-                    className="transition"
-                    style={{ color: '#4b5563' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/admin/sessions" 
-                    className="transition"
-                    style={{ color: '#4b5563' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-                  >
-                    All Sessions
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/admin/reports" 
-                    className="transition"
-                    style={{ color: '#4b5563' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-                  >
-                    Reports
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4" style={{ color: '#111827' }}>Support</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a 
-                    href="mailto:support@company.com" 
-                    className="transition"
-                    style={{ color: '#4b5563' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-                  >
-                    Admin Support
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="tel:+1-555-0123" 
-                    className="transition"
-                    style={{ color: '#4b5563' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-                  >
-                    Call Support
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div style={{ borderTop: '1px solid #e5e7eb', marginTop: '32px', paddingTop: '32px', textAlign: 'center', color: '#6b7280', fontSize: '0.875rem' }}>
-            <p>&copy; 2026 Intake Assistant. All rights reserved.</p>
+      <footer style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e5e7eb', marginTop: 'auto' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center" style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+            <p>&copy; {new Date().getFullYear()} Intake Assistant</p>
           </div>
         </div>
       </footer>
