@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS intakes (
   client_email TEXT NOT NULL,
   client_phone TEXT,
   legal_category TEXT,
-  status TEXT NOT NULL DEFAULT 'new', -- new, assigned, archived
+  status TEXT NOT NULL DEFAULT 'new', -- new, assigned, in_progress, completed
   admin_notes TEXT,
   assigned_to UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),

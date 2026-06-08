@@ -442,7 +442,6 @@ class AdminOperations:
             total = len(sessions)
             completed = len([s for s in sessions if s.get("status") == "completed"])
             in_progress = len([s for s in sessions if s.get("status") == "in_progress"])
-            archived = len([s for s in sessions if s.get("status") == "archived"])
             
             # Status breakdown
             statuses = {}
@@ -466,7 +465,6 @@ class AdminOperations:
                 "total_intakes": total,
                 "completed": completed,
                 "in_progress": in_progress,
-                "archived": archived,
                 "completion_rate": (completed / total * 100) if total > 0 else 0,
                 "average_completion_hours": round(avg_completion_time, 2),
                 "by_status": statuses,
@@ -600,7 +598,7 @@ class AdminOperations:
             sessions = response.data or []
             
             # Calculate performance metrics
-            total_processed = len([s for s in sessions if s.get("status") in ["completed", "archived"]])
+            total_processed = len([s for s in sessions if s.get("status") == "completed"])
             pending = len([s for s in sessions if s.get("status") == "in_progress"])
             
             completion_times = []

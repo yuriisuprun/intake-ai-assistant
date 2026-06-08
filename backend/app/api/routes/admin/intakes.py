@@ -21,7 +21,7 @@ router = APIRouter(prefix="/intakes")
 async def list_all_intakes(
     skip: int = Query(0, ge=0),
     limit: int = Query(20, ge=1, le=100),
-    status: Optional[str] = Query(None, description="Filter by status: submitted, assigned, archived"),
+    status: Optional[str] = Query(None, description="Filter by status: new, assigned, in_progress, completed"),
     search: Optional[str] = Query(None, description="Search by client name or email"),
     user_id: str = Depends(require_admin())
 ):
@@ -100,7 +100,7 @@ async def update_intake(
         update_data = {}
         
         if status:
-            valid_statuses = ["new", "assigned", "archived", "in_progress", "completed"]
+            valid_statuses = ["new", "assigned", "in_progress", "completed"]
             if status not in valid_statuses:
                 raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}")
             update_data["status"] = status

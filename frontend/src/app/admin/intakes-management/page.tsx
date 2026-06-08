@@ -233,7 +233,6 @@ export default function IntakesManagementPage() {
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
       'new': { bg: 'bg-gray-200', text: 'text-gray-800', icon: AlertTriangle },
-      'archived': { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
     }
     const config = colors[status] || colors['new']
     const Icon = config.icon
@@ -351,7 +350,6 @@ export default function IntakesManagementPage() {
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
                 <option value="new">New</option>
-                <option value="archived">Archived</option>
               </select>
             </div>
 
@@ -377,7 +375,7 @@ export default function IntakesManagementPage() {
                 </p>
               </div>
               <div className="flex gap-2">
-                {['new', 'assigned', 'in_progress', 'completed', 'archived'].map(status => (
+                {['new', 'assigned', 'in_progress', 'completed'].map(status => (
                   <button
                     key={status}
                     onClick={() => handleBulkStatusUpdate(status)}

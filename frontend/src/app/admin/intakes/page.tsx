@@ -151,7 +151,6 @@ export default function AdminIntakesPage() {
     const statusConfig: Record<string, { bg: string; text: string; icon: any }> = {
       new: { bg: 'bg-gray-200', text: 'text-gray-800', icon: Clock },
       assigned: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: CheckCircle },
-      archived: { bg: 'bg-gray-100', text: 'text-gray-800', icon: AlertCircle },
       'in_progress': { bg: 'bg-blue-100', text: 'text-blue-800', icon: Clock },
       'completed': { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
     }
@@ -235,7 +234,6 @@ export default function AdminIntakesPage() {
                 <option value="assigned">Assigned</option>
                 <option value="in_progress">In Progress</option>
                 <option value="completed">Completed</option>
-                <option value="archived">Archived</option>
               </select>
             </div>
 

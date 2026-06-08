@@ -32,7 +32,7 @@ async def bulk_update_status(
         if not session_ids:
             raise HTTPException(status_code=400, detail="No session IDs provided")
         
-        valid_statuses = ["new", "assigned", "in_progress", "completed", "archived"]
+        valid_statuses = ["new", "assigned", "in_progress", "completed"]
         if status not in valid_statuses:
             raise HTTPException(
                 status_code=400,
@@ -255,9 +255,8 @@ async def get_intake_workflow_status(
         
         # Define workflow transitions
         workflow_transitions = {
-            "in_progress": ["completed", "archived"],
-            "completed": ["archived", "in_progress"],
-            "archived": ["in_progress"],
+            "in_progress": ["completed"],
+            "completed": ["in_progress"],
         }
         
         available_actions = workflow_transitions.get(current_status, [])
