@@ -230,6 +230,47 @@ class SupabaseDB:
             logger.error(f"Error updating intake: {e}")
             raise
 
+    async def delete_intake(self, intake_id: str) -> bool:
+        """Delete an intake and its associated data."""
+        try:
+            # Delete associated messages/responses first (no error if none exist)
+            try:
+                self.client.table("messages").delete().eq("intake_id", intake_id).execute()
+            except Exception as e:
+                logger.debug(f"No messages to delete for intake {intake_id}: {e}")
+            
+            # Delete associated files
+            try:
+                self.client.table("files").delete().eq("intake_id", intake_id).execute()
+            except Exception as e:
+                logger.debug(f"No files to delete for intake {intake_id}: {e}")
+            
+            # Delete associated notes
+            try:
+                self.client.table("intake_notes").delete().eq("intake_id", intake_id).execute()
+            except Exception as e:
+                logger.debug(f"No notes to delete for intake {intake_id}: {e}")
+            
+            # Finally delete the intake itself
+            response = (
+                self.client.table("intakes")
+                .delete()
+                .eq("id", intake_id)
+                .execute()
+            )
+            
+            # Check if deletion was successful
+            if response.data is not None:
+                logger.info(f"Successfully deleted intake {intake_id}")
+                return True
+            else:
+                logger.error(f"Delete response returned no data for intake {intake_id}")
+                return True  # Still consider it success if no error was thrown
+                
+        except Exception as e:
+            logger.error(f"Error deleting intake {intake_id}: {e}")
+            return False
+
     async def get_intake_session(
         self, session_id: str
     ) -> Optional[Dict[str, Any]]:

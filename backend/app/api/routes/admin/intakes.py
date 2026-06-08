@@ -138,6 +138,58 @@ async def update_intake(
         raise HTTPException(status_code=500, detail="Failed to update intake")
 
 
+@router.delete("/{intake_id}", response_model=APIResponse)
+async def delete_intake(
+    intake_id: str,
+    user_id: str = Depends(require_admin())
+):
+    """Delete an intake (admin only)."""
+    try:
+        # Get intake first to verify it exists
+        intake = await db.get_intake(intake_id)
+        
+        if not intake:
+            raise HTTPException(status_code=404, detail="Intake not found")
+        
+        # Store intake details for audit log
+        intake_details = {
+            "client_name": intake.get("client_name", "Unknown"),
+            "client_email": intake.get("client_email", "Unknown"),
+            "status": intake.get("status", "Unknown")
+        }
+        
+        # Delete the intake
+        result = await db.delete_intake(intake_id)
+        
+        if not result:
+            logger.error(f"Failed to delete intake {intake_id} - delete_intake returned False")
+            raise HTTPException(status_code=400, detail="Failed to delete intake from database")
+        
+        # Log audit trail
+        try:
+            await AdminOperations.create_audit_log(
+                user_id=user_id,
+                action="DELETE_INTAKE",
+                resource_type="intake",
+                resource_id=intake_id,
+                changes={"deleted_intake": intake_details}
+            )
+        except Exception as log_error:
+            logger.warning(f"Failed to create audit log for intake deletion: {log_error}")
+            # Don't fail the deletion if audit logging fails
+
+        return APIResponse(
+            success=True,
+            message=f"Intake '{intake_details['client_name']}' deleted successfully"
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting intake {intake_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to delete intake: {str(e)}")
+
+
 @router.get("/search/by-email", response_model=APIResponse)
 async def search_intakes_by_email(
     email: str, user_id: str = Depends(require_admin())

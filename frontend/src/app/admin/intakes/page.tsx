@@ -4,8 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { apiClient } from '@/lib/api'
-import { Eye, Search, Filter, AlertCircle, Clock, CheckCircle } from 'lucide-react'
+import { Eye, Search, Filter, AlertCircle, Clock, CheckCircle, Trash2 } from 'lucide-react'
 import { IntakeDetailModal } from './_components/IntakeDetailModal'
+import { DeleteConfirmationModal } from './_components/DeleteConfirmationModal'
+import { BulkActionsBar } from './_components/BulkActionsBar'
+import { ToastNotification, useToast, type ToastType } from './_components/ToastNotification'
 
 interface Intake {
   id: string
@@ -18,10 +21,12 @@ interface Intake {
   created_at: string
   updated_at?: string
   urgency?: string
+  reference_number?: string
 }
 
 export default function AdminIntakesPage() {
   const router = useRouter()
+  const { toasts, showToast, setToasts } = useToast()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [intakes, setIntakes] = useState<Intake[]>([])
@@ -33,6 +38,11 @@ export default function AdminIntakesPage() {
   const [intakeDetails, setIntakeDetails] = useState<any>(null)
   const [loadingDetails, setLoadingDetails] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
+  const [deleteIntake, setDeleteIntake] = useState<Intake | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deletingMode, setDeletingMode] = useState<'single' | 'bulk'>('single')
+  const [selectedIntakes, setSelectedIntakes] = useState<Set<string>>(new Set())
+  const [bulkDeleting, setBulkDeleting] = useState(false)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -74,6 +84,7 @@ export default function AdminIntakesPage() {
       setFilteredIntakes(allIntakes)
     } catch (err) {
       console.error('Error fetching intakes:', err)
+      showToast('Failed to load intakes', 'error')
     }
   }
 
@@ -101,13 +112,12 @@ export default function AdminIntakesPage() {
     setLoadingDetails(true)
 
     try {
-      let details
-      // Fetch details using the generic endpoint
       const response = await apiClient.getAdminIntakeDetails(intake.id)
-      details = response.data
+      const details = response.data
       setIntakeDetails(details)
     } catch (err) {
       console.error('Error fetching intake details:', err)
+      showToast('Failed to load intake details', 'error')
     } finally {
       setLoadingDetails(false)
     }
@@ -128,9 +138,10 @@ export default function AdminIntakesPage() {
         )
       )
       setSelectedIntake({ ...selectedIntake, status: newStatus })
+      showToast('Status updated successfully', 'success')
     } catch (err) {
       console.error('Error updating status:', err)
-      alert('Failed to update status')
+      showToast('Failed to update status', 'error')
     } finally {
       setUpdatingStatus(false)
     }
@@ -141,9 +152,88 @@ export default function AdminIntakesPage() {
 
     try {
       await apiClient.addAdminIntakeNote(selectedIntake.id, notes)
+      showToast('Notes saved successfully', 'success')
     } catch (err) {
       console.error('Error updating notes:', err)
-      alert('Failed to update notes')
+      showToast('Failed to save notes', 'error')
+    }
+  }
+
+  const handleDeleteClick = (intake: Intake) => {
+    setDeleteIntake(intake)
+    setDeletingMode('single')
+    setShowDeleteConfirm(true)
+  }
+
+  const handleSelectIntake = (intakeId: string) => {
+    setSelectedIntakes((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(intakeId)) {
+        newSet.delete(intakeId)
+      } else {
+        newSet.add(intakeId)
+      }
+      return newSet
+    })
+  }
+
+  const handleSelectAll = () => {
+    if (selectedIntakes.size === filteredIntakes.length) {
+      setSelectedIntakes(new Set())
+    } else {
+      setSelectedIntakes(new Set(filteredIntakes.map((i) => i.id)))
+    }
+  }
+
+  const handleBulkDeleteClick = () => {
+    setDeleteIntake(null)
+    setDeletingMode('bulk')
+    setShowDeleteConfirm(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (deletingMode === 'single' && !deleteIntake) return
+    if (deletingMode === 'bulk' && selectedIntakes.size === 0) return
+
+    try {
+      if (deletingMode === 'single') {
+        await apiClient.deleteAdminIntake(deleteIntake!.id)
+        setIntakes(intakes.filter((i) => i.id !== deleteIntake!.id))
+        showToast(`Intake for ${deleteIntake!.client_name} deleted successfully`, 'success')
+      } else {
+        // Bulk delete
+        setBulkDeleting(true)
+        const deletePromises = Array.from(selectedIntakes).map((id) =>
+          apiClient.deleteAdminIntake(id)
+        )
+
+        const results = await Promise.allSettled(deletePromises)
+        const successful = results.filter((r) => r.status === 'fulfilled').length
+        const failed = results.filter((r) => r.status === 'rejected').length
+
+        setIntakes(intakes.filter((i) => !selectedIntakes.has(i.id)))
+        setSelectedIntakes(new Set())
+
+        if (failed === 0) {
+          showToast(`${successful} intake${successful === 1 ? '' : 's'} deleted successfully`, 'success')
+        } else {
+          showToast(
+            `Deleted ${successful} intake${successful === 1 ? '' : 's'}, ${failed} failed`,
+            'error'
+          )
+        }
+
+        setBulkDeleting(false)
+      }
+
+      setShowDeleteConfirm(false)
+      setDeleteIntake(null)
+    } catch (err) {
+      console.error('Error deleting intake:', err)
+      showToast(
+        err instanceof Error ? err.message : 'Failed to delete intake. Please try again.',
+        'error'
+      )
     }
   }
 
@@ -187,6 +277,13 @@ export default function AdminIntakesPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <BulkActionsBar
+          selectedCount={selectedIntakes.size}
+          onDeleteSelected={handleBulkDeleteClick}
+          isDeleting={bulkDeleting}
+          onClear={() => setSelectedIntakes(new Set())}
+        />
+
         <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', padding: '1.5rem', marginBottom: '1.5rem', border: '1px solid #e5e7eb' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
@@ -256,17 +353,52 @@ export default function AdminIntakesPage() {
               <table className="w-full">
                 <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                   <tr>
+                    <th style={{ padding: '0.75rem 1rem', textAlign: 'center', width: '2.5rem' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedIntakes.size === filteredIntakes.length && filteredIntakes.length > 0}
+                        onChange={handleSelectAll}
+                        style={{
+                          cursor: 'pointer',
+                          width: '1.125rem',
+                          height: '1.125rem',
+                        }}
+                      />
+                    </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Reference #</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Email</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Status</th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Submitted</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Action</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody style={{ borderTop: '1px solid #e5e7eb' }}>
                   {filteredIntakes.map((intake, idx) => (
-                    <tr key={intake.id} style={{ borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e5e7eb' : 'none', backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9fafb' }} className="hover:bg-gray-50 transition">
+                    <tr
+                      key={intake.id}
+                      style={{
+                        borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e5e7eb' : 'none',
+                        backgroundColor: selectedIntakes.has(intake.id)
+                          ? '#f3f4f6'
+                          : idx % 2 === 0
+                            ? '#ffffff'
+                            : '#f9fafb',
+                      }}
+                      className="hover:bg-gray-50 transition"
+                    >
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIntakes.has(intake.id)}
+                          onChange={() => handleSelectIntake(intake.id)}
+                          style={{
+                            cursor: 'pointer',
+                            width: '1.125rem',
+                            height: '1.125rem',
+                          }}
+                        />
+                      </td>
                       <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: '#a855f7' }}>{intake.reference_number || intake.id.substring(0, 8).toUpperCase()}</td>
                       <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>{intake.client_name}</td>
                       <td className="px-6 py-4 text-sm" style={{ color: '#4b5563' }}>{intake.client_email}</td>
@@ -277,16 +409,28 @@ export default function AdminIntakesPage() {
                         {new Date(intake.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={() => handleViewDetails(intake)}
-                          className="font-medium flex items-center gap-1 transition"
-                          style={{ color: '#a855f7' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
-                        >
-                          <Eye size={16} />
-                          View
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                          <button
+                            onClick={() => handleViewDetails(intake)}
+                            className="font-medium flex items-center gap-1 transition"
+                            style={{ color: '#a855f7' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(intake)}
+                            className="font-medium flex items-center gap-1 transition"
+                            style={{ color: '#ef4444' }}
+                            title="Delete intake"
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#dc2626')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = '#ef4444')}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -306,6 +450,66 @@ export default function AdminIntakesPage() {
         loading={loadingDetails}
         updating={updatingStatus}
       />
+
+      <DeleteConfirmationModal
+        intake={
+          deletingMode === 'single'
+            ? deleteIntake
+            : {
+                client_name: `${selectedIntakes.size} intakes`,
+                client_email: '',
+                reference_number: `BULK_DELETE_${selectedIntakes.size}`,
+              }
+        }
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false)
+          setDeleteIntake(null)
+        }}
+        onConfirmDelete={handleConfirmDelete}
+        loading={deletingMode === 'bulk' && bulkDeleting}
+      />
+
+      {/* Toast Notifications Container */}
+      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 40 }}>
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            style={{
+              marginBottom: '0.5rem',
+            }}
+          >
+            <ToastNotification
+              {...toast}
+              onDismiss={() => {
+                setToasts((prev) => prev.filter((t) => t.id !== toast.id))
+              }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <style>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(1rem);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   )
 }
