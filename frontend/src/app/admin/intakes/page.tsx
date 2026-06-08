@@ -8,7 +8,7 @@ import { Eye, Search, Filter, AlertCircle, Clock, CheckCircle, Trash2 } from 'lu
 import { IntakeDetailModal } from './_components/IntakeDetailModal'
 import { DeleteConfirmationModal } from './_components/DeleteConfirmationModal'
 import { BulkActionsBar } from './_components/BulkActionsBar'
-import { ToastNotification, useToast } from './_components/ToastNotification'
+import { ToastNotification, useToast, type ToastType } from './_components/ToastNotification'
 
 interface Intake {
   id: string
@@ -27,7 +27,7 @@ interface Intake {
 export default function AdminIntakesPage() {
   const router = useRouter()
   const { toasts, showToast, setToasts } = useToast()
-  const [setUser] = useState<any>(null)
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [intakes, setIntakes] = useState<Intake[]>([])
   const [filteredIntakes, setFilteredIntakes] = useState<Intake[]>([])
@@ -35,7 +35,7 @@ export default function AdminIntakesPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [selectedIntake, setSelectedIntake] = useState<Intake | null>(null)
   const [showDetails, setShowDetails] = useState(false)
-  const [setIntakeDetails] = useState<any>(null)
+  const [intakeDetails, setIntakeDetails] = useState<any>(null)
   const [loadingDetails, setLoadingDetails] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
   const [deleteIntake, setDeleteIntake] = useState<Intake | null>(null)
