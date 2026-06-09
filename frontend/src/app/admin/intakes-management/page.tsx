@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { adminApi } from '@/lib/api/admin'
 import {
   Search, Filter, Download, CheckCircle, Clock, AlertCircle, Zap,
-  TrendingUp, Users, Loader, ChevronDown, AlertTriangle, Flag
+  TrendingUp, Users, Loader, AlertTriangle, Flag
 } from 'lucide-react'
 
 interface Intake {

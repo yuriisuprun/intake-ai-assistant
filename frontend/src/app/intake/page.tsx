@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api'
 import { IntakeStepper } from '@/components/intake/IntakeStepper'
 import { QuestionRenderer } from '@/components/intake/QuestionRenderer'
+import { SidebarStepIndicator } from '@/components/intake/SidebarStepIndicator'
 import Footer from '@/components/common/Footer'
 import { AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
 
@@ -235,21 +236,53 @@ export default function PublicIntakePage() {
 
       {/* Main Content with Sidebar */}
       <div className="flex-1 flex max-w-7xl mx-auto w-full">
-        {/* Left Sidebar */}
-        <div className="w-64 bg-white border-r p-6 hidden lg:block" style={{ borderColor: '#e5e7eb' }}>
-          {/* Sidebar Navigation */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider mb-4" style={{ color: '#6b7280' }}>In this form</h3>
-            <nav className="space-y-1 mb-8">
-              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Getting Started</a>
-              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Your Information</a>
-              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}>Case Details</a>
-              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Document Upload</a>
-              <a href="#" className="text-sm block px-3 py-2 rounded" style={{ color: '#374151' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')} onMouseLeave={(e) => (e.currentTarget.style.color = '#374151')}>Review & Submit</a>
-            </nav>
+        {/* Left Sidebar - Step Indicator */}
+        <div className="w-80 bg-white border-r p-6 hidden lg:flex flex-col overflow-hidden max-h-[calc(100vh-120px)]" style={{ borderColor: '#e5e7eb' }}>
+          {clientInfoSubmitted && !completed && questions.length > 0 ? (
+            <SidebarStepIndicator
+              steps={questions.map((q, idx) => {
+                // Extract a clean title from the question
+                let cleanTitle = q.question
+                  .replace(/\?/g, '')
+                  .replace(/\*/g, '')
+                  .replace(/\n/g, ' ')
+                  .trim()
+                
+                // Truncate to reasonable length
+                if (cleanTitle.length > 35) {
+                  cleanTitle = cleanTitle.substring(0, 35) + '...'
+                }
 
-
-          </div>
+                return {
+                  id: `step-${q.step}`,
+                  key: q.key,
+                  title: cleanTitle,
+                  description: `Question ${idx + 1}`,
+                  status: 
+                    idx < currentQuestionIndex ? 'completed' :
+                    idx === currentQuestionIndex ? 'current' :
+                    'pending'
+                }
+              })}
+              currentStepIndex={currentQuestionIndex}
+              totalSteps={questions.length}
+              completedSteps={currentQuestionIndex}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-center py-12">
+              <div className="text-4xl mb-3">📋</div>
+              <p className="text-sm font-semibold mb-1" style={{ color: '#374151' }}>
+                {completed 
+                  ? 'Intake Completed' 
+                  : 'Ready to Begin'}
+              </p>
+              <p className="text-xs" style={{ color: '#6b7280' }}>
+                {completed 
+                  ? 'Thank you for completing the intake form' 
+                  : 'Start the intake to see the step-by-step process'}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Right Content Area */}

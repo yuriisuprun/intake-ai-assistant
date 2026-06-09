@@ -66,7 +66,7 @@ export default function Home() {
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mt-20">
+        <div className="grid md:grid-cols-3 gap-8 mt-20 mb-8">
           <div className="bg-white p-8 rounded-lg" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
             <FileText className="mb-4" size={32} style={{ color: '#a855f7' }} />
             <h3 className="text-xl font-semibold mb-2" style={{ color: '#111827' }}>Structured Intake</h3>
@@ -92,22 +92,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="rounded-lg p-12 mt-20 text-center" style={{ backgroundColor: '#ffffff', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-          <h2 className="text-3xl font-bold mb-4" style={{ color: '#111827' }}>Ready to get started?</h2>
-          <p className="mb-8" style={{ color: '#4b5563' }}>
-            Start collecting structured intake data today.
-          </p>
-          <Link 
-            href="/signup" 
-            className="text-white px-8 py-3 rounded-lg inline-block transition"
-            style={{ backgroundColor: '#a855f7' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}
-          >
-            Create Free Account
-          </Link>
-        </div>
+
       </div>
 
       {/* Footer */}

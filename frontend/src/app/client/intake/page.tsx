@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import IntakeStepper from '@/components/intake/IntakeStepper';
 import QuestionRenderer from '@/components/intake/QuestionRenderer';
+import { SidebarStepIndicator } from '@/components/intake/SidebarStepIndicator';
 import { apiClient } from '@/lib/api';
 
 interface Question {
@@ -364,32 +365,91 @@ export default function ClientIntakePage() {
   const question = flow.questions[currentStep];
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <IntakeStepper currentStep={currentStep + 1} totalSteps={flow.total_steps} />
+    <div className="min-h-screen" style={{ backgroundColor: '#f3f4f6' }}>
+      {/* Header */}
+      <div className="bg-white border-b" style={{ borderColor: '#e5e7eb' }}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>📋 Intake Assistant</h1>
+        </div>
+      </div>
 
-      <div className="bg-white rounded-lg shadow p-8 mt-8">
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-800">{error}</p>
-          </div>
-        )}
+      {/* Main Content with Sidebar */}
+      <div className="flex-1 flex max-w-7xl mx-auto w-full">
+        {/* Left Sidebar - Step Indicator */}
+        <div className="w-80 bg-white border-r p-6 hidden lg:flex flex-col overflow-hidden max-h-[calc(100vh-120px)]" style={{ borderColor: '#e5e7eb' }}>
+          <SidebarStepIndicator
+            steps={flow.questions.map((q, idx) => {
+              let cleanTitle = q.question
+                .replace(/\?/g, '')
+                .replace(/\*/g, '')
+                .replace(/\n/g, ' ')
+                .trim()
+              
+              if (cleanTitle.length > 35) {
+                cleanTitle = cleanTitle.substring(0, 35) + '...'
+              }
 
-        <QuestionRenderer
-          question={question}
-          onSubmit={handleSubmitAnswer}
-          loading={submitting}
-        />
+              return {
+                id: `step-${q.step}`,
+                key: q.key,
+                title: cleanTitle,
+                description: `Question ${idx + 1}`,
+                status: 
+                  idx < currentStep ? 'completed' :
+                  idx === currentStep ? 'current' :
+                  'pending'
+              }
+            })}
+            currentStepIndex={currentStep}
+            totalSteps={flow.total_steps}
+            completedSteps={currentStep}
+          />
+        </div>
 
-        <div className="flex gap-4 mt-8">
-          <button
-            onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0 || submitting}
-            className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition disabled:bg-gray-100 disabled:text-gray-400"
-          >
-            Previous
-          </button>
-          <div className="flex-1 text-center text-sm text-gray-600 py-2">
-            Question {currentStep + 1} of {flow.total_steps}
+        {/* Right Content Area */}
+        <div className="flex-1 px-8 py-8">
+          <div className="bg-white rounded-lg p-8" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
+            <IntakeStepper currentStep={currentStep + 1} totalSteps={flow.total_steps} />
+
+            {error && (
+              <div className="px-4 py-3 rounded-lg mb-6 flex items-start gap-3" style={{ backgroundColor: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b' }}>
+                <span>⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
+
+            <div className="mb-8 mt-6">
+              <QuestionRenderer
+                question={question}
+                onSubmit={handleSubmitAnswer}
+                loading={submitting}
+              />
+            </div>
+
+            <div className="flex gap-3 mt-10">
+              <button
+                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                disabled={currentStep === 0 || submitting}
+                className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm"
+                style={{ 
+                  border: '1px solid #d1d5db',
+                  color: currentStep === 0 || submitting ? '#9ca3af' : '#374151',
+                  backgroundColor: currentStep === 0 || submitting ? '#f3f4f6' : '#ffffff'
+                }}
+              >
+                Previous
+              </button>
+              <button
+                onClick={handleSubmitAnswer}
+                disabled={submitting}
+                className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm text-white"
+                style={{ 
+                  backgroundColor: submitting ? '#9ca3af' : '#a855f7',
+                }}
+              >
+                {submitting ? 'Submitting...' : currentStep === flow.total_steps - 1 ? 'Complete' : 'Next'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
