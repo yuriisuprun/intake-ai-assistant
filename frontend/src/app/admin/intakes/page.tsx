@@ -523,7 +523,7 @@ export default function AdminIntakesPage() {
       </div>
 
       <IntakeDetailModal
-        intake={selectedIntake}
+        intake={intakeDetails}
         isOpen={showDetails}
         onClose={() => setShowDetails(false)}
         onStatusChange={handleUpdateStatus}
