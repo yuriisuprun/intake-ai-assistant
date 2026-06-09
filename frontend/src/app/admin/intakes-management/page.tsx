@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { adminApi } from '@/lib/api/admin'
 import {
   Search, Filter, Download, CheckCircle, Clock, AlertCircle, Zap,
-  TrendingUp, Users, Loader, AlertTriangle, Flag
+  TrendingUp, Users, Loader, AlertTriangle
 } from 'lucide-react'
 
 interface Intake {
@@ -30,7 +30,6 @@ interface MetricsData {
 
 export default function IntakesManagementPage() {
   const router = useRouter()
-  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [intakes, setIntakes] = useState<Intake[]>([])
   const [filteredIntakes, setFilteredIntakes] = useState<Intake[]>([])
@@ -39,7 +38,6 @@ export default function IntakesManagementPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [metrics, setMetrics] = useState<MetricsData | null>(null)
   const [bulkOperationLoading, setBulkOperationLoading] = useState(false)
-  const [bulkStatusAction, setBulkStatusAction] = useState<string | null>(null)
   const [workloadData, setWorkloadData] = useState<any[]>([])
 
   // Check authentication and load data
@@ -52,8 +50,7 @@ export default function IntakesManagementPage() {
           return
         }
 
-        setUser(session.user)
-
+        // User is authenticated
         if (session.access_token) {
           // Set token in API client - assuming it has this capability
         }
@@ -77,7 +74,7 @@ export default function IntakesManagementPage() {
 
   const fetchIntakes = async () => {
     try {
-      const response = await adminApi.intake.list(0, 100)
+      const response = await adminApi.intakes.list(0, 100)
       if (response.success) {
         setIntakes(response.data.intakes || [])
       }
@@ -184,7 +181,7 @@ export default function IntakesManagementPage() {
       const response = await adminApi.intakesManagement.export(
         statusFilter !== 'all' ? statusFilter : undefined,
         undefined,
-        urgencyFilter !== 'all' ? urgencyFilter : undefined
+        undefined
       )
 
       if (response.success) {

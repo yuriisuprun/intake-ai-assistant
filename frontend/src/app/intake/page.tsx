@@ -7,7 +7,9 @@ import { IntakeStepper } from '@/components/intake/IntakeStepper'
 import { QuestionRenderer } from '@/components/intake/QuestionRenderer'
 import { SidebarStepIndicator } from '@/components/intake/SidebarStepIndicator'
 import Footer from '@/components/common/Footer'
+import LanguageSwitcher from '@/components/common/LanguageSwitcher'
 import { AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react'
+import { useTranslation } from '@/hooks/useTranslation'
 
 interface Question {
   key: string
@@ -23,6 +25,8 @@ interface Question {
 
 export default function PublicIntakePage() {
   const router = useRouter()
+  const { t } = useTranslation()
+  const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [questionsLoading, setQuestionsLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -41,6 +45,11 @@ export default function PublicIntakePage() {
   const [answers, setAnswers] = useState<Record<string, any>>({})
   const [completed, setCompleted] = useState(false)
   const [referenceNumber, setReferenceNumber] = useState<string>('')
+
+  // Mount detection
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Fetch intake flow
   useEffect(() => {
@@ -71,13 +80,13 @@ export default function PublicIntakePage() {
     e.preventDefault()
     
     if (!clientName.trim() || !clientEmail.trim()) {
-      setError('Please provide your name and email')
+      setError(t('intake.formRequired'))
       return
     }
 
     // Basic email validation
     if (!clientEmail.includes('@')) {
-      setError('Please provide a valid email address')
+      setError(t('intake.validEmail'))
       return
     }
 
@@ -128,7 +137,7 @@ export default function PublicIntakePage() {
 
     // Validate required fields
     if (currentQuestion.required && !answer) {
-      setError('This field is required')
+      setError(t('intake.validEmail'))
       return
     }
 
@@ -202,12 +211,16 @@ export default function PublicIntakePage() {
     setError('')
   }
 
+  if (!mounted) {
+    return null
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading intake form...</p>
+          <p className="text-gray-600">{t('intake.loadingForm')}</p>
         </div>
       </div>
     )
@@ -219,18 +232,21 @@ export default function PublicIntakePage() {
       <div className="bg-white border-b" style={{ borderColor: '#e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>📋 Intake Assistant</h1>
+            <h1 className="text-2xl font-bold" style={{ color: '#111827' }}>📋 {t('intake.title')}</h1>
           </div>
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-sm transition"
-            style={{ color: '#4b5563' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-          >
-            <ArrowLeft size={18} />
-            Back
-          </button>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <button
+              onClick={() => router.push('/')}
+              className="flex items-center gap-2 text-sm transition"
+              style={{ color: '#4b5563' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#111827')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
+            >
+              <ArrowLeft size={18} />
+              {t('nav.home')}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -273,13 +289,13 @@ export default function PublicIntakePage() {
               <div className="text-4xl mb-3">📋</div>
               <p className="text-sm font-semibold mb-1" style={{ color: '#374151' }}>
                 {completed 
-                  ? 'Intake Completed' 
-                  : 'Ready to Begin'}
+                  ? t('intake.complete')
+                  : t('intake.readyToBegin')}
               </p>
               <p className="text-xs" style={{ color: '#6b7280' }}>
                 {completed 
-                  ? 'Thank you for completing the intake form' 
-                  : 'Start the intake to see the step-by-step process'}
+                  ? t('intake.completedMessage')
+                  : t('intake.startForm')}
               </p>
             </div>
           )}
@@ -291,31 +307,31 @@ export default function PublicIntakePage() {
         {completed ? (
           <div className="bg-white rounded-lg p-8 text-center" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
             <CheckCircle style={{ color: '#22c55e' }} className="mx-auto mb-4" size={64} />
-            <h2 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>Thank You!</h2>
+            <h2 className="text-3xl font-bold mb-2" style={{ color: '#111827' }}>{t('intake.thankYou')}</h2>
             <p className="mb-8" style={{ color: '#4b5563' }}>
-              Your intake form has been successfully submitted.
+              {t('intake.formSubmitted')}
             </p>
             
             <div className="rounded-lg p-6 mb-8" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
-              <p className="text-sm mb-2" style={{ color: '#4b5563' }}>Your Reference Number:</p>
+              <p className="text-sm mb-2" style={{ color: '#4b5563' }}>{t('intake.referenceNumber')}</p>
               <p className="text-2xl font-mono font-bold" style={{ color: '#a855f7' }}>{referenceNumber}</p>
-              <p className="text-xs mt-2" style={{ color: '#6b7280' }}>Save this number for your records</p>
+              <p className="text-xs mt-2" style={{ color: '#6b7280' }}>{t('intake.saveNumber')}</p>
             </div>
 
             <div className="rounded-lg p-6 mb-8 text-left" style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }}>
-              <h3 className="font-semibold mb-3" style={{ color: '#111827' }}>What happens next?</h3>
+              <h3 className="font-semibold mb-3" style={{ color: '#111827' }}>{t('intake.whatHappensNext')}</h3>
               <ul className="space-y-2 text-sm" style={{ color: '#4b5563' }}>
                 <li className="flex items-start gap-3">
                   <span className="font-bold" style={{ color: '#a855f7' }}>1.</span>
-                  <span>Our team will review your intake information</span>
+                  <span>{t('intake.reviewInfo')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="font-bold" style={{ color: '#a855f7' }}>2.</span>
-                  <span>We'll contact you soon to discuss next steps</span>
+                  <span>{t('intake.contactSoon')}</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="font-bold" style={{ color: '#a855f7' }}>3.</span>
-                  <span>A lawyer will be assigned to your case</span>
+                  <span>{t('intake.lawyerAssigned')}</span>
                 </li>
               </ul>
             </div>
@@ -327,15 +343,15 @@ export default function PublicIntakePage() {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}
             >
-              Submit Another Intake
+              {t('intake.submitAnother')}
             </button>
           </div>
         ) : !clientInfoSubmitted ? (
           // Client Info Form
           <div className="bg-white rounded-lg p-8" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-            <h2 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>Get Started</h2>
+            <h2 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>{t('intake.getStarted')}</h2>
             <p className="mb-8 leading-relaxed" style={{ color: '#4b5563' }}>
-              Please provide your contact information to begin the intake process. Your information is secure and protected.
+              {t('intake.contactFormInfo')}
             </p>
 
             {error && (
@@ -348,7 +364,7 @@ export default function PublicIntakePage() {
             <form onSubmit={handleStartIntake} className="space-y-5">
               <div>
                 <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
-                  Full Name *
+                  {t('intake.fullName')} *
                 </label>
                 <input
                   type="text"
@@ -370,7 +386,7 @@ export default function PublicIntakePage() {
 
               <div>
                 <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
-                  Email Address *
+                  {t('intake.emailAddress')} *
                 </label>
                 <input
                   type="email"
@@ -388,12 +404,12 @@ export default function PublicIntakePage() {
                   }}
                   required
                 />
-                <p className="text-xs mt-1.5" style={{ color: '#6b7280' }}>We'll use this to contact you about your case</p>
+                <p className="text-xs mt-1.5" style={{ color: '#6b7280' }}>{t('intake.weWillUse')}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold mb-2" style={{ color: '#1f2937' }}>
-                  Phone Number (Optional)
+                  {t('intake.phoneNumber')} {t('intake.phoneOptional')}
                 </label>
                 <input
                   type="tel"
@@ -414,7 +430,7 @@ export default function PublicIntakePage() {
 
               <div className="rounded-lg p-4" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
                 <p className="text-sm" style={{ color: '#1f2937' }}>
-                  <span className="font-semibold">Privacy Notice:</span> Your information is secure and will only be used to process your legal intake.
+                  <span className="font-semibold">{t('intake.privacyNotice')}</span> {t('intake.privacyText')}
                 </p>
               </div>
 
@@ -426,7 +442,7 @@ export default function PublicIntakePage() {
                 onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
                 onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
               >
-                {submitting ? 'Starting...' : 'Start Intake Process'}
+                {submitting ? t('intake.starting') : t('intake.startProcess')}
               </button>
             </form>
           </div>
@@ -436,7 +452,7 @@ export default function PublicIntakePage() {
             {questionsLoading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
-                <p style={{ color: '#4b5563' }}>Loading questions...</p>
+                <p style={{ color: '#4b5563' }}>{t('intake.loadingForm')}</p>
               </div>
             ) : (
               <>
@@ -494,7 +510,7 @@ export default function PublicIntakePage() {
                       }
                     }}
                   >
-                    Previous
+                    {t('intake.back')}
                   </button>
                   <button
                     onClick={handleNext}
@@ -507,7 +523,7 @@ export default function PublicIntakePage() {
                     onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
                     onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
                   >
-                    {submitting ? 'Submitting...' : currentQuestionIndex === questions.length - 1 ? 'Complete' : 'Next'}
+                    {submitting ? 'Submitting...' : currentQuestionIndex === questions.length - 1 ? t('intake.submit') : t('intake.next')}
                   </button>
                 </div>
               </>
