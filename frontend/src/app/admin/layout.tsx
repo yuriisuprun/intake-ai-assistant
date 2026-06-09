@@ -43,15 +43,6 @@ export default function AdminLayout({
             Intake Assistant
           </Link>
           <nav className="hidden md:flex space-x-6 items-center">
-            <Link
-              href="/admin/intakes"
-              className="transition"
-              style={{ color: '#4b5563' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#a855f7')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#4b5563')}
-            >
-              Intakes
-            </Link>
           </nav>
           <div className="flex items-center space-x-4">
             <span className="text-sm" style={{ color: '#4b5563' }}>{user.email}</span>
