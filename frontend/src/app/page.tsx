@@ -26,38 +26,6 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold text-white">📋 Intake Assistant</div>
           <div className="flex items-center gap-6">
-            <div className="hidden sm:flex gap-4 text-white">
-              <Link 
-                href="/" 
-                className="hover:text-gray-200 transition"
-              >
-                {t('nav.home')}
-              </Link>
-              <Link 
-                href="#" 
-                className="hover:text-gray-200 transition"
-              >
-                {t('nav.areas')}
-              </Link>
-              <Link 
-                href="#" 
-                className="hover:text-gray-200 transition"
-              >
-                {t('nav.professionals')}
-              </Link>
-              <Link 
-                href="#" 
-                className="hover:text-gray-200 transition"
-              >
-                {t('nav.team')}
-              </Link>
-              <Link 
-                href="#" 
-                className="hover:text-gray-200 transition border border-gray-400 px-3 py-1 rounded"
-              >
-                {t('nav.contacts')}
-              </Link>
-            </div>
             <LanguageSwitcher />
           </div>
         </div>
