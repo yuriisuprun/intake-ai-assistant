@@ -130,7 +130,7 @@ export function IntakeDetailModal({
         {loading ? (
           <div className="p-12 text-center flex-1 flex items-center justify-center">
             <div>
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#111827' }}></div>
               <p style={{ color: '#4b5563' }}>Loading intake details...</p>
             </div>
           </div>
@@ -138,7 +138,7 @@ export function IntakeDetailModal({
           <>
             {/* Header with gradient */}
             <div style={{ 
-              background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)', 
+              background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)', 
               color: '#ffffff', 
               padding: '2rem' 
             }}>
@@ -208,7 +208,7 @@ export function IntakeDetailModal({
                     disabled={updating || intakeData.status === status}
                     className="px-3 py-2 rounded-lg font-medium text-sm transition"
                     style={{
-                      backgroundColor: intakeData.status === status ? '#a855f7' : '#e5e7eb',
+                      backgroundColor: intakeData.status === status ? '#111827' : '#e5e7eb',
                       color: intakeData.status === status ? '#ffffff' : '#374151',
                       opacity: updating || intakeData.status === status ? 0.6 : 1,
                       cursor: updating || intakeData.status === status ? 'not-allowed' : 'pointer',
@@ -242,8 +242,8 @@ export function IntakeDetailModal({
                     onClick={() => setActiveTab(tab)}
                     className="px-4 py-3 font-medium text-sm transition border-b-2"
                     style={{
-                      borderColor: activeTab === tab ? '#a855f7' : 'transparent',
-                      color: activeTab === tab ? '#a855f7' : '#6b7280',
+                      borderColor: activeTab === tab ? '#111827' : 'transparent',
+                      color: activeTab === tab ? '#111827' : '#6b7280',
                       backgroundColor: 'transparent',
                       cursor: 'pointer'
                     }}
@@ -451,9 +451,9 @@ export function IntakeDetailModal({
                           minHeight: '200px'
                         }}
                         onFocus={(e) => {
-                          e.currentTarget.style.borderColor = '#a855f7'
-                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
-                          e.currentTarget.style.backgroundColor = '#faf5ff'
+                          e.currentTarget.style.borderColor = '#111827'
+                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
+                          e.currentTarget.style.backgroundColor = '#f3f4f6'
                         }}
                         onBlur={(e) => {
                           e.currentTarget.style.borderColor = '#d1d5db'
@@ -504,18 +504,18 @@ export function IntakeDetailModal({
                         disabled={isSavingNotes || !hasUnsavedChanges}
                         className="px-4 py-2 text-white rounded-lg transition font-medium flex items-center gap-2"
                         style={{
-                          backgroundColor: !hasUnsavedChanges ? '#d1d5db' : isSavingNotes ? '#9ca3af' : '#a855f7',
+                          backgroundColor: !hasUnsavedChanges ? '#d1d5db' : isSavingNotes ? '#9ca3af' : '#111827',
                           cursor: isSavingNotes || !hasUnsavedChanges ? 'not-allowed' : 'pointer',
                           opacity: isSavingNotes || !hasUnsavedChanges ? 0.6 : 1
                         }}
                         onMouseEnter={(e) => {
                           if (!(isSavingNotes || !hasUnsavedChanges)) {
-                            e.currentTarget.style.backgroundColor = '#9333ea'
+                            e.currentTarget.style.backgroundColor = '#1f2937'
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (!(isSavingNotes || !hasUnsavedChanges)) {
-                            e.currentTarget.style.backgroundColor = '#a855f7'
+                            e.currentTarget.style.backgroundColor = '#111827'
                           }
                         }}
                       >

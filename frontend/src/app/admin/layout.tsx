@@ -22,7 +22,7 @@ export default function AdminLayout({
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#f3f4f6' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#111827' }}></div>
           <p style={{ color: '#4b5563' }}>Loading dashboard...</p>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function AdminLayout({
       {/* Header */}
       <header style={{ backgroundColor: '#ffffff', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', borderBottom: '1px solid #e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link href="/admin/intakes" className="text-2xl font-bold" style={{ color: '#a855f7' }}>
+          <Link href="/admin/intakes" className="text-2xl font-bold" style={{ color: '#111827' }}>
             Intake Assistant
           </Link>
           <nav className="hidden md:flex space-x-6 items-center">

@@ -92,7 +92,7 @@ export default function AdminLogin() {
           <div 
             className="inline-flex items-center justify-center rounded-lg mb-4"
             style={{ 
-              backgroundColor: '#a855f7',
+              backgroundColor: '#111827',
               width: '48px',
               height: '48px'
             }}
@@ -202,8 +202,8 @@ export default function AdminLogin() {
               disabled={loading}
               onFocus={(e) => {
                 if (!loading) {
-                  e.currentTarget.style.borderColor = '#a855f7'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                  e.currentTarget.style.borderColor = '#111827'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                 }
               }}
               onBlur={(e) => {
@@ -236,8 +236,8 @@ export default function AdminLogin() {
               disabled={loading}
               onFocus={(e) => {
                 if (!loading) {
-                  e.currentTarget.style.borderColor = '#a855f7'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                  e.currentTarget.style.borderColor = '#111827'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                 }
               }}
               onBlur={(e) => {
@@ -253,7 +253,7 @@ export default function AdminLogin() {
             disabled={loading}
             className="w-full rounded-lg font-semibold transition flex items-center justify-center"
             style={{
-              backgroundColor: loading ? '#d1d5db' : '#a855f7',
+              backgroundColor: loading ? '#d1d5db' : '#111827',
               color: '#ffffff',
               cursor: loading ? 'not-allowed' : 'pointer',
               padding: '11px 16px',
@@ -263,12 +263,12 @@ export default function AdminLogin() {
             }}
             onMouseEnter={(e) => {
               if (!loading) {
-                e.currentTarget.style.backgroundColor = '#9333ea'
+                e.currentTarget.style.backgroundColor = '#1f2937'
               }
             }}
             onMouseLeave={(e) => {
               if (!loading) {
-                e.currentTarget.style.backgroundColor = '#a855f7'
+                e.currentTarget.style.backgroundColor = '#111827'
               }
             }}
           >
@@ -315,9 +315,9 @@ export default function AdminLogin() {
             <Link 
               href="/login" 
               className="font-semibold transition"
-              style={{ color: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+              style={{ color: '#111827' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#6b7280')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}
             >
               User Login
             </Link>
@@ -326,9 +326,9 @@ export default function AdminLogin() {
             <Link 
               href="/" 
               className="font-semibold transition"
-              style={{ color: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+              style={{ color: '#111827' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#6b7280')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}
             >
               Back to Home
             </Link>

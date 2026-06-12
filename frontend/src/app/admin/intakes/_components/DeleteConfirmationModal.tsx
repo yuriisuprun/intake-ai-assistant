@@ -269,8 +269,8 @@ export function DeleteConfirmationModal({
                 opacity: isDeleting ? 0.6 : 1,
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = '#a855f7'
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                e.currentTarget.style.borderColor = '#111827'
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
               }}
               onBlur={(e) => {
                 e.currentTarget.style.boxShadow = 'none'

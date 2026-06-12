@@ -41,7 +41,7 @@ export function SidebarStepIndicator({
         {/* Progress Bar */}
         <div className="mt-3 w-full h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-purple-600 transition-all duration-300"
+            className="h-full bg-gray-900 transition-all duration-300"
             style={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }}
           />
         </div>
@@ -65,13 +65,13 @@ export function SidebarStepIndicator({
                 disabled={disabled || (onStepClick && !isCompleted)}
                 className={`w-full flex items-start gap-3 px-3 py-2 rounded-lg transition-all text-left ${
                   isCurrent
-                    ? 'bg-purple-50'
+                    ? 'bg-gray-100'
                     : isCompleted
                     ? 'hover:bg-gray-50 cursor-pointer'
                     : 'opacity-60'
                 }`}
                 style={{
-                  borderLeft: isCurrent ? '3px solid #a855f7' : '3px solid transparent',
+                  borderLeft: isCurrent ? '3px solid #111827' : '3px solid transparent',
                   paddingLeft: 'calc(0.75rem - 3px)',
                 }}
               >
@@ -81,7 +81,7 @@ export function SidebarStepIndicator({
                     isCompleted
                       ? 'bg-green-500 text-white'
                       : isCurrent
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-gray-900 text-white'
                       : 'bg-gray-300 text-gray-600'
                   }`}
                 >
@@ -93,7 +93,7 @@ export function SidebarStepIndicator({
                   <h4
                     className={`text-xs font-semibold transition-colors truncate ${
                       isCurrent
-                        ? 'text-purple-900'
+                        ? 'text-gray-900'
                         : isCompleted
                         ? 'text-gray-900'
                         : 'text-gray-600'
@@ -105,7 +105,7 @@ export function SidebarStepIndicator({
                     <p
                       className={`text-xs mt-0.5 transition-colors truncate ${
                         isCurrent
-                          ? 'text-purple-700'
+                          ? 'text-gray-900'
                           : isCompleted
                           ? 'text-gray-600'
                           : 'text-gray-500'
@@ -119,7 +119,7 @@ export function SidebarStepIndicator({
                 {isCurrent && (
                   <ChevronRight
                     size={14}
-                    className="text-purple-600 flex-shrink-0"
+                    className="text-gray-900 flex-shrink-0"
                   />
                 )}
               </button>
@@ -144,7 +144,7 @@ export function SidebarStepIndicator({
         <p className="text-xs text-center" style={{ color: '#6b7280' }}>
           <span className="font-semibold text-green-600">{completedSteps}</span>
           {' '}completed • 
-          <span className="font-semibold text-purple-600 ml-1">{totalSteps - completedSteps - 1}</span>
+          <span className="font-semibold text-gray-900 ml-1">{totalSteps - completedSteps - 1}</span>
           {' '}remaining
         </p>
       </div>

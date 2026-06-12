@@ -41,13 +41,13 @@ export function StepIndicator({
               disabled={disabled || (onStepClick && !isCompleted)}
               className={`w-full flex items-start gap-4 px-4 py-3 rounded-lg transition-all ${
                 isCurrent
-                  ? 'bg-purple-50 border-l-4 border-purple-600'
+                  ? 'bg-gray-100 border-l-4 border-gray-900'
                   : isCompleted
                   ? 'hover:bg-gray-50 cursor-pointer'
                   : 'opacity-60'
               }`}
               style={{
-                borderColor: isCurrent ? '#a855f7' : 'transparent',
+                borderColor: isCurrent ? '#111827' : 'transparent',
               }}
             >
               {/* Step Indicator Icon */}
@@ -56,7 +56,7 @@ export function StepIndicator({
                   isCompleted
                     ? 'bg-green-500 text-white'
                     : isCurrent
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-gray-900 text-white'
                     : 'bg-gray-200 text-gray-600'
                 }`}
               >
@@ -69,7 +69,7 @@ export function StepIndicator({
                   <h3
                     className={`text-sm font-semibold transition-colors ${
                       isCurrent
-                        ? 'text-purple-900'
+                        ? 'text-gray-900'
                         : isCompleted
                         ? 'text-gray-900'
                         : 'text-gray-600'
@@ -80,7 +80,7 @@ export function StepIndicator({
                   {isCurrent && (
                     <ChevronRight
                       size={16}
-                      className="text-purple-600"
+                      className="text-gray-900"
                     />
                   )}
                 </div>
@@ -88,7 +88,7 @@ export function StepIndicator({
                   <p
                     className={`text-xs mt-1 transition-colors ${
                       isCurrent
-                        ? 'text-purple-700'
+                        ? 'text-gray-900'
                         : isCompleted
                         ? 'text-gray-600'
                         : 'text-gray-500'

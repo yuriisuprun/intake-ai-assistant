@@ -260,7 +260,7 @@ export default function AdminIntakesPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f3f4f6' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#111827' }}></div>
           <p style={{ color: '#4b5563' }}>Loading intakes...</p>
         </div>
       </div>
@@ -333,8 +333,8 @@ export default function AdminIntakesPage() {
                     backgroundColor: '#f8fafc'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = '#a855f7'
-                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                    e.currentTarget.style.borderColor = '#111827'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                     e.currentTarget.style.backgroundColor = '#ffffff'
                   }}
                   onBlur={(e) => {
@@ -359,8 +359,8 @@ export default function AdminIntakesPage() {
                   backgroundColor: '#f8fafc'
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#a855f7'
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                  e.currentTarget.style.borderColor = '#111827'
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                   e.currentTarget.style.backgroundColor = '#ffffff'
                 }}
                 onBlur={(e) => {
@@ -418,7 +418,7 @@ export default function AdminIntakesPage() {
                           cursor: 'pointer',
                           width: '1.25rem',
                           height: '1.25rem',
-                          accentColor: '#a855f7',
+                          accentColor: '#111827',
                         }}
                         title="Select all intakes on this page"
                       />
@@ -438,7 +438,7 @@ export default function AdminIntakesPage() {
                       style={{
                         borderBottom: idx < filteredIntakes.length - 1 ? '1px solid #e2e8f0' : 'none',
                         backgroundColor: selectedIntakes.has(intake.id)
-                          ? '#f0f4ff'
+                          ? '#f3f4f6'
                           : '#ffffff',
                       }}
                       className="hover:bg-slate-50 transition"
@@ -452,11 +452,11 @@ export default function AdminIntakesPage() {
                             cursor: 'pointer',
                             width: '1.25rem',
                             height: '1.25rem',
-                            accentColor: '#a855f7',
+                            accentColor: '#111827',
                           }}
                         />
                       </td>
-                      <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: '#a855f7' }}>{intake.reference_number || intake.id.substring(0, 8).toUpperCase()}</td>
+                      <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: '#111827' }}>{intake.reference_number || intake.id.substring(0, 8).toUpperCase()}</td>
                       <td className="px-6 py-4 text-sm font-medium" style={{ color: '#0f172a' }}>{intake.client_name}</td>
                       <td className="px-6 py-4 text-sm" style={{ color: '#64748b' }}>{intake.client_email}</td>
                       <td className="px-6 py-4 text-sm">
@@ -471,18 +471,18 @@ export default function AdminIntakesPage() {
                             onClick={() => handleViewDetails(intake)}
                             className="px-3 py-1.5 rounded-md font-medium flex items-center gap-2 transition"
                             style={{ 
-                              backgroundColor: '#a855f7',
+                              backgroundColor: '#111827',
                               color: '#ffffff',
                               fontSize: '0.875rem',
-                              border: '1px solid #a855f7'
+                              border: '1px solid #111827'
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = '#9333ea'
-                              e.currentTarget.style.borderColor = '#9333ea'
+                              e.currentTarget.style.backgroundColor = '#1f2937'
+                              e.currentTarget.style.borderColor = '#1f2937'
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = '#a855f7'
-                              e.currentTarget.style.borderColor = '#a855f7'
+                              e.currentTarget.style.backgroundColor = '#111827'
+                              e.currentTarget.style.borderColor = '#111827'
                             }}
                             title="View intake details"
                           >

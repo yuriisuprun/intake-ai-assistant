@@ -17,15 +17,15 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-1 items-center bg-white border border-gray-300 rounded-full p-1">
       {(Object.keys(languages) as Language[]).map((lang) => (
         <button
           key={lang}
           onClick={() => setLanguage(lang)}
-          className={`px-3 py-1.5 text-sm font-medium rounded transition ${
+          className={`px-3 py-1.5 text-sm font-medium rounded-full transition ${
             language === lang
-              ? 'bg-purple-600 text-white'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              ? 'bg-gray-900 text-white'
+              : 'text-gray-600 hover:text-gray-900'
           }`}
           aria-label={`Switch to ${languages[lang]}`}
         >

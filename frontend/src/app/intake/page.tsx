@@ -219,7 +219,7 @@ export default function PublicIntakePage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
           <p className="text-gray-600">{t('intake.loadingForm')}</p>
         </div>
       </div>
@@ -312,9 +312,9 @@ export default function PublicIntakePage() {
               {t('intake.formSubmitted')}
             </p>
             
-            <div className="rounded-lg p-6 mb-8" style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff' }}>
+            <div className="rounded-lg p-6 mb-8" style={{ backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb' }}>
               <p className="text-sm mb-2" style={{ color: '#4b5563' }}>{t('intake.referenceNumber')}</p>
-              <p className="text-2xl font-mono font-bold" style={{ color: '#a855f7' }}>{referenceNumber}</p>
+              <p className="text-2xl font-mono font-bold" style={{ color: '#111827' }}>{referenceNumber}</p>
               <p className="text-xs mt-2" style={{ color: '#6b7280' }}>{t('intake.saveNumber')}</p>
             </div>
 
@@ -322,15 +322,15 @@ export default function PublicIntakePage() {
               <h3 className="font-semibold mb-3" style={{ color: '#111827' }}>{t('intake.whatHappensNext')}</h3>
               <ul className="space-y-2 text-sm" style={{ color: '#4b5563' }}>
                 <li className="flex items-start gap-3">
-                  <span className="font-bold" style={{ color: '#a855f7' }}>1.</span>
+                  <span className="font-bold" style={{ color: '#111827' }}>1.</span>
                   <span>{t('intake.reviewInfo')}</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="font-bold" style={{ color: '#a855f7' }}>2.</span>
+                  <span className="font-bold" style={{ color: '#111827' }}>2.</span>
                   <span>{t('intake.contactSoon')}</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="font-bold" style={{ color: '#a855f7' }}>3.</span>
+                  <span className="font-bold" style={{ color: '#111827' }}>3.</span>
                   <span>{t('intake.lawyerAssigned')}</span>
                 </li>
               </ul>
@@ -339,9 +339,9 @@ export default function PublicIntakePage() {
             <button
               onClick={handleStartOver}
               className="text-white px-8 py-3 rounded-lg transition font-medium"
-              style={{ backgroundColor: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}
+              style={{ backgroundColor: '#111827' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1f2937')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#111827')}
             >
               {t('intake.submitAnother')}
             </button>
@@ -438,9 +438,9 @@ export default function PublicIntakePage() {
                 type="submit"
                 disabled={submitting}
                 className="w-full text-white py-3 rounded-lg transition font-semibold"
-                style={{ backgroundColor: submitting ? '#9ca3af' : '#a855f7' }}
-                onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
-                onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
+                style={{ backgroundColor: submitting ? '#9ca3af' : '#111827' }}
+                onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#1f2937')}
+                onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#111827')}
               >
                 {submitting ? t('intake.starting') : t('intake.startProcess')}
               </button>
@@ -451,7 +451,7 @@ export default function PublicIntakePage() {
           <div className="bg-white rounded-lg p-8" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
             {questionsLoading ? (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#a855f7' }}></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#111827' }}></div>
                 <p style={{ color: '#4b5563' }}>{t('intake.loadingForm')}</p>
               </div>
             ) : (
@@ -517,11 +517,11 @@ export default function PublicIntakePage() {
                     disabled={submitting}
                     className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm"
                     style={{ 
-                      backgroundColor: submitting ? '#9ca3af' : '#a855f7',
+                      backgroundColor: submitting ? '#9ca3af' : '#111827',
                       color: '#ffffff'
                     }}
-                    onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#9333ea')}
-                    onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#a855f7')}
+                    onMouseEnter={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#1f2937')}
+                    onMouseLeave={(e) => !submitting && (e.currentTarget.style.backgroundColor = '#111827')}
                   >
                     {submitting ? 'Submitting...' : currentQuestionIndex === questions.length - 1 ? t('intake.submit') : t('intake.next')}
                   </button>

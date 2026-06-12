@@ -444,7 +444,7 @@ export default function ClientIntakePage() {
                 disabled={submitting}
                 className="flex-1 px-6 py-3 rounded-lg transition font-medium text-sm text-white"
                 style={{ 
-                  backgroundColor: submitting ? '#9ca3af' : '#a855f7',
+                  backgroundColor: submitting ? '#9ca3af' : '#111827',
                 }}
               >
                 {submitting ? 'Submitting...' : currentStep === flow.total_steps - 1 ? 'Complete' : 'Next'}

@@ -22,10 +22,13 @@ export default function Home() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       {/* Navigation */}
-      <nav className="bg-slate-700 shadow-sm">
+      <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-white">📋 Intake Assistant</div>
-          <div className="flex items-center gap-6">
+          {/* Logo */}
+          <div className="text-2xl font-bold text-gray-900">📋 Intake Assistant</div>
+          
+          {/* Right side - Language Switcher */}
+          <div className="flex items-center gap-3">
             <LanguageSwitcher />
           </div>
         </div>
@@ -44,9 +47,9 @@ export default function Home() {
             <Link 
               href="/intake" 
               className="text-white px-8 py-3 rounded-lg flex items-center gap-2 transition"
-              style={{ backgroundColor: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#a855f7')}>
+              style={{ backgroundColor: '#111827' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#1f2937')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#111827')}>
               {t('home.startIntake')}<ArrowRight size={20} />
             </Link>
             <Link 
@@ -54,8 +57,8 @@ export default function Home() {
               className="px-8 py-3 rounded-lg transition"
               style={{ 
                 backgroundColor: '#ffffff',
-                color: '#a855f7',
-                border: '2px solid #a855f7'
+                color: '#111827',
+                border: '2px solid #111827'
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#faf5ff')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
@@ -68,7 +71,7 @@ export default function Home() {
         {/* Features */}
         <div className="grid md:grid-cols-3 gap-8 mt-20 mb-8">
           <div className="bg-white p-8 rounded-lg" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-            <FileText className="mb-4" size={32} style={{ color: '#a855f7' }} />
+            <FileText className="mb-4" size={32} style={{ color: '#111827' }} />
             <h3 className="text-xl font-semibold mb-2" style={{ color: '#111827' }}>
               {t('features.structured.title')}
             </h3>
@@ -78,7 +81,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white p-8 rounded-lg" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-            <Brain className="mb-4" size={32} style={{ color: '#a855f7' }} />
+            <Brain className="mb-4" size={32} style={{ color: '#111827' }} />
             <h3 className="text-xl font-semibold mb-2" style={{ color: '#111827' }}>
               {t('features.ai.title')}
             </h3>
@@ -88,7 +91,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white p-8 rounded-lg" style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-            <Shield className="mb-4" size={32} style={{ color: '#a855f7' }} />
+            <Shield className="mb-4" size={32} style={{ color: '#111827' }} />
             <h3 className="text-xl font-semibold mb-2" style={{ color: '#111827' }}>
               {t('features.secure.title')}
             </h3>

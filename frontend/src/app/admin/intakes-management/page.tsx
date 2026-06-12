@@ -254,7 +254,7 @@ export default function IntakesManagementPage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f3f4f6' }}>
         <div className="text-center">
-          <Loader className="animate-spin mx-auto mb-4" size={48} style={{ color: '#a855f7' }} />
+          <Loader className="animate-spin mx-auto mb-4" size={48} style={{ color: '#111827' }} />
           <p style={{ color: '#4b5563' }}>Loading intakes management...</p>
         </div>
       </div>
@@ -282,7 +282,7 @@ export default function IntakesManagementPage() {
                   <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>Total Intakes</p>
                   <p className="text-3xl font-bold mt-1" style={{ color: '#111827' }}>{metrics.total_intakes}</p>
                 </div>
-                <Zap style={{ color: '#a855f7' }} size={32} />
+                <Zap style={{ color: '#111827' }} size={32} />
               </div>
             </div>
 
@@ -379,7 +379,7 @@ export default function IntakesManagementPage() {
                     disabled={bulkOperationLoading}
                     className="px-3 py-1 rounded text-sm font-medium transition"
                     style={{
-                      backgroundColor: '#a855f7',
+                      backgroundColor: '#111827',
                       color: '#ffffff',
                       opacity: bulkOperationLoading ? 0.5 : 1,
                       cursor: bulkOperationLoading ? 'not-allowed' : 'pointer'
@@ -396,9 +396,9 @@ export default function IntakesManagementPage() {
           <button
             onClick={selectAllFiltered}
             className="text-sm transition mt-3"
-            style={{ color: '#a855f7', cursor: 'pointer' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = '#9333ea'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#a855f7'}
+            style={{ color: '#111827', cursor: 'pointer' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#6b7280'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#111827'}
           >
             {selectedIntakes.size === filteredIntakes.length && filteredIntakes.length > 0
               ? 'Deselect All'
@@ -424,7 +424,7 @@ export default function IntakesManagementPage() {
                         checked={selectedIntakes.size === filteredIntakes.length && filteredIntakes.length > 0}
                         onChange={selectAllFiltered}
                         className="w-4 h-4 rounded cursor-pointer"
-                        style={{ accentColor: '#a855f7' }}
+                        style={{ accentColor: '#111827' }}
                       />
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-semibold" style={{ color: '#111827' }}>Client</th>
@@ -449,7 +449,7 @@ export default function IntakesManagementPage() {
                           checked={selectedIntakes.has(intake.id)}
                           onChange={() => toggleIntakeSelection(intake.id)}
                           className="w-4 h-4 rounded cursor-pointer"
-                          style={{ accentColor: '#a855f7' }}
+                          style={{ accentColor: '#111827' }}
                         />
                       </td>
                       <td className="px-6 py-4 text-sm font-medium" style={{ color: '#111827' }}>
@@ -478,7 +478,7 @@ export default function IntakesManagementPage() {
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div style={{ backgroundColor: '#ffffff', borderRadius: '0.5rem', padding: '1.5rem', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#111827' }}>
-                <Users size={20} style={{ color: '#a855f7' }} />
+                <Users size={20} style={{ color: '#111827' }} />
                 Team Workload Distribution
               </h3>
               <div className="space-y-3">
@@ -501,7 +501,7 @@ export default function IntakesManagementPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-lg" style={{ color: '#a855f7' }}>
+                      <p className="font-bold text-lg" style={{ color: '#111827' }}>
                         {member.assigned_count}
                       </p>
                       <p className="text-xs" style={{ color: '#6b7280' }}>assigned</p>

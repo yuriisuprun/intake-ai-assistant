@@ -201,18 +201,18 @@ export default function SignUp() {
               disabled={loading || !!configError}
               className="w-full py-2 rounded-lg font-medium transition"
               style={{
-                backgroundColor: loading || !!configError ? '#9ca3af' : '#a855f7',
+                backgroundColor: loading || !!configError ? '#9ca3af' : '#111827',
                 color: '#ffffff',
                 cursor: loading || !!configError ? 'not-allowed' : 'pointer'
               }}
               onMouseEnter={(e) => {
                 if (!loading && !configError) {
-                  e.currentTarget.style.backgroundColor = '#9333ea'
+                  e.currentTarget.style.backgroundColor = '#1f2937'
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading && !configError) {
-                  e.currentTarget.style.backgroundColor = '#a855f7'
+                  e.currentTarget.style.backgroundColor = '#111827'
                 }
               }}
             >
@@ -225,9 +225,9 @@ export default function SignUp() {
             <Link 
               href="/login" 
               className="font-medium transition"
-              style={{ color: '#a855f7' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+              style={{ color: '#111827' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#6b7280')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}
             >
               Log in
             </Link>

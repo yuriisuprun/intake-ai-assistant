@@ -127,8 +127,8 @@ export default function Login() {
                 disabled={loading || !!configError}
                 onFocus={(e) => {
                   if (!loading && !configError) {
-                    e.currentTarget.style.borderColor = '#a855f7'
-                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                    e.currentTarget.style.borderColor = '#111827'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                   }
                 }}
                 onBlur={(e) => {
@@ -160,8 +160,8 @@ export default function Login() {
                 disabled={loading || !!configError}
                 onFocus={(e) => {
                   if (!loading && !configError) {
-                    e.currentTarget.style.borderColor = '#a855f7'
-                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)'
+                    e.currentTarget.style.borderColor = '#111827'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17, 24, 39, 0.1)'
                   }
                 }}
                 onBlur={(e) => {
@@ -177,7 +177,7 @@ export default function Login() {
               disabled={loading || !!configError}
               className="w-full rounded-lg font-semibold transition"
               style={{
-                backgroundColor: loading || !!configError ? '#d1d5db' : '#a855f7',
+                backgroundColor: loading || !!configError ? '#d1d5db' : '#111827',
                 color: '#ffffff',
                 cursor: loading || !!configError ? 'not-allowed' : 'pointer',
                 padding: '11px 16px',
@@ -187,12 +187,12 @@ export default function Login() {
               }}
               onMouseEnter={(e) => {
                 if (!loading && !configError) {
-                  e.currentTarget.style.backgroundColor = '#9333ea'
+                  e.currentTarget.style.backgroundColor = '#1f2937'
                 }
               }}
               onMouseLeave={(e) => {
                 if (!loading && !configError) {
-                  e.currentTarget.style.backgroundColor = '#a855f7'
+                  e.currentTarget.style.backgroundColor = '#111827'
                 }
               }}
             >
@@ -207,9 +207,9 @@ export default function Login() {
               <Link 
                 href="/signup" 
                 className="font-semibold transition"
-                style={{ color: '#a855f7' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#9333ea')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#a855f7')}
+                style={{ color: '#111827' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#6b7280')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#111827')}
               >
                 Sign up
               </Link>
