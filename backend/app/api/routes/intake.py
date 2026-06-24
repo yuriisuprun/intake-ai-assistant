@@ -86,9 +86,11 @@ async def submit_intake_step(
     try:
         # Validate session exists
         try:
-            session = db.client.table("intakes").select("id").eq("id", request.session_id).single().execute()
-            if not session.data:
+            session = db.client.table("intakes").select("id").eq("id", request.session_id).execute()
+            if not session.data or len(session.data) == 0:
                 raise HTTPException(status_code=404, detail="Session not found")
+        except HTTPException:
+            raise
         except Exception as e:
             logger.error(f"Error fetching session {request.session_id}: {e}")
             raise HTTPException(status_code=404, detail="Session not found")
@@ -126,9 +128,9 @@ async def complete_intake(
     """Complete an intake session."""
     try:
         # Get session
-        session = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
+        session = db.client.table("intakes").select("*").eq("id", session_id).execute()
         
-        if not session.data:
+        if not session.data or len(session.data) == 0:
             raise HTTPException(status_code=404, detail="Session not found")
 
         # Complete intake
@@ -152,9 +154,9 @@ async def get_intake_session(
 ):
     """Get intake session details."""
     try:
-        session = db.client.table("intakes").select("*").eq("id", session_id).single().execute()
+        session = db.client.table("intakes").select("*").eq("id", session_id).execute()
         
-        if not session.data:
+        if not session.data or len(session.data) == 0:
             raise HTTPException(status_code=404, detail="Session not found")
 
         return APIResponse(
